@@ -515,18 +515,20 @@ const FinalLanding = () => {
             style={{ gap: 'clamp(1.5rem, 3vh, 3rem)' }}
           >
             {/* Text Group */}
-            <div className="flex flex-col items-center flex-shrink-0 drop-shadow-lg">
-              {/* Title */}
-              <h1
-                className="font-black tracking-tight text-white"
-                style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: 900,
-                  fontSize: 'clamp(3.5rem, 10vw, 8rem)',
-                  marginBottom: 'clamp(0.25rem, 0.5vh, 0.75rem)'
-                }}
-              >
-                SeeMe
+            <div
+            className="flex flex-col items-center flex-shrink-0 drop-shadow-lg"
+          >
+            {/* Title */}
+            <h1
+              className="font-black tracking-tight text-white"
+              style={{
+                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(5.5rem, 18vw, 9rem)',
+                marginBottom: 'clamp(0.25rem, 0.5vh, 0.75rem)'
+              }}
+            >
+              SeeMe
               </h1>
 
               {/* Subtitle */}
@@ -534,7 +536,7 @@ const FinalLanding = () => {
                 className="text-white/90 text-center px-4 whitespace-nowrap font-medium"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(0.875rem, 2vw, 1.5rem)'
+                  fontSize: 'clamp(1rem, 3vw, 1.6rem)'
                 }}
               >
                 Private personal intelligence for your growth
@@ -566,7 +568,7 @@ const FinalLanding = () => {
 
             {/* Scroll Indicator */}
             <motion.div
-              className="flex flex-col items-center gap-2 cursor-pointer mt-4"
+              className="flex flex-col items-center gap-2 cursor-pointer mt-4 md:mt-1"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.6 }}
@@ -589,24 +591,6 @@ const FinalLanding = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="opacity-70"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-40 -mt-4"
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
