@@ -47,6 +47,7 @@ const FinalLanding = () => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const [currentNotification, setCurrentNotification] = useState(1);
+  const [showLocked, setShowLocked] = useState(false);
 
   // Track section changes
   useEffect(() => {
@@ -117,7 +118,7 @@ const FinalLanding = () => {
     // Hero video (video1) gets priority, others load sequentially
     preloadVideosSequentially(
       [videoUrls.video1], // Priority: hero video
-      [videoUrls.video2, videoUrls.video3, videoUrls.video4, videoUrls.video5, videoUrls.video6] // Others
+      [videoUrls.video2, videoUrls.video3, videoUrls.video4, videoUrls.video5] // Others (no video6, lock now uses images)
     );
   }, [imagesLoaded]);
 
@@ -129,6 +130,21 @@ const FinalLanding = () => {
       }, 8000); // Change notification every 8 seconds (longer stay)
 
       return () => clearInterval(interval);
+    }
+  }, [activeSection]);
+
+  useEffect(() => {
+    if (activeSection === 7) {
+      const timer = setTimeout(() => {
+        setShowLocked(true);
+      }, 900);
+
+      return () => {
+        clearTimeout(timer);
+        setShowLocked(false);
+      };
+    } else {
+      setShowLocked(false);
     }
   }, [activeSection]);
 
@@ -1217,12 +1233,35 @@ const FinalLanding = () => {
             </div>
 
             {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              <SmartVideo
-                src={videoUrls.video6}
-                className="w-full h-full object-cover rounded-[28px]"
-                style={{ objectPosition: 'center 45%' }}
-              />
+            <div className="relative flex items-center justify-center w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+              <motion.div
+                className="absolute inset-0"
+                initial={{ opacity: 1, scale: 1 }}
+                animate={showLocked ? { opacity: 0, scale: 1.06 } : { opacity: 1, scale: 1 }}
+                transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}
+              >
+                <Image
+                  src="/unlock.png"
+                  alt="Unlocked"
+                  fill
+                  className="object-contain filter invert"
+                  sizes="128px"
+                />
+              </motion.div>
+              <motion.div
+                className="absolute inset-0"
+                initial={{ opacity: 0, scale: 0.94 }}
+                animate={showLocked ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
+                transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}
+              >
+                <Image
+                  src="/lock.png"
+                  alt="Locked"
+                  fill
+                  className="object-contain filter invert"
+                  sizes="128px"
+                />
+              </motion.div>
             </div>
 
             {/* Mobile paragraph */}

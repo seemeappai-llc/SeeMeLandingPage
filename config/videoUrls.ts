@@ -7,7 +7,6 @@ export const videoUrls = {
   video3: `${BLOB_CDN_BASE}/videos/video3.webm`,
   video4: `${BLOB_CDN_BASE}/videos/video4.webm`,
   video5: `${BLOB_CDN_BASE}/videos/video5.webm`,
-  video6: `${BLOB_CDN_BASE}/videos/video6.webm`,
 };
 
 // Optional: Add poster images for instant visual feedback
@@ -19,5 +18,4 @@ export const posterUrls = {
   video3: `${BLOB_CDN_BASE}/posters/poster3.webp`,
   video4: `${BLOB_CDN_BASE}/posters/poster4.webp`,
   video5: `${BLOB_CDN_BASE}/posters/poster5.webp`,
-  video6: `${BLOB_CDN_BASE}/posters/poster6.webp`,
 };
