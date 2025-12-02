@@ -49,6 +49,40 @@ const FinalLanding = () => {
   const [currentNotification, setCurrentNotification] = useState(1);
   const [showLocked, setShowLocked] = useState(false);
 
+  // Helper function to scroll to a specific section (0-8)
+  const scrollToSection = (sectionIndex: number) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Geometry-based mapping from section index to scroll position:
+    // progress 0 => container top aligned with viewport top
+    // progress 1 => container bottom aligned with viewport bottom
+    const rect = container.getBoundingClientRect();
+    const containerTop = rect.top + window.scrollY;
+    const containerHeight = rect.height;
+    const viewportHeight = window.innerHeight;
+
+    const scrollRange = containerHeight - viewportHeight;
+    if (scrollRange <= 0) return;
+
+    // Section indices map linearly onto the 0–1 ScrollTrigger progress
+    const totalSections = 9;
+    const segment = 1 / totalSections;
+
+    let targetProgress: number;
+    if (sectionIndex <= 0) {
+      targetProgress = 0;
+    } else if (sectionIndex >= totalSections - 1) {
+      targetProgress = 1;
+    } else {
+      // Use the center of the section (e.g. section 1 -> 1.5/9)
+      targetProgress = (sectionIndex + 0.5) * segment;
+    }
+    const targetScroll = containerTop + scrollRange * targetProgress;
+
+    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+  };
+
   // Track section changes
   useEffect(() => {
     const sectionNames = [
@@ -157,45 +191,41 @@ const FinalLanding = () => {
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.5,
+        scrub: 1.2,
         snap: {
           snapTo: (progress) => {
             // Don't snap at the very start (prevents auto-scroll on load)
-            if (progress < 0.02) {
+            if (progress < 0.01) {
               return 0;
             }
             
             // Get current scroll velocity
             const velocity = Math.abs(ScrollTrigger.getById('main-scroll')?.getVelocity() || 0);
 
-            // If scrolling fast, don't snap - let user fly through
+            // If scrolling very fast, don't snap - let user fly through
             if (velocity > 200) {
-              return progress; // Return current progress, no snapping
+              return progress;
             }
 
-            // If scrolling slowly or stopped, snap to CENTER of each section
-            // Section centers: 0.5/9, 1.5/9, 2.5/9, etc.
-            const snapPoints = [
-              0,       // Stay at top if near top
-              1.5/9,   // Section 2 center
-              2.5/9,   // Section 3 center
-              3.5/9,   // Section 4 center
-              4.5/9,   // Section 5 center
-              5.5/9,   // Section 6 center
-              6.5/9,   // Section 7 center
-              7.5/9,   // Section 8 center
-              1,       // Section 9 (CTA) - snap to end
-            ];
-            const closest = snapPoints.reduce((prev, curr) =>
+            // Define section center points for snapping
+            const totalSections = 9;
+            const segment = 1 / totalSections;
+
+            const snapPoints = Array.from({ length: totalSections }, (_, index) => {
+              if (index === 0) return 0;          // Hero pinned at top
+              if (index === totalSections - 1) return 1; // CTA pinned at end
+              return (index + 0.5) * segment;    // Centers for middle sections
+            });
+
+            // Snap to the closest section center
+            const targetSnap = snapPoints.reduce((prev, curr) =>
               Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev
             );
 
-            // Only snap if we're reasonably close to a section center
-            const distance = Math.abs(closest - progress);
-            return distance < 0.1 ? closest : progress;
+            return targetSnap;
           },
-          duration: { min: 0.6, max: 1.4 },
-          delay: 0.5, // Longer delay to prevent snap on load
+          duration: { min: 0.4, max: 1.0 },
+          delay: 0.2,
           ease: "power2.inOut"
         },
         id: 'main-scroll', // Give it an ID so we can reference it for velocity
@@ -515,7 +545,7 @@ const FinalLanding = () => {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      <div ref={containerRef} className="h-[3200vh] w-screen max-w-full relative z-10 overflow-x-hidden">
+      <div ref={containerRef} className="h-[1800vh] w-screen max-w-full relative z-10 overflow-x-hidden">
         
         {/* Fixed viewport container */}
         <div className="fixed inset-0 w-screen max-w-full" style={{ overflow: 'clip' }}>
@@ -590,7 +620,7 @@ const FinalLanding = () => {
               transition={{ delay: 1.5, duration: 0.6 }}
               onClick={() => {
                 analytics.scrollIndicatorClick();
-                window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                scrollToSection(1); // Scroll to section 2 (index 1)
               }}
             >
               <motion.div
