@@ -41,7 +41,6 @@ const FinalLanding = () => {
   const section8Ref = useRef<HTMLDivElement>(null);
   const section9Ref = useRef<HTMLDivElement>(null);
 
-  const riseSpanRef = useRef<HTMLSpanElement>(null);
   const riseTextRef = useRef<HTMLParagraphElement>(null);
 
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -80,7 +79,26 @@ const FinalLanding = () => {
     }
     const targetScroll = containerTop + scrollRange * targetProgress;
 
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    // Use GSAP tween so ScrollTrigger-driven cross-fades animate smoothly
+    const startScroll = window.scrollY;
+    const distance = targetScroll - startScroll;
+
+    if (Math.abs(distance) < 2) return; // already effectively there
+
+    const tweenState = { value: 0 };
+    gsap.to(tweenState, {
+      value: 1,
+      duration: 1.4,
+      ease: 'power2.inOut',
+      onUpdate: () => {
+        const next = startScroll + distance * tweenState.value;
+        window.scrollTo({ top: next });
+      },
+      onComplete: () => {
+        // Ensure we land exactly on the computed target
+        window.scrollTo({ top: targetScroll });
+      }
+    });
   };
 
   // Track section changes
@@ -290,8 +308,9 @@ const FinalLanding = () => {
             if (progress < sectionStart || progress >= sectionEnd) return 0;
 
             const sectionDuration = sectionEnd - sectionStart;
-            const fadeInEnd = sectionStart + sectionDuration * 0.1;
-            const fadeOutStart = sectionEnd - sectionDuration * 0.1;
+            // Wider fade regions so cross-fades are more visible
+            const fadeInEnd = sectionStart + sectionDuration * 0.25;
+            const fadeOutStart = sectionEnd - sectionDuration * 0.25;
 
             if (progress < fadeInEnd) {
               return gsap.utils.mapRange(sectionStart, fadeInEnd, 0, 1, progress);
@@ -377,26 +396,22 @@ const FinalLanding = () => {
           if (section6Ref.current) {
             const start = 5 / 9, end = 6 / 9;
             section6Ref.current.style.opacity = String(getSectionOpacity(start, end));
-            section6Ref.current.style.pointerEvents = progress >= start && progress < end ? 'auto' : 'none';
+            const isActive = progress >= start && progress < end;
+            section6Ref.current.style.pointerEvents = isActive ? 'auto' : 'none';
 
-            // Special logic for the "daily guidance" span
-            if (riseSpanRef.current) {
-              const spanStart = 5 / 9;
-              const spanEnd = 5.5 / 9; // Finishes earlier to stay longer
-              let spanOpacity = 0;
-              let spanY = 200;
-
-              if (progress >= spanStart && progress < end) {
-                const p = Math.min(progress, spanEnd);
-                spanOpacity = gsap.utils.mapRange(spanStart, spanEnd, 0, 1, p);
-                spanY = gsap.utils.mapRange(spanStart, spanEnd, 200, 0, p);
-              } else if (progress >= end) {
-                spanOpacity = 0;
-                spanY = 0;
-              }
-
-              riseSpanRef.current.style.opacity = String(spanOpacity);
-              riseSpanRef.current.style.transform = `translateY(${spanY}px)`;
+            // Animate heading ("Rise with" + "daily guidance") together
+            const heading = section6Ref.current.querySelector('.rise-heading') as HTMLElement;
+            if (heading) {
+              // Finish the rise animation in the first ~25% of the section scroll
+              const animEnd = start + (end - start) * 0.25;
+              const localProgress = gsap.utils.clamp(
+                0,
+                1,
+                gsap.utils.mapRange(start, animEnd, 0, 1, progress)
+              );
+              const eased = gsap.parseEase('power2.out')(localProgress);
+              const y = 40 * (1 - eased);
+              heading.style.transform = `translateY(${y}px)`;
             }
 
             // Keep text paragraph static and fully visible
@@ -618,6 +633,8 @@ const FinalLanding = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.6 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95, y: 1 }}
               onClick={() => {
                 analytics.scrollIndicatorClick();
                 scrollToSection(1); // Scroll to section 2 (index 1)
@@ -688,9 +705,11 @@ const FinalLanding = () => {
               <AnimatePresence>
                 {activeSection === 1 && coaches.map((coach, index) => {
                   const angle = (index / coaches.length) * Math.PI * 2;
-                  const radius = 250;
+                  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+                  const radius = isDesktop ? 700 : 360;
                   const startX = Math.cos(angle) * radius;
                   const startY = Math.sin(angle) * radius;
+                  const duration = isDesktop ? 3.2 : 2.5;
 
                   return (
                     <motion.div
@@ -708,7 +727,7 @@ const FinalLanding = () => {
                         scale: [0.8, 1, 0.6, 0.3]
                       }}
                       transition={{
-                        duration: 2.5,
+                        duration,
                         delay: coach.delay + 0.3,
                         ease: "easeInOut",
                         times: [0, 0.4, 0.8, 1]
@@ -901,18 +920,14 @@ const FinalLanding = () => {
         >
           <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto drop-shadow-lg">
             <h2
-              className="text-5xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
+              className="rise-heading text-5xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 400,
               }}
             >
               Rise with<br />
-              <span
-                ref={riseSpanRef}
-                className="text-white font-black inline-block"
-                style={{ opacity: 0, transform: 'translateY(200px)' }}
-              >
+              <span className="text-white font-black inline-block">
                 daily guidance
               </span>
             </h2>
