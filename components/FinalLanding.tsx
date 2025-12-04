@@ -1365,11 +1365,37 @@ const FinalLanding = () => {
               </svg>
               <span className="text-lg font-semibold whitespace-nowrap">Download on the App Store</span>
             </a>
+
           </div>
         </div>
       </div>
 
       </div>
+
+      {/* Footer - at absolute bottom of scroll */}
+      <footer 
+        className="absolute bottom-0 left-0 right-0 z-20 py-6 text-center"
+        style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+      >
+        <div className="flex items-center justify-center gap-4 text-white/40 text-sm">
+          <a
+            href="/privacy"
+            className="hover:text-white/70 transition-colors"
+          >
+            Privacy Policy
+          </a>
+          <span>·</span>
+          <a
+            href="mailto:info@seemeapp.ai"
+            className="hover:text-white/70 transition-colors"
+          >
+            Contact
+          </a>
+        </div>
+        <p className="mt-2 text-white/30 text-xs">
+          © {new Date().getFullYear()} SeeMe. All rights reserved.
+        </p>
+      </footer>
     </main>
   );
 };
