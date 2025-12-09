@@ -592,7 +592,7 @@ const FinalLanding = () => {
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 900,
-                fontSize: 'clamp(5.5rem, 18vw, 9rem)',
+                fontSize: 'clamp(4.5rem, 16vw, 9rem)',
                 marginBottom: 'clamp(0.25rem, 0.5vh, 0.75rem)'
               }}
             >
@@ -604,7 +604,7 @@ const FinalLanding = () => {
                 className="text-white/90 text-center px-4 whitespace-nowrap font-medium"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(1rem, 3vw, 1.6rem)'
+                  fontSize: 'clamp(0.875rem, 2.5vw, 1.6rem)'
                 }}
               >
                 Private personal intelligence for your growth
@@ -682,7 +682,7 @@ const FinalLanding = () => {
               className="text-center text-content w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
-                className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
+                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
               >
                 Your network of<br />
@@ -760,7 +760,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph - shown below video */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2"
+              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
@@ -781,7 +781,7 @@ const FinalLanding = () => {
               className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
-                className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
+                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
               >
                 Coaches that<br />
@@ -811,7 +811,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2"
+              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Learning from your <span className="text-white font-semibold">sessions, reflections, calendar, health,</span> and <span className="text-white font-semibold">screen time</span> patterns.
@@ -832,7 +832,7 @@ const FinalLanding = () => {
               className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
-                className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
+                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                   fontWeight: 600
@@ -865,7 +865,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2"
+              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
@@ -886,7 +886,7 @@ const FinalLanding = () => {
               className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
-                className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
+                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                   fontWeight: 600
@@ -919,7 +919,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2"
+              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               <span className="text-white font-semibold">Evidence-based methods</span> and guided sessions, adapted to your goals and daily reality.
@@ -935,7 +935,7 @@ const FinalLanding = () => {
         >
           <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto drop-shadow-lg">
             <h2
-              className="rise-heading text-5xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
+              className="rise-heading text-4xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 400,
@@ -948,7 +948,7 @@ const FinalLanding = () => {
             </h2>
             <p
               ref={riseTextRef}
-              className="text-white/90 text-xl max-w-2xl mx-auto mt-6 font-normal"
+              className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mt-6 font-normal"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
               }}
@@ -1164,7 +1164,7 @@ const FinalLanding = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.3 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-5xl text-white text-center mb-6 leading-[1.1] drop-shadow-lg"
+              className="text-4xl md:text-5xl text-white text-center mb-6 leading-[1.1]"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 600
@@ -1173,7 +1173,7 @@ const FinalLanding = () => {
               Loved by people like you
             </motion.h2>
             <p
-              className="text-white/90 text-xl max-w-2xl mx-auto mb-12 reviews-text font-normal drop-shadow-lg text-center"
+              className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mb-12 reviews-text font-normal text-center"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 opacity: 0
@@ -1272,7 +1272,7 @@ const FinalLanding = () => {
             {/* Text content */}
             <div className="text-center w-full md:w-auto md:max-w-sm md:mb-0">
               <h2
-                className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
+                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                   fontWeight: 600
@@ -1328,7 +1328,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2"
+              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Built <span className="text-white font-semibold">private-first</span> with on-device intelligence and secure optional cloud enhancements.
@@ -1344,7 +1344,7 @@ const FinalLanding = () => {
         >
           <div className="cta-inner relative z-10 flex flex-col items-center justify-center text-center px-4 cursor-auto">
             <h2
-              className="text-4xl md:text-6xl text-white/80 leading-[1.1]"
+              className="text-3xl md:text-6xl text-white/80 leading-[1.1]"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 600
@@ -1356,7 +1356,7 @@ const FinalLanding = () => {
               </span>
             </h2>
             <p
-              className="text-white/90 text-lg md:text-xl max-w-lg mt-6 font-normal"
+              className="text-white/90 text-base md:text-xl max-w-lg mt-6 font-normal"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
               }}
