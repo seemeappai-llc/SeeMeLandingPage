@@ -613,7 +613,7 @@ const FinalLanding = () => {
 
             {/* Video Mockup Container */}
             <div
-              className="relative rounded-[30px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden flex-shrink-0"
+              className="relative rounded-[30px] border-4 border-white/30 bg-black shadow-lg overflow-hidden flex-shrink-0"
               style={{
                 width: '240px',
                 height: '528px',
@@ -702,7 +702,7 @@ const FinalLanding = () => {
             </div>
 
             {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
               {(activeSection === 0 || activeSection === 1 || activeSection === 2) && (
                 <SmartVideo
                   src={videoUrls.video2}
@@ -799,7 +799,7 @@ const FinalLanding = () => {
             </div>
 
             {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
               {(activeSection === 1 || activeSection === 2 || activeSection === 3) && (
                 <SmartVideo
                   src={videoUrls.video3}
@@ -853,7 +853,7 @@ const FinalLanding = () => {
             </div>
 
             {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
               {(activeSection === 2 || activeSection === 3 || activeSection === 4) && (
                 <SmartVideo
                   src={videoUrls.video4}
@@ -907,7 +907,7 @@ const FinalLanding = () => {
             </div>
 
             {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
               {(activeSection === 3 || activeSection === 4 || activeSection === 5) && (
                 <SmartVideo
                   src={videoUrls.video5}
@@ -933,7 +933,7 @@ const FinalLanding = () => {
           className="absolute inset-0 flex items-start justify-center pt-32"
           style={{ opacity: 0, pointerEvents: 'none' }}
         >
-          <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto drop-shadow-lg">
+          <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto ">
             <h2
               className="rise-heading text-4xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
               style={{
@@ -987,7 +987,7 @@ const FinalLanding = () => {
                             alt="Notification"
                             width={350}
                             height={110}
-                            className="drop-shadow-2xl w-full h-auto"
+                            className=" w-full h-auto"
                           />
                         </motion.div>
                       );
@@ -1021,7 +1021,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={320}
                         height={100}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
 
@@ -1044,7 +1044,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={320}
                         height={100}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
                   </div>
@@ -1070,7 +1070,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={300}
                         height={90}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
 
@@ -1093,7 +1093,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={300}
                         height={90}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
                   </div>
@@ -1119,7 +1119,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={320}
                         height={100}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
 
@@ -1142,7 +1142,7 @@ const FinalLanding = () => {
                         alt="Notification"
                         width={320}
                         height={100}
-                        className="drop-shadow-lg"
+                        className=""
                       />
                     </motion.div>
                   </div>
@@ -1223,7 +1223,7 @@ const FinalLanding = () => {
                       delay: (index % reviews.length) * 0.1,
                       duration: 0.5
                     }}
-                    className="bg-white/10 rounded-2xl p-5 md:p-6 border border-white/20 shadow-xl flex-shrink-0 w-[300px] md:w-[350px]"
+                    className="bg-white/10 rounded-2xl p-5 md:p-6 border border-white/20 shadow-md flex-shrink-0 w-[300px] md:w-[350px]"
                   >
                     <div className="mb-3">
                       <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-2"
@@ -1369,7 +1369,7 @@ const FinalLanding = () => {
               href="https://apps.apple.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-2xl cursor-pointer"
+              className="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
               }}
