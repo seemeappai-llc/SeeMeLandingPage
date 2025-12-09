@@ -1183,7 +1183,7 @@ const FinalLanding = () => {
             </p>
 
             {/* Infinite auto-scroll carousel with edge fade - only render when section is active */}
-            {(activeSection === 5 || activeSection === 6 || activeSection === 7) && (
+            {(activeSection === 5 || activeSection === 6) && (
             <div 
               className="overflow-hidden pb-6 relative"
               style={{ 
@@ -1294,36 +1294,36 @@ const FinalLanding = () => {
               </p>
             </div>
 
-            {/* Video mockup */}
+            {/* Lock icon - simplified, no animation on mobile for performance */}
             <div className="relative flex items-center justify-center w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
-              <motion.div
-                className="absolute inset-0"
-                initial={{ opacity: 1, scale: 1 }}
-                animate={showLocked ? { opacity: 0, scale: 1.06 } : { opacity: 1, scale: 1 }}
-                transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}
-              >
-                <Image
-                  src="/unlock.png"
-                  alt="Unlocked"
-                  fill
-                  className="object-contain filter invert"
-                  sizes="128px"
-                />
-              </motion.div>
-              <motion.div
-                className="absolute inset-0"
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={showLocked ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
-                transition={{ duration: 0.9, ease: [0.22, 0.61, 0.36, 1] }}
-              >
-                <Image
-                  src="/lock.png"
-                  alt="Locked"
-                  fill
-                  className="object-contain filter invert"
-                  sizes="128px"
-                />
-              </motion.div>
+              {(activeSection === 6 || activeSection === 7 || activeSection === 8) && (
+                <>
+                  <div
+                    className="absolute inset-0 transition-opacity duration-700"
+                    style={{ opacity: showLocked ? 0 : 1 }}
+                  >
+                    <Image
+                      src="/unlock.png"
+                      alt="Unlocked"
+                      fill
+                      className="object-contain brightness-0 invert"
+                      sizes="128px"
+                    />
+                  </div>
+                  <div
+                    className="absolute inset-0 transition-opacity duration-700"
+                    style={{ opacity: showLocked ? 1 : 0 }}
+                  >
+                    <Image
+                      src="/lock.png"
+                      alt="Locked"
+                      fill
+                      className="object-contain brightness-0 invert"
+                      sizes="128px"
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Mobile paragraph */}
@@ -1344,7 +1344,7 @@ const FinalLanding = () => {
         >
           <div className="cta-inner relative z-10 flex flex-col items-center justify-center text-center px-4 cursor-auto">
             <h2
-              className="text-4xl md:text-6xl text-white/80 leading-[1.1] drop-shadow-lg"
+              className="text-4xl md:text-6xl text-white/80 leading-[1.1]"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 600
@@ -1356,7 +1356,7 @@ const FinalLanding = () => {
               </span>
             </h2>
             <p
-              className="text-white/90 text-lg md:text-xl max-w-lg mt-6 font-normal drop-shadow-lg"
+              className="text-white/90 text-lg md:text-xl max-w-lg mt-6 font-normal"
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
               }}
