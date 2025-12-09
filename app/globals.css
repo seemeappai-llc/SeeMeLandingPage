@@ -137,7 +137,6 @@ body > div {
   scrollbar-width: auto;
   scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.15);
   overflow-x: scroll !important;
-  -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   cursor: grab;
 }
@@ -166,4 +165,20 @@ body > div {
   block-size: 100%;
   object-fit: cover;      /* critical to avoid "black bars" from the asset itself */
   object-position: center;
+}
+
+/* iOS Safari GPU optimization - reduce composited layers */
+@supports (-webkit-touch-callout: none) {
+  /* Disable hardware acceleration hints on older iOS devices */
+  .reduce-gpu * {
+    -webkit-transform: translateZ(0);
+    transform: none !important;
+    will-change: auto !important;
+  }
+  
+  /* Optimize fixed elements */
+  .fixed {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 }

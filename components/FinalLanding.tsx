@@ -526,6 +526,7 @@ const FinalLanding = () => {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-black">
       {/* Background - fixed, extends into safe areas */}
+      {/* Only render backgrounds near the active section to reduce GPU memory */}
       <div 
         ref={backgroundRef}
         className="fixed z-0 pointer-events-none"
@@ -539,24 +540,30 @@ const FinalLanding = () => {
         }}
         aria-hidden="true"
       >
-        {backgrounds.map((bg, index) => (
-          <div
-            key={`bg-${index}`}
-            data-bg={index}
-            className="absolute inset-0"
-            style={{ opacity: index === 0 ? 1 : 0 }}
-          >
-            <Image
-              src={bg}
-              alt={`Background ${index + 1}`}
-              fill
-              priority={index === 0}
-              quality={90}
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        ))}
+        {backgrounds.map((bg, index) => {
+          // Only render backgrounds within 2 indices of active section to reduce GPU memory
+          const shouldRender = Math.abs(index - activeSection) <= 2 || index === 0;
+          if (!shouldRender) return null;
+          
+          return (
+            <div
+              key={`bg-${index}`}
+              data-bg={index}
+              className="absolute inset-0"
+              style={{ opacity: index === 0 ? 1 : 0 }}
+            >
+              <Image
+                src={bg}
+                alt={`Background ${index + 1}`}
+                fill
+                priority={index === 0}
+                quality={75}
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          );
+        })}
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
@@ -577,7 +584,7 @@ const FinalLanding = () => {
           >
             {/* Text Group */}
             <div
-            className="flex flex-col items-center flex-shrink-0 drop-shadow-lg"
+            className="flex flex-col items-center flex-shrink-0"
           >
             {/* Title */}
             <h1
@@ -672,7 +679,7 @@ const FinalLanding = () => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
             {/* Text content - Desktop: all together, Mobile: heading only */}
             <div
-              className="text-center text-content drop-shadow-lg w-full md:w-auto md:max-w-sm md:mb-0"
+              className="text-center text-content w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
                 className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
@@ -696,11 +703,13 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              <SmartVideo
-                src={videoUrls.video2}
-                className="w-full h-full object-cover rounded-[28px]"
-                style={{ objectPosition: 'center 45%' }}
-              />
+              {(activeSection === 0 || activeSection === 1 || activeSection === 2) && (
+                <SmartVideo
+                  src={videoUrls.video2}
+                  className="w-full h-full object-cover rounded-[28px]"
+                  style={{ objectPosition: 'center 45%' }}
+                />
+              )}
 
               <AnimatePresence>
                 {activeSection === 1 && coaches.map((coach, index) => {
@@ -751,7 +760,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph - shown below video */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2 drop-shadow-lg"
+              className="md:hidden text-white/90 text-base text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
@@ -769,7 +778,7 @@ const FinalLanding = () => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
             {/* Text content */}
             <div
-              className="text-center drop-shadow-lg w-full md:w-auto md:max-w-sm md:mb-0"
+              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
                 className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
@@ -791,16 +800,18 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              <SmartVideo
-                src={videoUrls.video3}
-                className="w-full h-full object-cover rounded-[28px]"
-                style={{ objectPosition: 'center 45%' }}
-              />
+              {(activeSection === 1 || activeSection === 2 || activeSection === 3) && (
+                <SmartVideo
+                  src={videoUrls.video3}
+                  className="w-full h-full object-cover rounded-[28px]"
+                  style={{ objectPosition: 'center 45%' }}
+                />
+              )}
             </div>
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2 drop-shadow-lg"
+              className="md:hidden text-white/90 text-base text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Learning from your <span className="text-white font-semibold">sessions, reflections, calendar, health,</span> and <span className="text-white font-semibold">screen time</span> patterns.
@@ -818,7 +829,7 @@ const FinalLanding = () => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
             {/* Text content */}
             <div
-              className="text-center drop-shadow-lg w-full md:w-auto md:max-w-sm md:mb-0"
+              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
                 className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
@@ -843,16 +854,18 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              <SmartVideo
-                src={videoUrls.video4}
-                className="w-full h-full object-cover rounded-[28px]"
-                style={{ objectPosition: 'center center' }}
-              />
+              {(activeSection === 2 || activeSection === 3 || activeSection === 4) && (
+                <SmartVideo
+                  src={videoUrls.video4}
+                  className="w-full h-full object-cover rounded-[28px]"
+                  style={{ objectPosition: 'center center' }}
+                />
+              )}
             </div>
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2 drop-shadow-lg"
+              className="md:hidden text-white/90 text-base text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
@@ -870,7 +883,7 @@ const FinalLanding = () => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
             {/* Text content */}
             <div
-              className="text-center drop-shadow-lg w-full md:w-auto md:max-w-sm md:mb-0"
+              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
             >
               <h2
                 className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
@@ -895,16 +908,18 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-2xl overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              <SmartVideo
-                src={videoUrls.video5}
-                className="w-full h-full object-cover rounded-[28px]"
-                style={{ objectPosition: 'center 45%' }}
-              />
+              {(activeSection === 3 || activeSection === 4 || activeSection === 5) && (
+                <SmartVideo
+                  src={videoUrls.video5}
+                  className="w-full h-full object-cover rounded-[28px]"
+                  style={{ objectPosition: 'center 45%' }}
+                />
+              )}
             </div>
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2 drop-shadow-lg"
+              className="md:hidden text-white/90 text-base text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               <span className="text-white font-semibold">Evidence-based methods</span> and guided sessions, adapted to your goals and daily reality.
@@ -1167,7 +1182,8 @@ const FinalLanding = () => {
               Authentic stories of <span className="text-white font-semibold">clarity, confidence, and balance</span> from SeeMe's early community.
             </p>
 
-            {/* Infinite auto-scroll carousel with edge fade */}
+            {/* Infinite auto-scroll carousel with edge fade - only render when section is active */}
+            {(activeSection === 5 || activeSection === 6 || activeSection === 7) && (
             <div 
               className="overflow-hidden pb-6 relative"
               style={{ 
@@ -1189,10 +1205,10 @@ const FinalLanding = () => {
                     repeatType: "loop"
                   }
                 }}
-                style={{ willChange: 'transform' }}
+                style={{ willChange: 'auto' }}
               >
-                {/* Double the reviews for seamless infinite loop */}
-                {[...reviews, ...reviews].map((review, index) => (
+                {/* Single set of reviews - reduced from doubled for memory savings */}
+                {reviews.map((review, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 30 }}
@@ -1207,7 +1223,7 @@ const FinalLanding = () => {
                       delay: (index % reviews.length) * 0.1,
                       duration: 0.5
                     }}
-                    className="bg-white/10 backdrop-blur-md rounded-2xl p-5 md:p-6 border border-white/20 shadow-xl flex-shrink-0 w-[300px] md:w-[350px]"
+                    className="bg-white/10 rounded-2xl p-5 md:p-6 border border-white/20 shadow-xl flex-shrink-0 w-[300px] md:w-[350px]"
                   >
                     <div className="mb-3">
                       <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-2"
@@ -1242,6 +1258,7 @@ const FinalLanding = () => {
                 ))}
               </motion.div>
             </div>
+            )}
           </div>
         </div>
 
@@ -1253,7 +1270,7 @@ const FinalLanding = () => {
         >
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
             {/* Text content */}
-            <div className="text-center drop-shadow-lg w-full md:w-auto md:max-w-sm md:mb-0">
+            <div className="text-center w-full md:w-auto md:max-w-sm md:mb-0">
               <h2
                 className="text-4xl md:text-5xl text-white/80 leading-[1.1]"
                 style={{
@@ -1311,7 +1328,7 @@ const FinalLanding = () => {
 
             {/* Mobile paragraph */}
             <p
-              className="md:hidden text-white/90 text-base text-center font-normal px-2 drop-shadow-lg"
+              className="md:hidden text-white/90 text-base text-center font-normal px-2"
               style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
             >
               Built <span className="text-white font-semibold">private-first</span> with on-device intelligence and secure optional cloud enhancements.
