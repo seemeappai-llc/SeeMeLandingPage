@@ -8,7 +8,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { videoUrls } from '../config/videoUrls';
 import SmartVideo, { preloadVideosSequentially } from './SmartVideo';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useDeviceCapability } from '@/hooks/useDeviceCapability';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,9 +24,8 @@ const backgrounds = [
 ];
 
 const FinalLanding = () => {
-  // Initialize analytics and device detection
+  // Initialize analytics
   const analytics = useAnalytics();
-  const device = useDeviceCapability();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -543,9 +541,8 @@ const FinalLanding = () => {
         aria-hidden="true"
       >
         {backgrounds.map((bg, index) => {
-          // Render range based on device capability
-          const renderRange = device.tier === 'low' ? 1 : device.tier === 'mid' ? 2 : 3;
-          const shouldRender = Math.abs(index - activeSection) <= renderRange || index === 0;
+          // Only render backgrounds within 2 indices of active section to reduce GPU memory
+          const shouldRender = Math.abs(index - activeSection) <= 2 || index === 0;
           if (!shouldRender) return null;
           
           return (
@@ -1226,11 +1223,7 @@ const FinalLanding = () => {
                       delay: (index % reviews.length) * 0.1,
                       duration: 0.5
                     }}
-                    className={`rounded-2xl p-5 md:p-6 border border-white/20 flex-shrink-0 w-[300px] md:w-[350px] ${
-                      device.canUseBlur 
-                        ? 'bg-white/10 backdrop-blur-md shadow-xl' 
-                        : 'bg-black/40 shadow-md'
-                    }`}
+                    className="bg-white/10 rounded-2xl p-5 md:p-6 border border-white/20 shadow-md flex-shrink-0 w-[300px] md:w-[350px]"
                   >
                     <div className="mb-3">
                       <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-2"
