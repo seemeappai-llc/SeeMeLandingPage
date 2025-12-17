@@ -8,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { videoUrls } from '../config/videoUrls';
 import SmartVideo, { preloadVideosSequentially } from './SmartVideo';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { getDeviceCapabilities, getAnimationConfig } from '@/lib/deviceDetection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +27,24 @@ const backgrounds = [
 const FinalLanding = () => {
   // Initialize analytics
   const analytics = useAnalytics();
+
+  // Detect device capabilities for performance optimization (client-only to avoid hydration errors)
+  const [deviceCapabilities, setDeviceCapabilities] = useState({
+    isLowEndDevice: false,
+    isMobile: false,
+    isIOS: false,
+    shouldReduceMotion: false,
+    maxConcurrentBackgrounds: 3,
+    maxConcurrentVideos: 2,
+  });
+  const [animConfig, setAnimConfig] = useState({
+    scrollScrub: 1.2,
+    snapDuration: { min: 0.4, max: 1.0 },
+    snapDelay: 0.2,
+    enableBackgroundTransitions: true,
+    enableParallax: true,
+    enableBlur: true,
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -48,6 +67,16 @@ const FinalLanding = () => {
   const [currentNotification, setCurrentNotification] = useState(1);
   const [showLocked, setShowLocked] = useState(false);
   const [disclaimerExpanded, setDisclaimerExpanded] = useState(false);
+
+  // Low-end background handling: keep a single background mounted and only swap after load
+  const [lowEndBgIndex, setLowEndBgIndex] = useState(0);
+  const loadedBgIndexesRef = useRef<Set<number>>(new Set());
+  const bgLoadPromisesRef = useRef<Map<number, Promise<void>>>(new Map());
+  const pendingLowEndBgIndexRef = useRef<number>(0);
+
+  // Non-low-end background tracking so our rendered layers always include the GSAP-selected bgIndex
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const currentBgIndexRef = useRef(0);
 
   // Helper function to scroll to a specific section (0-8)
   const scrollToSection = (sectionIndex: number) => {
@@ -102,6 +131,75 @@ const FinalLanding = () => {
     });
   };
 
+  // Detect device capabilities on mount (client-only)
+  useEffect(() => {
+    const capabilities = getDeviceCapabilities();
+    setDeviceCapabilities(capabilities);
+    setAnimConfig(getAnimationConfig(capabilities));
+
+    // Emergency memory cleanup for Safari crashes
+    if (capabilities.isIOS) {
+      // Listen for memory warnings on iOS
+      const handleMemoryWarning = () => {
+        console.warn('Memory warning detected - cleaning up');
+        // Force garbage collection by clearing caches
+        ScrollTrigger.getAll().forEach(st => st.kill());
+        gsap.globalTimeline.clear();
+      };
+
+      // iOS fires pagehide before crash
+      window.addEventListener('pagehide', handleMemoryWarning);
+      
+      return () => {
+        window.removeEventListener('pagehide', handleMemoryWarning);
+      };
+    }
+  }, []);
+
+  // Low-end iOS: progressively preload backgrounds and only swap once the new background is loaded
+  useEffect(() => {
+    if (!deviceCapabilities.shouldReduceMotion) return;
+
+    const targetIndex = Math.max(0, Math.min(activeSection, backgrounds.length - 1));
+    const prefetchIndex = Math.max(0, Math.min(targetIndex + 1, backgrounds.length - 1));
+
+    pendingLowEndBgIndexRef.current = targetIndex;
+
+    const ensureLoaded = (index: number): Promise<void> => {
+      if (loadedBgIndexesRef.current.has(index)) {
+        return Promise.resolve();
+      }
+
+      const existing = bgLoadPromisesRef.current.get(index);
+      if (existing) return existing;
+
+      const promise = new Promise<void>((resolve) => {
+        const img = new window.Image();
+        const done = () => {
+          loadedBgIndexesRef.current.add(index);
+          bgLoadPromisesRef.current.delete(index);
+          resolve();
+        };
+        img.onload = done;
+        img.onerror = done;
+        img.src = backgrounds[index];
+      });
+
+      bgLoadPromisesRef.current.set(index, promise);
+      return promise;
+    };
+
+    // Load the target background; switch only after it's ready
+    ensureLoaded(targetIndex).then(() => {
+      if (pendingLowEndBgIndexRef.current === targetIndex) {
+        setLowEndBgIndex(targetIndex);
+      }
+    });
+
+    // Prefetch next section background in the background
+    void ensureLoaded(prefetchIndex);
+  }, [activeSection, deviceCapabilities.shouldReduceMotion]);
+
   // Track section changes
   useEffect(() => {
     const sectionNames = [
@@ -121,17 +219,36 @@ const FinalLanding = () => {
     }
   }, [activeSection, analytics]);
 
+  // Configure GSAP for low-end device optimization
+  useEffect(() => {
+    if (deviceCapabilities.shouldReduceMotion) {
+      // Reduce ScrollTrigger refresh rate on low-end devices to prevent crashes
+      ScrollTrigger.config({
+        autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load', // Disable resize refresh
+        limitCallbacks: true, // Throttle callbacks
+      });
+    }
+  }, [deviceCapabilities]);
+
   // Preload images first (critical for initial render)
   useEffect(() => {
-    const imagesToPreload = [
-      ...backgrounds,
-      '/coaches/c1.png',
-      '/coaches/c2.png',
-      '/coaches/c3.png',
-      '/coaches/c4.png',
-      '/coaches/c5.png',
-      '/coaches/c6.png',
-    ];
+    // On low-end devices, only preload hero background + coaches to prevent crash
+    const imagesToPreload = deviceCapabilities.shouldReduceMotion
+      ? [
+          backgrounds[0], // Only hero background
+          '/coaches/c1.png',
+          '/coaches/c2.png',
+          '/coaches/c3.png',
+        ]
+      : [
+          ...backgrounds,
+          '/coaches/c1.png',
+          '/coaches/c2.png',
+          '/coaches/c3.png',
+          '/coaches/c4.png',
+          '/coaches/c5.png',
+          '/coaches/c6.png',
+        ];
 
     let loadedCount = 0;
     const totalImages = imagesToPreload.length;
@@ -147,12 +264,14 @@ const FinalLanding = () => {
       img.onload = () => {
         loadedCount++;
         if (loadedCount === totalImages) {
+          clearTimeout(minDisplayTime);
           setImagesLoaded(true);
         }
       };
       img.onerror = () => {
         loadedCount++;
         if (loadedCount === totalImages) {
+          clearTimeout(minDisplayTime);
           setImagesLoaded(true);
         }
       };
@@ -160,20 +279,28 @@ const FinalLanding = () => {
     });
 
     return () => clearTimeout(minDisplayTime);
-  }, []);
+  }, [deviceCapabilities]);
 
   // Preload videos progressively AFTER images are loaded
   // Hero video first, then others in background
   useEffect(() => {
     if (!imagesLoaded) return;
 
-    // Start preloading videos in the background
-    // Hero video (video1) gets priority, others load sequentially
-    preloadVideosSequentially(
-      [videoUrls.video1], // Priority: hero video
-      [videoUrls.video2, videoUrls.video3, videoUrls.video4, videoUrls.video5] // Others (no video6, lock now uses images)
-    );
-  }, [imagesLoaded]);
+    // On low-end devices, only preload the hero video to conserve memory
+    if (deviceCapabilities.shouldReduceMotion) {
+      preloadVideosSequentially(
+        [videoUrls.video1], // Only hero video on low-end devices
+        [] // Skip preloading other videos
+      );
+    } else {
+      // Start preloading videos in the background
+      // Hero video (video1) gets priority, others load sequentially
+      preloadVideosSequentially(
+        [videoUrls.video1], // Priority: hero video
+        [videoUrls.video2, videoUrls.video3, videoUrls.video4, videoUrls.video5] // Others (no video6, lock now uses images)
+      );
+    }
+  }, [imagesLoaded, deviceCapabilities]);
 
   // Cycle through notification groups when in section 5
   useEffect(() => {
@@ -210,7 +337,7 @@ const FinalLanding = () => {
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.2,
+        scrub: animConfig.scrollScrub, // Device-optimized scrub value
         snap: {
           snapTo: (progress) => {
             // Don't snap at the very start (prevents auto-scroll on load)
@@ -243,8 +370,8 @@ const FinalLanding = () => {
 
             return targetSnap;
           },
-          duration: { min: 0.4, max: 1.0 },
-          delay: 0.2,
+          duration: animConfig.snapDuration, // Device-optimized snap duration
+          delay: animConfig.snapDelay, // Device-optimized snap delay
           ease: "power2.inOut"
         },
         id: 'main-scroll', // Give it an ID so we can reference it for velocity
@@ -268,39 +395,49 @@ const FinalLanding = () => {
           }
 
           // --- Background Logic ---
-          const exactBgIndex = progress * (backgrounds.length - 1);
-          const bgIndex = Math.floor(exactBgIndex);
-          const nextBgIndex = Math.min(bgIndex + 1, backgrounds.length - 1);
+          // On low-end devices, we use a single background layer driven by activeSection
+          // (handled in a separate effect) to avoid flicker/dark frames when an image isn't loaded yet.
+          if (!deviceCapabilities.shouldReduceMotion) {
+            const exactBgIndex = progress * (backgrounds.length - 1);
+            const bgIndex = Math.floor(exactBgIndex);
+            const nextBgIndex = Math.min(bgIndex + 1, backgrounds.length - 1);
 
-          if (backgroundRef.current) {
-            backgrounds.forEach((_, index) => {
-              const bg = backgroundRef.current!.querySelector(`[data-bg="${index}"]`) as HTMLElement;
-              if (bg) gsap.set(bg, { opacity: 0 });
-            });
+            // Keep render window centered on the GSAP-driven background index (prevents dark flashes)
+            if (currentBgIndexRef.current !== bgIndex) {
+              currentBgIndexRef.current = bgIndex;
+              setCurrentBgIndex(bgIndex);
+            }
 
-            const currentBg = backgroundRef.current.querySelector(`[data-bg="${bgIndex}"]`) as HTMLElement;
-            const nextBg = backgroundRef.current.querySelector(`[data-bg="${nextBgIndex}"]`) as HTMLElement;
+            if (backgroundRef.current && animConfig.enableBackgroundTransitions) {
+              backgrounds.forEach((_, index) => {
+                const bg = backgroundRef.current!.querySelector(`[data-bg="${index}"]`) as HTMLElement;
+                if (bg) gsap.set(bg, { opacity: 0 });
+              });
 
-            if (currentBg && nextBg && bgIndex !== nextBgIndex) {
-              const bgProgress = exactBgIndex - bgIndex;
-              const delayedStart = 0.20;
-              const delayedEnd = 0.80;
-              const transitionWindow = delayedEnd - delayedStart;
+              const currentBg = backgroundRef.current.querySelector(`[data-bg="${bgIndex}"]`) as HTMLElement;
+              const nextBg = backgroundRef.current.querySelector(`[data-bg="${nextBgIndex}"]`) as HTMLElement;
 
-              let adjustedProgress = 0;
-              if (bgProgress < delayedStart) {
-                adjustedProgress = 0;
-              } else if (bgProgress > delayedEnd) {
-                adjustedProgress = 1;
-              } else {
-                const normalizedProgress = (bgProgress - delayedStart) / transitionWindow;
-                adjustedProgress = gsap.parseEase('power1.inOut')(normalizedProgress);
+              if (currentBg && nextBg && bgIndex !== nextBgIndex) {
+                const bgProgress = exactBgIndex - bgIndex;
+                const delayedStart = 0.20;
+                const delayedEnd = 0.80;
+                const transitionWindow = delayedEnd - delayedStart;
+
+                let adjustedProgress = 0;
+                if (bgProgress < delayedStart) {
+                  adjustedProgress = 0;
+                } else if (bgProgress > delayedEnd) {
+                  adjustedProgress = 1;
+                } else {
+                  const normalizedProgress = (bgProgress - delayedStart) / transitionWindow;
+                  adjustedProgress = gsap.parseEase('power1.inOut')(normalizedProgress);
+                }
+
+                gsap.set(currentBg, { opacity: 1 - adjustedProgress });
+                gsap.set(nextBg, { opacity: adjustedProgress });
+              } else if (currentBg) {
+                gsap.set(currentBg, { opacity: 1 });
               }
-
-              gsap.set(currentBg, { opacity: 1 - adjustedProgress });
-              gsap.set(nextBg, { opacity: adjustedProgress });
-            } else if (currentBg) {
-              gsap.set(currentBg, { opacity: 1 });
             }
           }
 
@@ -474,7 +611,7 @@ const FinalLanding = () => {
     });
 
     return () => ctx.revert();
-  }, [imagesLoaded]);
+  }, [imagesLoaded, animConfig]);
 
   const coaches = [
     { id: 1, img: '/coaches/c1.png', delay: 0 },
@@ -541,25 +678,41 @@ const FinalLanding = () => {
         }}
         aria-hidden="true"
       >
-        {backgrounds.map((bg, index) => {
-          // Only render backgrounds within 2 indices of active section to reduce GPU memory
-          const shouldRender = Math.abs(index - activeSection) <= 2 || index === 0;
-          if (!shouldRender) return null;
-          
-          return (
-            <div
-              key={`bg-${index}`}
-              data-bg={index}
-              className="absolute inset-0"
-              style={{ 
-                opacity: index === 0 ? 1 : 0,
-                backgroundImage: `url(${bg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-          );
-        })}
+        {deviceCapabilities.shouldReduceMotion ? (
+          <div
+            data-bg="low-end"
+            className="absolute inset-0"
+            style={{
+              opacity: 1,
+              backgroundImage: `url(${backgrounds[lowEndBgIndex] || backgrounds[0]})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        ) : (
+          backgrounds.map((bg, index) => {
+            // Limit concurrent background layers, but keep window centered on currentBgIndex
+            const maxDistance = deviceCapabilities.maxConcurrentBackgrounds - 1;
+            const shouldRender = Math.abs(index - currentBgIndex) <= maxDistance || index === 0;
+            if (!shouldRender) return null;
+
+            return (
+              <div
+                key={`bg-${index}`}
+                data-bg={index}
+                className="absolute inset-0"
+                style={{
+                  opacity: index === 0 ? 1 : 0,
+                  backgroundImage: `url(${bg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  willChange: index === currentBgIndex ? 'opacity' : 'auto',
+                  backfaceVisibility: 'hidden',
+                }}
+              />
+            );
+          })
+        )}
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
@@ -617,17 +770,19 @@ const FinalLanding = () => {
                 marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
               }}
             >
-              <SmartVideo
-                src={videoUrls.video1}
-                priority={true}
-                className="rounded-[28px]"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center 45%'
-                }}
-              />
+              {(!deviceCapabilities.shouldReduceMotion || activeSection === 0) && (
+                <SmartVideo
+                  src={videoUrls.video1}
+                  priority={true}
+                  className="rounded-[28px]"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center 45%'
+                  }}
+                />
+              )}
             </div>
 
             {/* Scroll Indicator */}
@@ -699,7 +854,7 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {(activeSection === 0 || activeSection === 1 || activeSection === 2) && (
+              {((deviceCapabilities.shouldReduceMotion && activeSection === 1) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
                 <SmartVideo
                   src={videoUrls.video2}
                   className="w-full h-full object-cover rounded-[28px]"
@@ -796,7 +951,7 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {(activeSection === 1 || activeSection === 2 || activeSection === 3) && (
+              {((deviceCapabilities.shouldReduceMotion && activeSection === 2) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
                 <SmartVideo
                   src={videoUrls.video3}
                   className="w-full h-full object-cover rounded-[28px]"
@@ -850,7 +1005,7 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {(activeSection === 2 || activeSection === 3 || activeSection === 4) && (
+              {((deviceCapabilities.shouldReduceMotion && activeSection === 3) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
                 <SmartVideo
                   src={videoUrls.video4}
                   className="w-full h-full object-cover rounded-[28px]"
@@ -904,7 +1059,7 @@ const FinalLanding = () => {
 
             {/* Video mockup */}
             <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {(activeSection === 3 || activeSection === 4 || activeSection === 5) && (
+              {((deviceCapabilities.shouldReduceMotion && activeSection === 4) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
                 <SmartVideo
                   src={videoUrls.video5}
                   className="w-full h-full object-cover rounded-[28px]"

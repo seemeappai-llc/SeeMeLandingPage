@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { analytics } from '@/lib/analytics';
 
 interface SmartVideoProps {
@@ -28,24 +28,37 @@ export const preloadVideo = (src: string): Promise<void> => {
   
   const promise = new Promise<void>((resolve) => {
     const video = document.createElement('video');
-    video.preload = 'auto';
+    video.preload = 'metadata';
     video.muted = true;
-    
+
+    const cleanup = () => {
+      try {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      } catch {
+        // ignore
+      }
+    };
+
     const handleLoaded = () => {
       videoCache.set(src, true);
       loadingPromises.delete(src);
+      cleanup();
       resolve();
     };
-    
-    video.addEventListener('canplaythrough', handleLoaded, { once: true });
-    video.addEventListener('loadeddata', handleLoaded, { once: true });
-    video.addEventListener('error', () => {
+
+    const handleError = () => {
       // Still mark as "loaded" to prevent blocking
       videoCache.set(src, true);
       loadingPromises.delete(src);
+      cleanup();
       resolve();
-    }, { once: true });
-    
+    };
+
+    video.addEventListener('loadeddata', handleLoaded, { once: true });
+    video.addEventListener('error', handleError, { once: true });
+
     video.src = src;
     video.load();
   });
@@ -82,6 +95,25 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
   const [isVisible, setIsVisible] = useState(priority);
   const [hasError, setHasError] = useState(false);
   const loadStartTime = useRef<number>(0);
+
+  // Aggressively release video decoder/memory when unmounting or when src changes
+  useEffect(() => {
+    const video = videoRef.current;
+    return () => {
+      if (!video) return;
+      try {
+        video.pause();
+        // Detach sources to free iOS decoder buffers
+        while (video.firstChild) {
+          video.removeChild(video.firstChild);
+        }
+        video.removeAttribute('src');
+        video.load();
+      } catch {
+        // ignore
+      }
+    };
+  }, [src]);
 
   // Intersection observer for lazy loading non-priority videos
   useEffect(() => {
