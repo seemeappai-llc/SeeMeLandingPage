@@ -11,16 +11,18 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const R2_CDN_BASE = 'https://media.seemeai.app';
+
 const backgrounds = [
-  '/backgrounds/backg1.png',
-  '/backgrounds/backg2.png',
-  '/backgrounds/backg2.png',
-  '/backgrounds/backg3.png',
-  '/backgrounds/backg3.png',
-  '/backgrounds/backg4.png',
-  '/backgrounds/backg5.png',
-  '/backgrounds/backg6.png',
-  '/backgrounds/backg6.png', // CTA uses same background as section 8
+  `${R2_CDN_BASE}/backgrounds/backg1.png`,
+  `${R2_CDN_BASE}/backgrounds/backg2.png`,
+  `${R2_CDN_BASE}/backgrounds/backg2.png`,
+  `${R2_CDN_BASE}/backgrounds/backg3.png`,
+  `${R2_CDN_BASE}/backgrounds/backg3.png`,
+  `${R2_CDN_BASE}/backgrounds/backg4.png`,
+  `${R2_CDN_BASE}/backgrounds/backg5.png`,
+  `${R2_CDN_BASE}/backgrounds/backg6.png`,
+  `${R2_CDN_BASE}/backgrounds/backg6.png`, // CTA uses same background as section 8
 ];
 
 const FinalLanding = () => {
