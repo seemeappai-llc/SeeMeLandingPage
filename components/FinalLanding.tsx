@@ -47,6 +47,7 @@ const FinalLanding = () => {
   const [activeSection, setActiveSection] = useState(0);
   const [currentNotification, setCurrentNotification] = useState(1);
   const [showLocked, setShowLocked] = useState(false);
+  const [disclaimerExpanded, setDisclaimerExpanded] = useState(false);
 
   // Helper function to scroll to a specific section (0-8)
   const scrollToSection = (sectionIndex: number) => {
@@ -1382,6 +1383,60 @@ const FinalLanding = () => {
               </svg>
               <span className="text-lg font-semibold whitespace-nowrap">Download on the App Store</span>
             </a>
+
+            {/* Disclaimer Section - Below CTA */}
+            <div className="mt-16 max-w-2xl mx-auto">
+              <button
+                onClick={() => setDisclaimerExpanded(!disclaimerExpanded)}
+                className="w-full flex items-center justify-center gap-2 text-white/40 hover:text-white/60 transition-colors text-xs py-2 cursor-pointer"
+                aria-expanded={disclaimerExpanded}
+              >
+                <span>Important Disclaimer</span>
+                <motion.svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  animate={{ rotate: disclaimerExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </motion.svg>
+              </button>
+              
+              <AnimatePresence>
+                {disclaimerExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-5 mt-3 text-left border border-white/10">
+                      <p className="text-white/60 text-xs leading-relaxed mb-3">
+                        SeeMe LLC provides an AI-powered coaching and reflection tool. We do not provide medical, mental health, psychological, legal, or financial services, and we do not monitor or respond to emergencies.
+                      </p>
+                      <p className="text-white/70 text-xs leading-relaxed mb-2">
+                        <strong className="text-white/80">SeeMe does not and cannot:</strong>
+                      </p>
+                      <ul className="text-white/60 text-xs leading-relaxed mb-3 space-y-1.5 pl-4">
+                        <li className="list-disc">Monitor your content in real time</li>
+                        <li className="list-disc">Contact emergency services, law enforcement, or third parties for you</li>
+                        <li className="list-disc">Take responsibility for any harm, injury, or unlawful activity arising from your use of the app</li>
+                      </ul>
+                      <p className="text-white/60 text-xs leading-relaxed">
+                        You remain solely responsible for your own decisions, actions, safety, and well-being. Always seek help from qualified professionals and emergency services when needed.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
           </div>
         </div>
