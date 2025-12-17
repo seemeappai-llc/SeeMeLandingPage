@@ -38,23 +38,10 @@ export function getDeviceCapabilities(): DeviceCapabilities {
   let isLowEndDevice = false;
   
   if (isIOS) {
-    // iPhone model detection via screen dimensions and pixel ratio
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const ratio = window.devicePixelRatio || 1;
-    
-    // iPhone 13 and below have lower GPU memory
-    // iPhone 13: 390x844 @3x, iPhone 12: 390x844 @3x, iPhone 11: 414x896 @2x
-    // iPhone SE (2020/2022): 375x667 @2x, iPhone 8 and below
-    const isOlderIPhone = (
-      (width === 375 && height === 667) || // iPhone SE, 6, 7, 8
-      (width === 414 && height === 896 && ratio === 2) || // iPhone 11, XR
-      (width === 390 && height === 844) || // iPhone 12, 13
-      (width === 375 && height === 812) || // iPhone X, XS, 11 Pro
-      width < 375 // Older iPhones
-    );
-    
-    isLowEndDevice = isOlderIPhone;
+    // Treat ALL iOS devices (iPhone + iPad) as needing video memory optimization
+    // Safari on iOS has strict video decoder limits regardless of device model
+    // This prevents crashes from multiple concurrent video decodes
+    isLowEndDevice = true;
   } else if (/Android/i.test(ua)) {
     // Android: check for low RAM indicators
     // @ts-ignore - deviceMemory is experimental
