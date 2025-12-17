@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { getSupabase } from './supabase';
 
 // Generate a unique session ID for this user session
 const getSessionId = (): string => {
@@ -58,6 +58,9 @@ export interface AnalyticsEvent {
 // Track an event
 export const trackEvent = async (event: AnalyticsEvent) => {
   try {
+    const supabase = getSupabase();
+    if (!supabase) return;
+
     const sessionId = getSessionId();
     const userId = getUserId();
     const deviceType = getDeviceType();
@@ -79,9 +82,9 @@ export const trackEvent = async (event: AnalyticsEvent) => {
     };
 
     // Send to Supabase
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('analytics_events')
-      .insert([eventData]);
+      .insert([eventData] as any);
 
     if (error) {
       console.error('Analytics error:', error);
