@@ -553,18 +553,13 @@ const FinalLanding = () => {
               key={`bg-${index}`}
               data-bg={index}
               className="absolute inset-0"
-              style={{ opacity: index === 0 ? 1 : 0 }}
-            >
-              <Image
-                src={bg}
-                alt={`Background ${index + 1}`}
-                fill
-                priority={index === 0}
-                quality={75}
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
+              style={{ 
+                opacity: index === 0 ? 1 : 0,
+                backgroundImage: `url(${bg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
           );
         })}
         <div className="absolute inset-0 bg-black/40" />
