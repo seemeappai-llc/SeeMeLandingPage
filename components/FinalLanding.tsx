@@ -724,12 +724,17 @@ const FinalLanding = () => {
         {/* Section 1 - Hero with SeeMe */}
         <div
           ref={heroRef}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 1, pointerEvents: 'auto' }}
+          className="absolute inset-0 flex items-center justify-start"
+          style={{ 
+            opacity: 1, 
+            pointerEvents: 'auto',
+            paddingTop: 'max(env(safe-area-inset-top, 0px) + 3rem, 4rem)',
+            paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
+          }}
         >
           <div
-            className="relative z-10 flex flex-col items-center justify-center px-4 md:px-8"
-            style={{ gap: 'clamp(1.5rem, 3vh, 3rem)' }}
+            className="relative z-10 flex flex-col items-center w-full max-w-7xl px-4 md:px-8 mx-auto"
+            style={{ gap: 'clamp(1rem, 2vh, 2rem)' }}
           >
             {/* Text Group */}
             <div
@@ -741,8 +746,9 @@ const FinalLanding = () => {
               style={{
                 fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                 fontWeight: 900,
-                fontSize: 'clamp(4.5rem, 16vw, 9rem)',
-                marginBottom: 'clamp(0.25rem, 0.5vh, 0.75rem)'
+                fontSize: 'clamp(3.5rem, 14vw, 9rem)',
+                lineHeight: '1',
+                marginBottom: 'clamp(0.5rem, 1vh, 1rem)'
               }}
             >
               SeeMe
@@ -750,10 +756,12 @@ const FinalLanding = () => {
 
               {/* Subtitle */}
               <p
-                className="text-white/90 text-center px-4 whitespace-nowrap font-medium"
+                className="text-white/90 text-center px-4 font-medium"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(0.875rem, 2.5vw, 1.6rem)'
+                  fontSize: 'clamp(0.875rem, 2.5vw, 1.6rem)',
+                  maxWidth: '90vw',
+                  lineHeight: '1.4'
                 }}
               >
                 Private personal intelligence for your growth
@@ -766,7 +774,6 @@ const FinalLanding = () => {
               style={{
                 width: '240px',
                 height: '528px',
-                aspectRatio: '240 / 528',
                 marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
               }}
             >
