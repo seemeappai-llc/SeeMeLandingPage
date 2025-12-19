@@ -286,6 +286,10 @@ const FinalLanding = () => {
   useEffect(() => {
     if (!imagesLoaded) return;
 
+    // iOS Safari (including iPad) is prone to decoder/GPU crashes with WebM.
+    // We render posters on iOS, so skip video preloading entirely.
+    if (deviceCapabilities.isIOS) return;
+
     // On low-end devices, only preload the hero video to conserve memory
     if (deviceCapabilities.shouldReduceMotion) {
       preloadVideosSequentially(
@@ -781,6 +785,8 @@ const FinalLanding = () => {
                 <SmartVideo
                   src={videoUrls.video1}
                   priority={true}
+                  disabled={deviceCapabilities.isIOS}
+                  
                   className="rounded-[28px]"
                   style={{
                     width: '100%',
@@ -864,6 +870,8 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 1) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
                 <SmartVideo
                   src={videoUrls.video2}
+                  disabled={deviceCapabilities.isIOS}
+                  
                   className="w-full h-full object-cover rounded-[28px]"
                   style={{ objectPosition: 'center 45%' }}
                 />
@@ -961,6 +969,8 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 2) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
                 <SmartVideo
                   src={videoUrls.video3}
+                  disabled={deviceCapabilities.isIOS}
+                  
                   className="w-full h-full object-cover rounded-[28px]"
                   style={{ objectPosition: 'center 45%' }}
                 />
@@ -1015,6 +1025,8 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 3) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
                 <SmartVideo
                   src={videoUrls.video4}
+                  disabled={deviceCapabilities.isIOS}
+                  
                   className="w-full h-full object-cover rounded-[28px]"
                   style={{ objectPosition: 'center center' }}
                 />
@@ -1069,6 +1081,8 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 4) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
                 <SmartVideo
                   src={videoUrls.video5}
+                  disabled={deviceCapabilities.isIOS}
+                  
                   className="w-full h-full object-cover rounded-[28px]"
                   style={{ objectPosition: 'center 45%' }}
                 />

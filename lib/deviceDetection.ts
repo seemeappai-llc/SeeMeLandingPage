@@ -28,8 +28,11 @@ export function getDeviceCapabilities(): DeviceCapabilities {
   }
 
   const ua = navigator.userAgent;
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
-  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  // iPadOS 13+ reports a Mac-like user agent ("Macintosh") so regex alone misses it.
+  // Detect iPadOS via platform + touch support.
+  const isIPadOS = navigator.platform === 'MacIntel' && (navigator as any).maxTouchPoints > 1;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(ua) || isIPadOS;
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || isIPadOS;
   
   // Check for reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

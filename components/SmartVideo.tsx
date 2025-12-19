@@ -10,11 +10,42 @@ interface SmartVideoProps {
   style?: React.CSSProperties;
   onLoad?: () => void;
   poster?: string; // Optional poster image
+  disabled?: boolean;
 }
 
 // Global video cache to track loaded videos
 const videoCache = new Map<string, boolean>();
 const loadingPromises = new Map<string, Promise<void>>();
+
+// Detect network quality for adaptive timeouts
+const getNetworkQuality = (): 'fast' | 'slow' | 'unknown' => {
+  if (typeof navigator === 'undefined' || !('connection' in navigator)) {
+    return 'unknown';
+  }
+  
+  const conn = (navigator as any).connection;
+  if (!conn) return 'unknown';
+  
+  // Check effective type (4g, 3g, 2g, slow-2g)
+  if (conn.effectiveType === '4g' || conn.effectiveType === '5g') {
+    return 'fast';
+  }
+  
+  if (conn.effectiveType === '3g' || conn.effectiveType === '2g' || conn.effectiveType === 'slow-2g') {
+    return 'slow';
+  }
+  
+  // Check downlink speed (Mbps)
+  if (conn.downlink && conn.downlink > 5) {
+    return 'fast';
+  }
+  
+  if (conn.downlink && conn.downlink < 1.5) {
+    return 'slow';
+  }
+  
+  return 'unknown';
+};
 
 // Preload a video and cache it
 export const preloadVideo = (src: string): Promise<void> => {
@@ -30,6 +61,7 @@ export const preloadVideo = (src: string): Promise<void> => {
     const video = document.createElement('video');
     video.preload = 'metadata';
     video.muted = true;
+    let hasCompleted = false;
 
     const cleanup = () => {
       try {
@@ -42,6 +74,9 @@ export const preloadVideo = (src: string): Promise<void> => {
     };
 
     const handleLoaded = () => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      clearTimeout(timeoutId);
       videoCache.set(src, true);
       loadingPromises.delete(src);
       cleanup();
@@ -49,12 +84,31 @@ export const preloadVideo = (src: string): Promise<void> => {
     };
 
     const handleError = () => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      clearTimeout(timeoutId);
       // Still mark as "loaded" to prevent blocking
       videoCache.set(src, true);
       loadingPromises.delete(src);
       cleanup();
       resolve();
     };
+
+    const handleTimeout = () => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      console.warn(`Preload timeout for: ${src}`);
+      // Mark as loaded to prevent blocking
+      videoCache.set(src, true);
+      loadingPromises.delete(src);
+      cleanup();
+      resolve();
+    };
+
+    // Network-aware timeout for preloading
+    const networkQuality = getNetworkQuality();
+    const timeoutMs = networkQuality === 'slow' ? 6000 : networkQuality === 'fast' ? 3000 : 4000;
+    const timeoutId = setTimeout(handleTimeout, timeoutMs);
 
     video.addEventListener('loadeddata', handleLoaded, { once: true });
     video.addEventListener('error', handleError, { once: true });
@@ -88,16 +142,35 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
   style = {},
   onLoad,
   poster,
+  disabled = false,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(videoCache.has(src));
-  const [isVisible, setIsVisible] = useState(priority);
+  const [isLoaded, setIsLoaded] = useState(disabled ? !poster : videoCache.has(src));
+  const [isVisible, setIsVisible] = useState(disabled ? false : priority);
   const [hasError, setHasError] = useState(false);
   const loadStartTime = useRef<number>(0);
 
+  // Set video src using ref - React not rendering src attribute properly
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || disabled) return;
+    
+    video.src = src;
+    video.load();
+  }, [src, disabled]);
+
+  useEffect(() => {
+    if (!disabled) return;
+    if (!poster) {
+      setIsLoaded(true);
+      onLoad?.();
+    }
+  }, [disabled, poster, onLoad]);
+
   // Aggressively release video decoder/memory when unmounting or when src changes
   useEffect(() => {
+    if (disabled) return;
     const video = videoRef.current;
     return () => {
       if (!video) return;
@@ -117,6 +190,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
 
   // Intersection observer for lazy loading non-priority videos
   useEffect(() => {
+    if (disabled) return;
     if (priority) {
       setIsVisible(true);
       return;
@@ -142,19 +216,26 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     }
 
     return () => observer.disconnect();
-  }, [priority]);
+  }, [priority, disabled]);
 
   // Load video when visible
   useEffect(() => {
-    if (!isVisible || isLoaded) return;
+    if (disabled) return;
+    if (isLoaded) return;
 
     const video = videoRef.current;
     if (!video) return;
 
     // Track load start time
     loadStartTime.current = Date.now();
+    let timeoutId: NodeJS.Timeout;
+    let hasCompleted = false;
 
     const handleCanPlay = () => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      clearTimeout(timeoutId);
+      
       const loadTime = Date.now() - loadStartTime.current;
       setIsLoaded(true);
       videoCache.set(src, true);
@@ -180,6 +261,10 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     };
 
     const handleError = (e: Event) => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      clearTimeout(timeoutId);
+      
       const errorMsg = (e as ErrorEvent).message || 'Unknown error';
       setHasError(true);
       setIsLoaded(true); // Don't block UI
@@ -189,19 +274,61 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       analytics.videoError(src, errorMsg);
     };
 
+    const handleTimeout = () => {
+      if (hasCompleted) return;
+      hasCompleted = true;
+      
+      const loadTime = Date.now() - loadStartTime.current;
+      console.warn(`Video load timeout after ${loadTime}ms: ${src}`);
+      
+      // Force show video anyway - it might still load in background
+      setIsLoaded(true);
+      videoCache.set(src, true);
+      onLoad?.();
+      
+      // Track timeout as error
+      analytics.videoError(src, `Timeout after ${loadTime}ms`);
+      
+      // Still try to play in case it loads
+      const tryPlay = (attempts = 0) => {
+        video.play()
+          .then(() => {
+            analytics.videoPlaying(src);
+          })
+          .catch(() => {
+            if (attempts < 3) {
+              setTimeout(() => tryPlay(attempts + 1), 100 * (attempts + 1));
+            }
+          });
+      };
+      tryPlay();
+    };
+
+    // Network-aware timeout: adjust based on connection quality
+    const networkQuality = getNetworkQuality();
+    let timeoutMs: number;
+    
+    if (networkQuality === 'slow') {
+      timeoutMs = priority ? 5000 : 8000; // More lenient on slow connections
+    } else if (networkQuality === 'fast') {
+      timeoutMs = priority ? 2000 : 4000; // Aggressive on fast connections
+    } else {
+      timeoutMs = priority ? 3000 : 5000; // Default
+    }
+    
+    timeoutId = setTimeout(handleTimeout, timeoutMs);
+
     video.addEventListener('canplaythrough', handleCanPlay, { once: true });
     video.addEventListener('loadeddata', handleCanPlay, { once: true });
     video.addEventListener('error', handleError, { once: true });
 
-    // Start loading
-    video.load();
-
     return () => {
+      clearTimeout(timeoutId);
       video.removeEventListener('canplaythrough', handleCanPlay);
       video.removeEventListener('loadeddata', handleCanPlay);
       video.removeEventListener('error', handleError);
     };
-  }, [isVisible, isLoaded, src, onLoad]);
+  }, [isLoaded, src, onLoad, disabled, priority]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
@@ -227,20 +354,43 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
         </div>
       )}
       
-      {/* Actual video - only render source when visible */}
-      <video
-        ref={videoRef}
-        className={`${className} transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        style={style}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload={priority ? 'metadata' : 'none'}
-        poster={poster}
-      >
-        {isVisible && <source src={src} type="video/webm" />}
-      </video>
+      {disabled ? (
+        poster ? (
+          <img
+            src={poster}
+            alt=""
+            className={`${className} transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            style={style}
+            loading={priority ? 'eager' : 'lazy'}
+            onLoad={() => {
+              if (!isLoaded) {
+                setIsLoaded(true);
+                onLoad?.();
+              }
+            }}
+            onError={() => {
+              setHasError(true);
+              setIsLoaded(true);
+              onLoad?.();
+            }}
+          />
+        ) : null
+      ) : (
+        <video
+          key={src}
+          ref={videoRef}
+          className={`${className} transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          style={style}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload={priority ? 'metadata' : 'none'}
+          poster={poster}
+        >
+          <source src={src} type="video/webm" />
+        </video>
+      )}
     </div>
   );
 };
