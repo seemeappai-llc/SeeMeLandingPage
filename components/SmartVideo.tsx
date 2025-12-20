@@ -149,20 +149,21 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
   const [isLoaded, setIsLoaded] = useState(disabled ? !poster : videoCache.has(src));
   const [isVisible, setIsVisible] = useState(disabled ? false : priority);
   const [hasError, setHasError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false); // Track if video is ready to replace poster
   const loadStartTime = useRef<number>(0);
 
   // Set video src using ref - React not rendering src attribute properly
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || disabled) return;
+    if (!video) return;
     
+    // On iOS/disabled mode, still load video in background but don't show it yet
     video.src = src;
     video.load();
   }, [src, disabled]);
 
   useEffect(() => {
-    if (!disabled) return;
-    if (!poster) {
+    if (disabled && !poster) {
       setIsLoaded(true);
       onLoad?.();
     }
@@ -190,7 +191,6 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
 
   // Intersection observer for lazy loading non-priority videos
   useEffect(() => {
-    if (disabled) return;
     if (priority) {
       setIsVisible(true);
       return;
@@ -220,11 +220,16 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
 
   // Load video when visible
   useEffect(() => {
-    if (disabled) return;
     if (isLoaded) return;
+    if (!isVisible) return;
 
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      console.log(`No video ref for ${src}`);
+      return;
+    }
+
+    console.log(`Starting to load video: ${src}, disabled: ${disabled}`);
 
     // Track load start time
     loadStartTime.current = Date.now();
@@ -237,6 +242,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       clearTimeout(timeoutId);
       
       const loadTime = Date.now() - loadStartTime.current;
+      setVideoReady(true); // Mark video as ready
       setIsLoaded(true);
       videoCache.set(src, true);
       onLoad?.();
@@ -244,14 +250,20 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       // Track successful video load
       analytics.videoLoaded(src, loadTime);
       
-      // Try to play with exponential backoff
+      // Try to play with exponential backoff (even on iOS)
       const tryPlay = (attempts = 0) => {
         video.play()
           .then(() => {
             // Track video playing
             analytics.videoPlaying(src);
+            if (disabled) {
+              console.log(`Video playing on iOS: ${src}`);
+            }
           })
-          .catch(() => {
+          .catch((err) => {
+            if (disabled) {
+              console.log(`iOS video play attempt ${attempts + 1} failed:`, err);
+            }
             if (attempts < 3) {
               setTimeout(() => tryPlay(attempts + 1), 100 * (attempts + 1));
             }
@@ -328,7 +340,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       video.removeEventListener('loadeddata', handleCanPlay);
       video.removeEventListener('error', handleError);
     };
-  }, [isLoaded, src, onLoad, disabled, priority]);
+  }, [isLoaded, isVisible, src, onLoad, disabled, priority]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
@@ -354,43 +366,44 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
         </div>
       )}
       
-      {disabled ? (
-        poster ? (
-          <img
-            src={poster}
-            alt=""
-            className={`${className} transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-            style={style}
-            loading={priority ? 'eager' : 'lazy'}
-            onLoad={() => {
-              if (!isLoaded) {
-                setIsLoaded(true);
-                onLoad?.();
-              }
-            }}
-            onError={() => {
-              setHasError(true);
+      {/* Show poster image on disabled (iOS) until video is ready */}
+      {disabled && poster && (
+        <img
+          src={poster}
+          alt=""
+          className={`${className} ${videoReady ? 'opacity-0' : 'opacity-100'} transition-opacity duration-700`}
+          style={style}
+          onLoad={() => {
+            console.log(`Poster loaded successfully: ${poster}`);
+            if (!isLoaded) {
               setIsLoaded(true);
               onLoad?.();
-            }}
-          />
-        ) : null
-      ) : (
-        <video
-          key={src}
-          ref={videoRef}
-          className={`${className} transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          style={style}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload={priority ? 'metadata' : 'none'}
-          poster={poster}
-        >
-          <source src={src} type="video/webm" />
-        </video>
+            }
+          }}
+          onError={(e) => {
+            console.error(`Failed to load poster image: ${poster}`, e);
+            setHasError(true);
+            setIsLoaded(true);
+            onLoad?.();
+          }}
+        />
       )}
+      
+      {/* Video element - always render but hide on iOS until ready */}
+      <video
+        key={src}
+        ref={videoRef}
+        className={`${className} transition-opacity duration-700 ${disabled && !videoReady ? 'opacity-0 pointer-events-none' : isLoaded ? 'opacity-100' : poster ? 'opacity-100' : 'opacity-0'}`}
+        style={style}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload={priority ? 'metadata' : 'none'}
+        poster={!disabled ? poster : undefined}
+      >
+        <source src={src} type="video/webm" />
+      </video>
     </div>
   );
 };

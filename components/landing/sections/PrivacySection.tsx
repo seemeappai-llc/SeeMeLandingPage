@@ -40,6 +40,7 @@ export const PrivacySection: React.FC<PrivacySectionProps> = ({
         {((shouldReduceMotion && activeSection === 4) || (!shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
           <SmartVideo
             src={videoUrls.video5}
+            poster="/mockups/mock5.webp"
             priority={false}
             disabled={isIOS}
             className="w-full h-full object-cover rounded-[28px]"

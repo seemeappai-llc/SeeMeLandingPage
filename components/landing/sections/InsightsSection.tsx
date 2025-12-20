@@ -40,6 +40,7 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({
         {((shouldReduceMotion && activeSection === 2) || (!shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
           <SmartVideo
             src={videoUrls.video3}
+            poster="/mockups/mock3.webp"
             priority={false}
             disabled={isIOS}
             className="w-full h-full object-cover rounded-[28px]"

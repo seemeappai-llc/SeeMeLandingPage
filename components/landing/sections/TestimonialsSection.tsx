@@ -43,7 +43,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           Authentic stories of <span className="text-white font-semibold">clarity, confidence, and balance</span> from SeeMe's early community.
         </p>
 
-        {(activeSection === 5 || activeSection === 6) && (
+        {(activeSection >= 6) && (
           <div 
             className="overflow-hidden pb-6 relative"
             style={{ 
@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             <motion.div 
               className="flex gap-6"
               animate={{
-                x: activeSection === 6 ? [0, -((350 + 24) * REVIEWS.length)] : 0
+                x: [0, -((350 + 24) * REVIEWS.length)]
               }}
               transition={{
                 x: {
@@ -71,12 +71,9 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
-                  animate={activeSection === 6 ? {
+                  animate={{
                     opacity: 1,
                     y: 0
-                  } : {
-                    opacity: 0,
-                    y: 30
                   }}
                   transition={{
                     delay: (index % REVIEWS.length) * 0.1,

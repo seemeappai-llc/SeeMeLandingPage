@@ -73,6 +73,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {(!shouldReduceMotion || activeSection === 0) && (
             <SmartVideo
               src={videoUrls.video1}
+              poster="/mockups/mock1.webp"
               priority={true}
               disabled={isIOS}
               className="rounded-[28px]"

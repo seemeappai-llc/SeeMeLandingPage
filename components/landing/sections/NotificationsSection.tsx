@@ -40,6 +40,7 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
         {((shouldReduceMotion && activeSection === 3) || (!shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
           <SmartVideo
             src={videoUrls.video4}
+            poster="/mockups/mock4.webp"
             priority={false}
             disabled={isIOS}
             className="w-full h-full object-cover rounded-[28px]"

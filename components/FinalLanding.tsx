@@ -784,6 +784,7 @@ const FinalLanding = () => {
               {(!deviceCapabilities.shouldReduceMotion || activeSection === 0) && (
                 <SmartVideo
                   src={videoUrls.video1}
+                  poster="/mockups/mock1.webp"
                   priority={true}
                   disabled={deviceCapabilities.isIOS}
                   
@@ -870,6 +871,7 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 1) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
                 <SmartVideo
                   src={videoUrls.video2}
+                  poster="/mockups/mock2.webp"
                   disabled={deviceCapabilities.isIOS}
                   
                   className="w-full h-full object-cover rounded-[28px]"
@@ -969,6 +971,7 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 2) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
                 <SmartVideo
                   src={videoUrls.video3}
+                  poster="/mockups/mock3.webp"
                   disabled={deviceCapabilities.isIOS}
                   
                   className="w-full h-full object-cover rounded-[28px]"
@@ -1025,6 +1028,7 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 3) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
                 <SmartVideo
                   src={videoUrls.video4}
+                  poster="/mockups/mock4.webp"
                   disabled={deviceCapabilities.isIOS}
                   
                   className="w-full h-full object-cover rounded-[28px]"
@@ -1081,6 +1085,7 @@ const FinalLanding = () => {
               {((deviceCapabilities.shouldReduceMotion && activeSection === 4) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
                 <SmartVideo
                   src={videoUrls.video5}
+                  poster="/mockups/mock5.webp"
                   disabled={deviceCapabilities.isIOS}
                   
                   className="w-full h-full object-cover rounded-[28px]"
