@@ -22,28 +22,28 @@ const getNetworkQuality = (): 'fast' | 'slow' | 'unknown' => {
   if (typeof navigator === 'undefined' || !('connection' in navigator)) {
     return 'unknown';
   }
-  
+
   const conn = (navigator as any).connection;
   if (!conn) return 'unknown';
-  
+
   // Check effective type (4g, 3g, 2g, slow-2g)
   if (conn.effectiveType === '4g' || conn.effectiveType === '5g') {
     return 'fast';
   }
-  
+
   if (conn.effectiveType === '3g' || conn.effectiveType === '2g' || conn.effectiveType === 'slow-2g') {
     return 'slow';
   }
-  
+
   // Check downlink speed (Mbps)
   if (conn.downlink && conn.downlink > 5) {
     return 'fast';
   }
-  
+
   if (conn.downlink && conn.downlink < 1.5) {
     return 'slow';
   }
-  
+
   return 'unknown';
 };
 
@@ -52,11 +52,11 @@ export const preloadVideo = (src: string): Promise<void> => {
   if (videoCache.has(src)) {
     return Promise.resolve();
   }
-  
+
   if (loadingPromises.has(src)) {
     return loadingPromises.get(src)!;
   }
-  
+
   const promise = new Promise<void>((resolve) => {
     const video = document.createElement('video');
     video.preload = 'metadata';
@@ -116,7 +116,7 @@ export const preloadVideo = (src: string): Promise<void> => {
     video.src = src;
     video.load();
   });
-  
+
   loadingPromises.set(src, promise);
   return promise;
 };
@@ -128,7 +128,7 @@ export const preloadVideosSequentially = async (
 ): Promise<void> => {
   // Load priority videos first (in parallel)
   await Promise.all(priorityVideos.map(preloadVideo));
-  
+
   // Then load others one by one to not overwhelm bandwidth
   for (const src of otherVideos) {
     await preloadVideo(src);
@@ -156,8 +156,16 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    
-    // On iOS/disabled mode, still load video in background but don't show it yet
+
+    // On iOS/disabled mode, STRICTLY do not load video to save memory
+    if (disabled) {
+      if (video.src) {
+        video.removeAttribute('src');
+        video.load(); // Force release
+      }
+      return;
+    }
+
     video.src = src;
     video.load();
   }, [src, disabled]);
@@ -240,16 +248,16 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       if (hasCompleted) return;
       hasCompleted = true;
       clearTimeout(timeoutId);
-      
+
       const loadTime = Date.now() - loadStartTime.current;
       setVideoReady(true); // Mark video as ready
       setIsLoaded(true);
       videoCache.set(src, true);
       onLoad?.();
-      
+
       // Track successful video load
       analytics.videoLoaded(src, loadTime);
-      
+
       // Try to play with exponential backoff (even on iOS)
       const tryPlay = (attempts = 0) => {
         video.play()
@@ -276,12 +284,12 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
       if (hasCompleted) return;
       hasCompleted = true;
       clearTimeout(timeoutId);
-      
+
       const errorMsg = (e as ErrorEvent).message || 'Unknown error';
       setHasError(true);
       setIsLoaded(true); // Don't block UI
       onLoad?.();
-      
+
       // Track video error
       analytics.videoError(src, errorMsg);
     };
@@ -289,18 +297,18 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     const handleTimeout = () => {
       if (hasCompleted) return;
       hasCompleted = true;
-      
+
       const loadTime = Date.now() - loadStartTime.current;
       console.warn(`Video load timeout after ${loadTime}ms: ${src}`);
-      
+
       // Force show video anyway - it might still load in background
       setIsLoaded(true);
       videoCache.set(src, true);
       onLoad?.();
-      
+
       // Track timeout as error
       analytics.videoError(src, `Timeout after ${loadTime}ms`);
-      
+
       // Still try to play in case it loads
       const tryPlay = (attempts = 0) => {
         video.play()
@@ -319,7 +327,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     // Network-aware timeout: adjust based on connection quality
     const networkQuality = getNetworkQuality();
     let timeoutMs: number;
-    
+
     if (networkQuality === 'slow') {
       timeoutMs = priority ? 5000 : 8000; // More lenient on slow connections
     } else if (networkQuality === 'fast') {
@@ -327,7 +335,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     } else {
       timeoutMs = priority ? 3000 : 5000; // Default
     }
-    
+
     timeoutId = setTimeout(handleTimeout, timeoutMs);
 
     video.addEventListener('canplaythrough', handleCanPlay, { once: true });
@@ -346,7 +354,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
     <div ref={containerRef} className="relative w-full h-full">
       {/* Loading skeleton */}
       {!isLoaded && (
-        <div 
+        <div
           className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center overflow-hidden"
           style={style}
         >
@@ -355,17 +363,17 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
           <div className="w-10 h-10 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
         </div>
       )}
-      
+
       {/* Error state */}
       {hasError && (
-        <div 
+        <div
           className="absolute inset-0 bg-gray-900 flex items-center justify-center"
           style={style}
         >
           <span className="text-white/50 text-sm">Video unavailable</span>
         </div>
       )}
-      
+
       {/* Show poster image on disabled (iOS) until video is ready */}
       {disabled && poster && (
         <img
@@ -388,7 +396,7 @@ const SmartVideo: React.FC<SmartVideoProps> = ({
           }}
         />
       )}
-      
+
       {/* Video element - always render but hide on iOS until ready */}
       <video
         key={src}
