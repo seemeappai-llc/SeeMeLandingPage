@@ -33,31 +33,8 @@ export const useScrollAnimation = (
         trigger: containerRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.5, // Smoother scroll-linked animation (from GSAP best practices)
-        snap: {
-          snapTo: (progress) => {
-            if (progress < 0.01) return 0;
-            const velocity = Math.abs(ScrollTrigger.getById('main-scroll')?.getVelocity() || 0);
-            if (velocity > 2000) return progress;
-            
-            // Snap to section centers where opacity is 1.0, not boundaries
-            const segment = 1 / TOTAL_SECTIONS;
-            const sectionIndex = Math.round(progress / segment);
-            
-            // For the last section, snap to 88.89% (8/9) instead of center (94.44%)
-            // This ensures the final section is reachable and fully visible
-            if (sectionIndex >= TOTAL_SECTIONS - 1) {
-              return (TOTAL_SECTIONS - 1) / TOTAL_SECTIONS; // 8/9 = 88.89%
-            }
-            
-            // Snap to center of section: (index + 0.5) / TOTAL_SECTIONS
-            const snappedProgress = (sectionIndex + 0.5) / TOTAL_SECTIONS;
-            return snappedProgress;
-          },
-          duration: animConfig.snapDuration,
-          delay: animConfig.snapDelay,
-          ease: 'power1.inOut', // More natural snap easing (from GSAP best practices)
-        },
+        scrub: 1.0, // Reduced from 1.5 for snappier response
+        // Snap removed to prevent "unexpected scroll snap" issues
         id: 'main-scroll',
         onUpdate: (self) => {
           const progress = self.progress;
@@ -100,7 +77,7 @@ export const useScrollAnimation = (
             if (!ref.current) return;
             const sectionStart = index / TOTAL_SECTIONS;
             const sectionEnd = (index + 1) / TOTAL_SECTIONS;
-            
+
             let opacity = 0;
             let pointerEvents = 'none';
 
@@ -114,38 +91,43 @@ export const useScrollAnimation = (
               }
               pointerEvents = opacity > 0.5 ? 'auto' : 'none';
             } else if (index === TOTAL_SECTIONS - 1) {
-              // Special handling for last section - full opacity from 88.89% onwards
-              if (progress >= sectionStart) {
+              // UNIFIED CROSSFADE for Last Section (CTA)
+              const halfDuration = (sectionEnd - sectionStart) / 2;
+              const overlap = halfDuration * 0.2; // Match overlap with generic sections
+
+              const fadeInStart = sectionStart - overlap;
+              const fadeInEnd = sectionStart + overlap;
+
+              if (progress >= fadeInEnd) {
                 opacity = 1;
                 pointerEvents = 'auto';
-              } else {
-                // Fade in from previous section
-                const fadeInStart = sectionStart - (sectionEnd - sectionStart) * 0.3;
-                if (progress >= fadeInStart) {
-                  opacity = (progress - fadeInStart) / (sectionStart - fadeInStart);
-                  pointerEvents = opacity > 0.5 ? 'auto' : 'none';
-                }
+              } else if (progress >= fadeInStart) {
+                // Fade in across the boundary (-overlap to +overlap)
+                opacity = (progress - fadeInStart) / (2 * overlap);
+                pointerEvents = opacity > 0.5 ? 'auto' : 'none';
               }
             } else {
-              // Calculate distance from section center for other sections
+              // UNIFIED CROSSFADE for Generic Sections
               const sectionCenter = (sectionStart + sectionEnd) / 2;
               const distanceFromCenter = Math.abs(progress - sectionCenter);
               const halfDuration = (sectionEnd - sectionStart) / 2;
 
-              // Fade based on distance from center - sections overlap during transitions
-              if (distanceFromCenter < halfDuration) {
-                // Within section range - calculate opacity
-                const fadeRegion = halfDuration * 0.2; // 20% fade region for snappier transitions (GSAP best practice)
-                
-                if (distanceFromCenter < halfDuration - fadeRegion) {
-                  // Full opacity in center region (80% of section duration)
+              // Allow overlap beyond standard boundary
+              const overlap = halfDuration * 0.2; // 20% overlap for smooth crossfade
+
+              if (distanceFromCenter < halfDuration + overlap) {
+                const fadeRange = 2 * overlap;
+                // Distance from where fading starts (plateau edge)
+                const distFromPlateau = distanceFromCenter - (halfDuration - overlap);
+
+                if (distFromPlateau < 0) {
+                  // Inside full opacity plateau
                   opacity = 1;
                 } else {
-                  // Fade out at edges
-                  const fadeProgress = (distanceFromCenter - (halfDuration - fadeRegion)) / fadeRegion;
-                  opacity = 1 - fadeProgress;
+                  // Fading out (crossfading)
+                  opacity = 1 - (distFromPlateau / fadeRange);
                 }
-                
+
                 pointerEvents = opacity > 0.5 ? 'auto' : 'none';
               }
             }

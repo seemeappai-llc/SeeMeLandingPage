@@ -17,8 +17,8 @@ export const useDeviceOptimization = () => {
     isMobile: false,
     isIOS: false,
     shouldReduceMotion: false,
-    maxConcurrentBackgrounds: 3,
-    maxConcurrentVideos: 2,
+    maxConcurrentBackgrounds: 2, // Must be at least 2 to support crossfade (Current + Next)
+    maxConcurrentVideos: 1,
   });
 
   const [animConfig, setAnimConfig] = useState<AnimConfig>({
@@ -47,7 +47,7 @@ export const useDeviceOptimization = () => {
       };
 
       window.addEventListener('pagehide', handleMemoryWarning);
-      
+
       return () => {
         window.removeEventListener('pagehide', handleMemoryWarning);
       };

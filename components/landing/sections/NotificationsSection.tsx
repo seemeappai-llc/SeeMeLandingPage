@@ -32,7 +32,7 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
           className="hidden md:block text-white/90 text-lg mt-6 font-normal"
           style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
         >
-          Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
+          Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and supports you when it matters.
         </p>
       </div>
 
@@ -58,7 +58,7 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
         className="md:hidden text-white/90 text-sm text-center font-normal px-2"
         style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
       >
-        Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
+        Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and supports you when it matters.
       </p>
     </SectionLayout>
   );

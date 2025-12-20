@@ -149,7 +149,7 @@ const FinalLanding = () => {
 
       // iOS fires pagehide before crash
       window.addEventListener('pagehide', handleMemoryWarning);
-      
+
       return () => {
         window.removeEventListener('pagehide', handleMemoryWarning);
       };
@@ -213,7 +213,7 @@ const FinalLanding = () => {
       'Reviews',
       'CTA'
     ];
-    
+
     if (activeSection >= 0 && activeSection < sectionNames.length) {
       analytics.sectionVisible(activeSection, sectionNames[activeSection]);
     }
@@ -235,20 +235,20 @@ const FinalLanding = () => {
     // On low-end devices, only preload hero background + coaches to prevent crash
     const imagesToPreload = deviceCapabilities.shouldReduceMotion
       ? [
-          backgrounds[0], // Only hero background
-          '/coaches/c1.png',
-          '/coaches/c2.png',
-          '/coaches/c3.png',
-        ]
+        backgrounds[0], // Only hero background
+        '/coaches/c1.png',
+        '/coaches/c2.png',
+        '/coaches/c3.png',
+      ]
       : [
-          ...backgrounds,
-          '/coaches/c1.png',
-          '/coaches/c2.png',
-          '/coaches/c3.png',
-          '/coaches/c4.png',
-          '/coaches/c5.png',
-          '/coaches/c6.png',
-        ];
+        ...backgrounds,
+        '/coaches/c1.png',
+        '/coaches/c2.png',
+        '/coaches/c3.png',
+        '/coaches/c4.png',
+        '/coaches/c5.png',
+        '/coaches/c6.png',
+      ];
 
     let loadedCount = 0;
     const totalImages = imagesToPreload.length;
@@ -348,7 +348,7 @@ const FinalLanding = () => {
             if (progress < 0.01) {
               return 0;
             }
-            
+
             // Get current scroll velocity
             const velocity = Math.abs(ScrollTrigger.getById('main-scroll')?.getVelocity() || 0);
 
@@ -590,17 +590,17 @@ const FinalLanding = () => {
           if (section9Ref.current) {
             const start = 8 / 9;
             const isActive = progress >= start;
-            
+
             // Fade in and STAY fully visible (no fade out)
             let opacity = 0;
             if (isActive) {
               // Quick fade in, then stay at 1
               opacity = Math.min((progress - start) * 18, 1); // Faster fade in
             }
-            
+
             section9Ref.current.style.opacity = String(opacity);
             section9Ref.current.style.pointerEvents = isActive ? 'auto' : 'none';
-            
+
             // Animate the content - settle into final position
             const ctaInner = section9Ref.current.querySelector('.cta-inner') as HTMLElement;
             if (ctaInner) {
@@ -669,7 +669,7 @@ const FinalLanding = () => {
     <main className="relative min-h-screen overflow-x-hidden bg-black">
       {/* Background - fixed, extends into safe areas */}
       {/* Only render backgrounds near the active section to reduce GPU memory */}
-      <div 
+      <div
         ref={backgroundRef}
         className="fixed z-0 pointer-events-none"
         style={{
@@ -721,907 +721,908 @@ const FinalLanding = () => {
       </div>
 
       <div ref={containerRef} className="h-[1800vh] w-screen max-w-full relative z-10 overflow-x-hidden">
-        
+
         {/* Fixed viewport container */}
         <div className="fixed inset-0 w-screen max-w-full" style={{ overflow: 'clip' }}>
 
-        {/* Section 1 - Hero with SeeMe */}
-        <div
-          ref={heroRef}
-          className="absolute inset-0 flex items-center justify-start"
-          style={{ 
-            opacity: 1, 
-            pointerEvents: 'auto',
-            paddingTop: 'max(env(safe-area-inset-top, 0px) + 3rem, 4rem)',
-            paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
-          }}
-        >
+          {/* Section 1 - Hero with SeeMe */}
           <div
-            className="relative z-10 flex flex-col items-center w-full max-w-7xl px-4 md:px-8 mx-auto"
-            style={{ gap: 'clamp(1rem, 2vh, 2rem)' }}
+            ref={heroRef}
+            className="absolute inset-0 flex items-center justify-start"
+            style={{
+              opacity: 1,
+              pointerEvents: 'auto',
+              paddingTop: 'max(env(safe-area-inset-top, 0px) + 3rem, 4rem)',
+              paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
+            }}
           >
-            {/* Text Group */}
             <div
-            className="flex flex-col items-center flex-shrink-0"
-          >
-            {/* Title */}
-            <h1
-              className="font-black tracking-tight text-white"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                fontWeight: 900,
-                fontSize: 'clamp(3.5rem, 14vw, 9rem)',
-                lineHeight: '1',
-                marginBottom: 'clamp(0.5rem, 1vh, 1rem)'
-              }}
+              className="relative z-10 flex flex-col items-center w-full max-w-7xl px-4 md:px-8 mx-auto"
+              style={{ gap: 'clamp(1rem, 2vh, 2rem)' }}
             >
-              SeeMe
-              </h1>
-
-              {/* Subtitle */}
-              <p
-                className="text-white/90 text-center px-4 font-medium"
-                style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(0.875rem, 2.5vw, 1.6rem)',
-                  maxWidth: '90vw',
-                  lineHeight: '1.4'
-                }}
+              {/* Text Group */}
+              <div
+                className="flex flex-col items-center flex-shrink-0"
               >
-                Private personal intelligence for your growth
-              </p>
-            </div>
-
-            {/* Video Mockup Container */}
-            <div
-              className="relative rounded-[30px] border-4 border-white/30 bg-black shadow-lg overflow-hidden flex-shrink-0"
-              style={{
-                width: '240px',
-                height: '528px',
-                marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
-              }}
-            >
-              {(!deviceCapabilities.shouldReduceMotion || activeSection === 0) && (
-                <SmartVideo
-                  src={videoUrls.video1}
-                  poster="/mockups/mock1.webp"
-                  priority={true}
-                  disabled={deviceCapabilities.isIOS}
-                  
-                  className="rounded-[28px]"
+                {/* Title */}
+                <h1
+                  className="font-black tracking-tight text-white"
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center 45%'
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontWeight: 900,
+                    fontSize: 'clamp(3.5rem, 14vw, 9rem)',
+                    lineHeight: '1',
+                    marginBottom: 'clamp(0.5rem, 1vh, 1rem)'
                   }}
-                />
-              )}
-            </div>
-
-            {/* Scroll Indicator */}
-            <motion.div
-              className="flex flex-col items-center gap-2 cursor-pointer mt-4 md:mt-1"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.5, duration: 0.6 }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95, y: 1 }}
-              onClick={() => {
-                analytics.scrollIndicatorClick();
-                scrollToSection(1); // Scroll to section 2 (index 1)
-              }}
-            >
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-70"
                 >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
+                  SeeMe
+                </h1>
 
-        {/* Section 2 - Your Network of Expert Coaches */}
-        <div
-          ref={section2Ref}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          {/* Centered group container */}
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
-            {/* Text content - Desktop: all together, Mobile: heading only */}
-            <div
-              className="text-center text-content w-full md:w-auto md:max-w-sm md:mb-0"
-            >
-              <h2
-                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
-                style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
-              >
-                Your network of<br />
-                <span className="text-white font-bold">
-                  expert coaches
-                </span>
-              </h2>
-              {/* Desktop paragraph - hidden on mobile */}
-              <p
-                className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                {/* Subtitle */}
+                <p
+                  className="text-white/90 text-center px-4 font-medium"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontSize: 'clamp(0.875rem, 2.5vw, 1.6rem)',
+                    maxWidth: '90vw',
+                    lineHeight: '1.4'
+                  }}
+                >
+                  Private personal intelligence for your growth
+                </p>
+              </div>
+
+              {/* Video Mockup Container */}
+              <div
+                className="relative rounded-[30px] border-4 border-white/30 bg-black shadow-lg overflow-hidden flex-shrink-0"
                 style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  width: '240px',
+                  height: '528px',
+                  marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
                 }}
+              >
+                {(!deviceCapabilities.shouldReduceMotion || activeSection === 0) && (
+                  <SmartVideo
+                    src={videoUrls.video1}
+                    poster="/mockups/mock1.webp"
+                    priority={true}
+                    disabled={deviceCapabilities.isIOS}
+
+                    className="rounded-[28px]"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center 45%'
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* Scroll Indicator */}
+              <motion.div
+                className="flex flex-col items-center gap-2 cursor-pointer mt-4 md:mt-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.5, duration: 0.6 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95, y: 1 }}
+                onClick={() => {
+                  analytics.scrollIndicatorClick();
+                  scrollToSection(1); // Scroll to section 2 (index 1)
+                }}
+              >
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="opacity-70"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Section 2 - Your Network of Expert Coaches */}
+          <div
+            ref={section2Ref}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            {/* Centered group container */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
+              {/* Text content - Desktop: all together, Mobile: heading only */}
+              <div
+                className="text-center text-content w-full md:w-auto md:max-w-sm md:mb-0"
+              >
+                <h2
+                  className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+                  style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
+                >
+                  Your network of<br />
+                  <span className="text-white font-bold">
+                    expert coaches
+                  </span>
+                </h2>
+                {/* Desktop paragraph - hidden on mobile */}
+                <p
+                  className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  }}
+                >
+                  Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
+                </p>
+              </div>
+
+              {/* Video mockup */}
+              <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+                {((deviceCapabilities.shouldReduceMotion && activeSection === 1) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
+                  <SmartVideo
+                    src={videoUrls.video2}
+                    poster="/mockups/mock2.webp"
+                    disabled={deviceCapabilities.isIOS}
+
+                    className="w-full h-full object-cover rounded-[28px]"
+                    style={{ objectPosition: 'center 45%' }}
+                  />
+                )}
+
+                <AnimatePresence>
+                  {activeSection === 1 && coaches.map((coach, index) => {
+                    const angle = (index / coaches.length) * Math.PI * 2;
+                    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+                    const radius = isDesktop ? 700 : 360;
+                    const startX = Math.cos(angle) * radius;
+                    const startY = Math.sin(angle) * radius;
+                    const duration = isDesktop ? 3.2 : 2.5;
+
+                    return (
+                      <motion.div
+                        key={coach.id}
+                        initial={{
+                          x: startX,
+                          y: startY,
+                          opacity: 0,
+                          scale: 0.8
+                        }}
+                        animate={{
+                          x: [startX, 0],
+                          y: [startY, 0],
+                          opacity: [0, 1, 1, 0],
+                          scale: [0.8, 1, 0.6, 0.3]
+                        }}
+                        transition={{
+                          duration,
+                          delay: coach.delay + 0.3,
+                          ease: "easeInOut",
+                          times: [0, 0.4, 0.8, 1]
+                        }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-20 md:h-20 pointer-events-none"
+                      >
+                        <div className="relative w-full h-full rounded-full border-4 border-white shadow-lg overflow-hidden">
+                          <Image
+                            src={coach.img}
+                            alt={`Coach ${coach.id}`}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+
+              {/* Mobile paragraph - shown below video */}
+              <p
+                className="md:hidden text-white/90 text-sm text-center font-normal px-2"
+                style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
               >
                 Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
               </p>
             </div>
-
-            {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {((deviceCapabilities.shouldReduceMotion && activeSection === 1) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
-                <SmartVideo
-                  src={videoUrls.video2}
-                  poster="/mockups/mock2.webp"
-                  disabled={deviceCapabilities.isIOS}
-                  
-                  className="w-full h-full object-cover rounded-[28px]"
-                  style={{ objectPosition: 'center 45%' }}
-                />
-              )}
-
-              <AnimatePresence>
-                {activeSection === 1 && coaches.map((coach, index) => {
-                  const angle = (index / coaches.length) * Math.PI * 2;
-                  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
-                  const radius = isDesktop ? 700 : 360;
-                  const startX = Math.cos(angle) * radius;
-                  const startY = Math.sin(angle) * radius;
-                  const duration = isDesktop ? 3.2 : 2.5;
-
-                  return (
-                    <motion.div
-                      key={coach.id}
-                      initial={{
-                        x: startX,
-                        y: startY,
-                        opacity: 0,
-                        scale: 0.8
-                      }}
-                      animate={{
-                        x: [startX, 0],
-                        y: [startY, 0],
-                        opacity: [0, 1, 1, 0],
-                        scale: [0.8, 1, 0.6, 0.3]
-                      }}
-                      transition={{
-                        duration,
-                        delay: coach.delay + 0.3,
-                        ease: "easeInOut",
-                        times: [0, 0.4, 0.8, 1]
-                      }}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-20 md:h-20 pointer-events-none"
-                    >
-                      <div className="relative w-full h-full rounded-full border-4 border-white shadow-lg overflow-hidden">
-                        <Image
-                          src={coach.img}
-                          alt={`Coach ${coach.id}`}
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                        />
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
-
-            {/* Mobile paragraph - shown below video */}
-            <p
-              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
-              style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
-              Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
-            </p>
           </div>
-        </div>
 
-        {/* Section 3 - Coaches that really KNOW you */}
-        <div
-          ref={section3Ref}
-          className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          {/* Centered group container */}
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
-            {/* Text content */}
-            <div
-              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
-            >
-              <h2
-                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
-                style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
+          {/* Section 3 - Coaches that really KNOW you */}
+          <div
+            ref={section3Ref}
+            className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            {/* Centered group container */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
+              {/* Text content */}
+              <div
+                className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
               >
-                Coaches that<br />
-                <span className="text-white font-bold">
-                  truly understand you
-                </span>
-              </h2>
-              {/* Desktop paragraph */}
+                <h2
+                  className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+                  style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 600 }}
+                >
+                  Coaches that<br />
+                  <span className="text-white font-bold">
+                    truly understand you
+                  </span>
+                </h2>
+                {/* Desktop paragraph */}
+                <p
+                  className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                  style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
+                  Learning from your <span className="text-white font-semibold">sessions, reflections, calendar, health,</span> and <span className="text-white font-semibold">screen time</span> patterns.
+                </p>
+              </div>
+
+              {/* Video mockup */}
+              <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+                {((deviceCapabilities.shouldReduceMotion && activeSection === 2) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
+                  <SmartVideo
+                    src={videoUrls.video3}
+                    poster="/mockups/mock3.webp"
+                    disabled={deviceCapabilities.isIOS}
+
+                    className="w-full h-full object-cover rounded-[28px]"
+                    style={{ objectPosition: 'center 45%' }}
+                  />
+                )}
+              </div>
+
+              {/* Mobile paragraph */}
               <p
-                className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                className="md:hidden text-white/90 text-sm text-center font-normal px-2"
                 style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
               >
                 Learning from your <span className="text-white font-semibold">sessions, reflections, calendar, health,</span> and <span className="text-white font-semibold">screen time</span> patterns.
               </p>
             </div>
-
-            {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {((deviceCapabilities.shouldReduceMotion && activeSection === 2) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
-                <SmartVideo
-                  src={videoUrls.video3}
-                  poster="/mockups/mock3.webp"
-                  disabled={deviceCapabilities.isIOS}
-                  
-                  className="w-full h-full object-cover rounded-[28px]"
-                  style={{ objectPosition: 'center 45%' }}
-                />
-              )}
-            </div>
-
-            {/* Mobile paragraph */}
-            <p
-              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
-              style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
-              Learning from your <span className="text-white font-semibold">sessions, reflections, calendar, health,</span> and <span className="text-white font-semibold">screen time</span> patterns.
-            </p>
           </div>
-        </div>
 
-        {/* Section 4 - Unparalleled insights */}
-        <div
-          ref={section4Ref}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          {/* Centered group container */}
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
-            {/* Text content */}
-            <div
-              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
-            >
-              <h2
-                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
-                style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: 600
-                }}
+          {/* Section 4 - Unparalleled insights */}
+          <div
+            ref={section4Ref}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            {/* Centered group container */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
+              {/* Text content */}
+              <div
+                className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
               >
-                <span className="text-white font-bold">
-                  Unparalleled insights
-                </span><br />
-                from your life
-              </h2>
-              {/* Desktop paragraph */}
+                <h2
+                  className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontWeight: 600
+                  }}
+                >
+                  <span className="text-white font-bold">
+                    Unparalleled insights
+                  </span><br />
+                  from your life
+                </h2>
+                {/* Desktop paragraph */}
+                <p
+                  className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                  style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
+                  Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and supports you when it matters.
+                </p>
+              </div>
+
+              {/* Video mockup */}
+              <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+                {((deviceCapabilities.shouldReduceMotion && activeSection === 3) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
+                  <SmartVideo
+                    src={videoUrls.video4}
+                    poster="/mockups/mock4.webp"
+                    disabled={deviceCapabilities.isIOS}
+
+                    className="w-full h-full object-cover rounded-[28px]"
+                    style={{ objectPosition: 'center center' }}
+                  />
+                )}
+              </div>
+
+              {/* Mobile paragraph */}
               <p
-                className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                className="md:hidden text-white/90 text-sm text-center font-normal px-2"
                 style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
               >
-                Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
+                Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and supports you when it matters.
               </p>
             </div>
-
-            {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {((deviceCapabilities.shouldReduceMotion && activeSection === 3) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 2 || activeSection === 3 || activeSection === 4))) && (
-                <SmartVideo
-                  src={videoUrls.video4}
-                  poster="/mockups/mock4.webp"
-                  disabled={deviceCapabilities.isIOS}
-                  
-                  className="w-full h-full object-cover rounded-[28px]"
-                  style={{ objectPosition: 'center center' }}
-                />
-              )}
-            </div>
-
-            {/* Mobile paragraph */}
-            <p
-              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
-              style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
-              Ask anything. SeeMe <span className="text-white font-semibold">reveals patterns</span>, <span className="text-white font-semibold">highlights blind spots</span>, and guides you when it matters.
-            </p>
           </div>
-        </div>
 
-        {/* Section 5 - Expert Strategies */}
-        <div
-          ref={section5Ref}
-          className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          {/* Centered group container */}
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
-            {/* Text content */}
-            <div
-              className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
-            >
-              <h2
-                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
-                style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: 600
-                }}
+          {/* Section 5 - Expert Strategies */}
+          <div
+            ref={section5Ref}
+            className="absolute inset-0 flex items-center justify-center transition-opacity duration-500"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            {/* Centered group container */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
+              {/* Text content */}
+              <div
+                className="text-center w-full md:w-auto md:max-w-sm md:mb-0"
               >
-                <span className="text-white font-bold">
-                  Expert strategies,
-                </span><br />
-                tailored to you
-              </h2>
-              {/* Desktop paragraph */}
+                <h2
+                  className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontWeight: 600
+                  }}
+                >
+                  <span className="text-white font-bold">
+                    Expert strategies,
+                  </span><br />
+                  tailored to you
+                </h2>
+                {/* Desktop paragraph */}
+                <p
+                  className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                  style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
+                  <span className="text-white font-semibold">Evidence-based methods</span> and guided sessions, adapted to your goals and daily reality.
+                </p>
+              </div>
+
+              {/* Video mockup */}
+              <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
+                {((deviceCapabilities.shouldReduceMotion && activeSection === 4) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
+                  <SmartVideo
+                    src={videoUrls.video5}
+                    poster="/mockups/mock5.webp"
+                    disabled={deviceCapabilities.isIOS}
+
+                    className="w-full h-full object-cover rounded-[28px]"
+                    style={{ objectPosition: 'center 45%' }}
+                  />
+                )}
+              </div>
+
+              {/* Mobile paragraph */}
               <p
-                className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                className="md:hidden text-white/90 text-sm text-center font-normal px-2"
                 style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
               >
                 <span className="text-white font-semibold">Evidence-based methods</span> and guided sessions, adapted to your goals and daily reality.
               </p>
             </div>
-
-            {/* Video mockup */}
-            <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-              {((deviceCapabilities.shouldReduceMotion && activeSection === 4) || (!deviceCapabilities.shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
-                <SmartVideo
-                  src={videoUrls.video5}
-                  poster="/mockups/mock5.webp"
-                  disabled={deviceCapabilities.isIOS}
-                  
-                  className="w-full h-full object-cover rounded-[28px]"
-                  style={{ objectPosition: 'center 45%' }}
-                />
-              )}
-            </div>
-
-            {/* Mobile paragraph */}
-            <p
-              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
-              style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
-              <span className="text-white font-semibold">Evidence-based methods</span> and guided sessions, adapted to your goals and daily reality.
-            </p>
-          </div>
-        </div>
-
-        {/* Section 6 - So you can RISE */}
-        <div
-          ref={section6Ref}
-          className="absolute inset-0 flex items-start justify-center pt-32"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto ">
-            <h2
-              className="rise-heading text-4xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                fontWeight: 400,
-              }}
-            >
-              Rise with<br />
-              <span className="text-white font-black inline-block">
-                daily guidance
-              </span>
-            </h2>
-            <p
-              ref={riseTextRef}
-              className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mt-6 font-normal"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-              }}
-            >
-              Timely boosts and reminders aligned with your <span className="text-white font-semibold">mood, energy, and intentions.</span>
-            </p>
           </div>
 
-          {/* Notification Images - iOS-style below text for mobile, scattered for desktop */}
-          {activeSection === 5 && (
-            <>
-              {/* Mobile: 3 notifications in vertical stack, below the text */}
-              <div className="absolute inset-0 pointer-events-none block md:hidden flex items-end justify-center pb-20">
-                <div className="flex flex-col gap-3 items-center">
-                  <AnimatePresence>
-                    {activeSection === 5 && [0, 1, 2].map((offset, idx) => {
-                      const notifNum = currentNotification === 1 ? [1, 3, 5][offset] : [2, 4, 6][offset];
-                      return (
-                        <motion.div
-                          key={`${currentNotification}-${offset}`}
-                          variants={{
-                            enter: { opacity: 1, scale: 1 },
-                            exit: { opacity: 0, scale: 0.95 }
-                          }}
-                          initial="exit"
-                          animate="enter"
-                          exit="exit"
-                          transition={{
-                            duration: 0.3, // Quick for both enter and exit
-                            ease: "easeOut"
-                          }}
-                          className="w-[98%] max-w-[420px]"
-                        >
-                          <Image
-                            src={`/notifications/notif${notifNum}.png`}
-                            alt="Notification"
-                            width={350}
-                            height={110}
-                            className=" w-full h-auto"
-                          />
-                        </motion.div>
-                      );
-                    })}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Desktop: Better notification layout */}
-              <div className="absolute inset-0 pointer-events-none hidden md:block">
-                {/* Notification container - ensures all notifications stay within bounds */}
-                <div className="absolute inset-x-8 inset-y-16 max-w-6xl mx-auto">
-                  {/* Top notifications row */}
-                  <div className="absolute top-8 left-0 right-0 flex justify-between px-12">
-                    <motion.div
-                      initial={{ opacity: 0, y: -50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif5.png"
-                        alt="Notification"
-                        width={320}
-                        height={100}
-                        className=""
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: -50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.3,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif6.png"
-                        alt="Notification"
-                        width={320}
-                        height={100}
-                        className=""
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Middle notifications - positioned on sides */}
-                  <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex justify-between px-4">
-                    <motion.div
-                      initial={{ opacity: 0, x: -50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.6,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif3.png"
-                        alt="Notification"
-                        width={300}
-                        height={90}
-                        className=""
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, x: 50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 0.9,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif4.png"
-                        alt="Notification"
-                        width={300}
-                        height={90}
-                        className=""
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Bottom notifications row */}
-                  <div className="absolute bottom-16 left-0 right-0 flex justify-center gap-40">
-                    <motion.div
-                      initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 1.2,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif1.png"
-                        alt="Notification"
-                        width={320}
-                        height={100}
-                        className=""
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        delay: 1.5,
-                        ease: [0.34, 1.56, 0.64, 1]
-                      }}
-                      className="pointer-events-none z-20"
-                    >
-                      <Image
-                        src="/notifications/notif2.png"
-                        alt="Notification"
-                        width={320}
-                        height={100}
-                        className=""
-                      />
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Section 7 - Reviews Section with Motion animations */}
-        <div
-          ref={section7Ref}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 0, pointerEvents: 'none', overflow: 'visible' }}
-        >
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8" style={{ overflow: 'visible' }}>
-            <motion.h2
-              initial={{ opacity: 0, y: -30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-4xl md:text-5xl text-white text-center mb-6 leading-[1.1]"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                fontWeight: 600
-              }}
-            >
-              Loved by people like you
-            </motion.h2>
-            <p
-              className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mb-12 reviews-text font-normal text-center"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                opacity: 0
-              }}
-            >
-              Authentic stories of <span className="text-white font-semibold">clarity, confidence, and balance</span> from SeeMe's early community.
-            </p>
-
-            {/* Infinite auto-scroll carousel with edge fade - only render when section is active */}
-            {(activeSection === 5 || activeSection === 6) && (
-            <div 
-              className="overflow-hidden pb-6 relative"
-              style={{ 
-                pointerEvents: 'auto',
-                maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
-              }}
-            >
-              <motion.div 
-                className="flex gap-6"
-                animate={{
-                  x: activeSection === 6 ? [0, -((350 + 24) * reviews.length)] : 0
+          {/* Section 6 - So you can RISE */}
+          <div
+            ref={section6Ref}
+            className="absolute inset-0 flex items-start justify-center pt-32"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto ">
+              <h2
+                className="rise-heading text-4xl md:text-7xl text-white/80 leading-[1.1] transition-all duration-1000 ease-out"
+                style={{
+                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontWeight: 400,
                 }}
-                transition={{
-                  x: {
-                    duration: 60,
-                    repeat: Infinity,
-                    ease: "linear",
-                    repeatType: "loop"
-                  }
-                }}
-                style={{ willChange: 'auto' }}
               >
-                {/* Single set of reviews - reduced from doubled for memory savings */}
-                {reviews.map((review, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={activeSection === 6 ? {
-                      opacity: 1,
-                      y: 0
-                    } : {
-                      opacity: 0,
-                      y: 30
-                    }}
-                    transition={{
-                      delay: (index % reviews.length) * 0.1,
-                      duration: 0.5
-                    }}
-                    className="bg-white/10 rounded-2xl p-5 md:p-6 border border-white/20 shadow-md flex-shrink-0 w-[300px] md:w-[350px]"
-                  >
-                    <div className="mb-3">
-                      <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-2"
-                        style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>
-                        {review.category}
-                      </p>
-                      <div className="flex mb-3">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className="w-4 h-4 text-yellow-400 fill-current"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                          </svg>
-                        ))}
-                      </div>
-                    </div>
-                    <p
-                      className="text-white/90 text-sm md:text-base mb-4 leading-relaxed"
-                      style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-                    >
-                      "{review.text}"
-                    </p>
-                    <p
-                      className="text-white/70 text-xs font-medium italic"
-                      style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-                    >
-                      {review.name}
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
+                Rise with<br />
+                <span className="text-white font-black inline-block">
+                  daily guidance
+                </span>
+              </h2>
+              <p
+                ref={riseTextRef}
+                className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mt-6 font-normal"
+                style={{
+                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                }}
+              >
+                Timely boosts and reminders aligned with your <span className="text-white font-semibold">mood, energy, and intentions.</span>
+              </p>
             </div>
+
+            {/* Notification Images - iOS-style below text for mobile, scattered for desktop */}
+            {activeSection === 5 && (
+              <>
+                {/* Mobile: 3 notifications in vertical stack, below the text */}
+                <div className="absolute inset-0 pointer-events-none block md:hidden flex items-end justify-center pb-20">
+                  <div className="flex flex-col gap-3 items-center">
+                    <AnimatePresence>
+                      {activeSection === 5 && [0, 1, 2].map((offset, idx) => {
+                        const notifNum = currentNotification === 1 ? [1, 3, 5][offset] : [2, 4, 6][offset];
+                        return (
+                          <motion.div
+                            key={`${currentNotification}-${offset}`}
+                            variants={{
+                              enter: { opacity: 1, scale: 1 },
+                              exit: { opacity: 0, scale: 0.95 }
+                            }}
+                            initial="exit"
+                            animate="enter"
+                            exit="exit"
+                            transition={{
+                              duration: 0.3, // Quick for both enter and exit
+                              ease: "easeOut"
+                            }}
+                            className="w-[98%] max-w-[420px]"
+                          >
+                            <Image
+                              src={`/notifications/notif${notifNum}.png`}
+                              alt="Notification"
+                              width={350}
+                              height={110}
+                              className=" w-full h-auto"
+                            />
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* Desktop: Better notification layout */}
+                <div className="absolute inset-0 pointer-events-none hidden md:block">
+                  {/* Notification container - ensures all notifications stay within bounds */}
+                  <div className="absolute inset-x-8 inset-y-16 max-w-6xl mx-auto">
+                    {/* Top notifications row */}
+                    <div className="absolute top-8 left-0 right-0 flex justify-between px-12">
+                      <motion.div
+                        initial={{ opacity: 0, y: -50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif5.png"
+                          alt="Notification"
+                          width={320}
+                          height={100}
+                          className=""
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: -50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.3,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif6.png"
+                          alt="Notification"
+                          width={320}
+                          height={100}
+                          className=""
+                        />
+                      </motion.div>
+                    </div>
+
+                    {/* Middle notifications - positioned on sides */}
+                    <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex justify-between px-4">
+                      <motion.div
+                        initial={{ opacity: 0, x: -50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.6,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif3.png"
+                          alt="Notification"
+                          width={300}
+                          height={90}
+                          className=""
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, x: 50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.9,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif4.png"
+                          alt="Notification"
+                          width={300}
+                          height={90}
+                          className=""
+                        />
+                      </motion.div>
+                    </div>
+
+                    {/* Bottom notifications row */}
+                    <div className="absolute bottom-16 left-0 right-0 flex justify-center gap-40">
+                      <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 1.2,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif1.png"
+                          alt="Notification"
+                          width={320}
+                          height={100}
+                          className=""
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1
+                        }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 1.5,
+                          ease: [0.34, 1.56, 0.64, 1]
+                        }}
+                        className="pointer-events-none z-20"
+                      >
+                        <Image
+                          src="/notifications/notif2.png"
+                          alt="Notification"
+                          width={320}
+                          height={100}
+                          className=""
+                        />
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
           </div>
-        </div>
 
-        {/* Section 8 - Completely Private */}
-        <div
-          ref={section8Ref}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
-            {/* Text content */}
-            <div className="text-center w-full md:w-auto md:max-w-sm md:mb-0">
-              <h2
-                className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+          {/* Section 7 - Reviews Section with Motion animations */}
+          <div
+            ref={section7Ref}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ opacity: 0, pointerEvents: 'none', overflow: 'visible' }}
+          >
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-8" style={{ overflow: 'visible' }}>
+              <motion.h2
+                initial={{ opacity: 0, y: -30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl text-white text-center mb-6 leading-[1.1]"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
                   fontWeight: 600
                 }}
               >
-                Your data.<br />
-                <span className="text-white font-bold">
-                  Always your own.
-                </span>
-              </h2>
-              {/* Desktop paragraph */}
+                Loved by people like you
+              </motion.h2>
               <p
-                className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mb-12 reviews-text font-normal text-center"
                 style={{
                   fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  opacity: 0
                 }}
+              >
+                Authentic stories of <span className="text-white font-semibold">clarity, confidence, and balance</span> from SeeMe's early community.
+              </p>
+
+              {/* Infinite auto-scroll carousel with edge fade - only render when section is active */}
+              {(activeSection === 5 || activeSection === 6) && (
+                <div
+                  className="overflow-hidden pb-6 relative"
+                  style={{
+                    pointerEvents: 'auto',
+                    maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+                  }}
+                >
+                  <motion.div
+                    className="flex gap-6"
+                    animate={{
+                      x: activeSection === 6 ? [0, -((300 + 24) * reviews.length)] : 0
+                    }}
+                    transition={{
+                      x: {
+                        duration: 40, // Slightly faster for better flow
+                        repeat: Infinity,
+                        ease: "linear",
+                        repeatType: "loop"
+                      }
+                    }}
+                    style={{ willChange: 'transform' }}
+                  >
+                    {/* Render double array for seamless infinite loop */}
+                    {[...reviews, ...reviews, ...reviews].map((review, index) => (
+                      <motion.div
+                        key={`${index}-${review.name}`}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={activeSection === 6 ? {
+                          opacity: 1,
+                          y: 0
+                        } : {
+                          opacity: 0,
+                          y: 30
+                        }}
+                        transition={{
+                          delay: (index % reviews.length) * 0.1,
+                          duration: 0.5
+                        }}
+                        // Updated to match Disclaimer glass style: bg-white/5, backdrop-blur-sm, border-white/10
+                        className="bg-white/5 backdrop-blur-sm rounded-xl p-5 md:p-6 border border-white/10 shadow-sm flex-shrink-0 w-[300px] md:w-[350px]"
+                      >
+                        <div className="mb-3">
+                          <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-2"
+                            style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+                            {review.category}
+                          </p>
+                          <div className="flex mb-3">
+                            {[...Array(review.rating)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className="w-4 h-4 text-white/50 fill-current"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        <p
+                          className="text-white/90 text-sm md:text-base mb-4 leading-relaxed"
+                          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                        >
+                          "{review.text}"
+                        </p>
+                        <p
+                          className="text-white/50 text-xs font-medium italic"
+                          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                        >
+                          {review.name}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Section 8 - Completely Private */}
+          <div
+            ref={section8Ref}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-20 px-4 md:-translate-x-12">
+              {/* Text content */}
+              <div className="text-center w-full md:w-auto md:max-w-sm md:mb-0">
+                <h2
+                  className="text-3xl md:text-5xl text-white/80 leading-[1.1]"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontWeight: 600
+                  }}
+                >
+                  Your data.<br />
+                  <span className="text-white font-bold">
+                    Always your own.
+                  </span>
+                </h2>
+                {/* Desktop paragraph */}
+                <p
+                  className="hidden md:block text-white/90 text-lg mt-6 font-normal"
+                  style={{
+                    fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  }}
+                >
+                  Built <span className="text-white font-semibold">private-first</span> with on-device intelligence and secure optional cloud enhancements.
+                </p>
+              </div>
+
+              {/* Lock icon - simplified, no animation on mobile for performance */}
+              <div className="relative flex items-center justify-center w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+                {(activeSection === 6 || activeSection === 7 || activeSection === 8) && (
+                  <>
+                    <div
+                      className="absolute inset-0 transition-opacity duration-700"
+                      style={{ opacity: showLocked ? 0 : 1 }}
+                    >
+                      <Image
+                        src="/unlock.png"
+                        alt="Unlocked"
+                        fill
+                        className="object-contain brightness-0 invert"
+                        sizes="128px"
+                      />
+                    </div>
+                    <div
+                      className="absolute inset-0 transition-opacity duration-700"
+                      style={{ opacity: showLocked ? 1 : 0 }}
+                    >
+                      <Image
+                        src="/lock.png"
+                        alt="Locked"
+                        fill
+                        className="object-contain brightness-0 invert"
+                        sizes="128px"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile paragraph */}
+              <p
+                className="md:hidden text-white/90 text-sm text-center font-normal px-2"
+                style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
               >
                 Built <span className="text-white font-semibold">private-first</span> with on-device intelligence and secure optional cloud enhancements.
               </p>
             </div>
-
-            {/* Lock icon - simplified, no animation on mobile for performance */}
-            <div className="relative flex items-center justify-center w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
-              {(activeSection === 6 || activeSection === 7 || activeSection === 8) && (
-                <>
-                  <div
-                    className="absolute inset-0 transition-opacity duration-700"
-                    style={{ opacity: showLocked ? 0 : 1 }}
-                  >
-                    <Image
-                      src="/unlock.png"
-                      alt="Unlocked"
-                      fill
-                      className="object-contain brightness-0 invert"
-                      sizes="128px"
-                    />
-                  </div>
-                  <div
-                    className="absolute inset-0 transition-opacity duration-700"
-                    style={{ opacity: showLocked ? 1 : 0 }}
-                  >
-                    <Image
-                      src="/lock.png"
-                      alt="Locked"
-                      fill
-                      className="object-contain brightness-0 invert"
-                      sizes="128px"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Mobile paragraph */}
-            <p
-              className="md:hidden text-white/90 text-sm text-center font-normal px-2"
-              style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-            >
-              Built <span className="text-white font-semibold">private-first</span> with on-device intelligence and secure optional cloud enhancements.
-            </p>
           </div>
-        </div>
 
-        {/* Section 9 - CTA */}
-        <div
-          ref={section9Ref}
-          className="absolute inset-0 flex items-center justify-center z-50 cursor-auto"
-          style={{ opacity: 0, pointerEvents: 'none' }}
-        >
-          <div className="cta-inner relative z-10 flex flex-col items-center justify-center text-center px-4 cursor-auto">
-            <h2
-              className="text-3xl md:text-6xl text-white/80 leading-[1.1]"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                fontWeight: 600
-              }}
-            >
-              Begin your journey<br />
-              <span className="text-white font-bold">
-                today.
-              </span>
-            </h2>
-            <p
-              className="text-white/90 text-base md:text-xl max-w-lg mt-6 font-normal"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-              }}
-            >
-              Start building your personal intelligence. Calmly, privately, and on your terms.
-            </p>
-            
-            {/* App Store Button */}
-            <a
-              href="https://apps.apple.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer"
-              style={{
-                fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-              }}
-              onClick={() => {
-                analytics.buttonClick('Download on the App Store', 'Final CTA');
-              }}
-            >
-              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <span className="text-lg font-semibold whitespace-nowrap">Download on the App Store</span>
-            </a>
-
-            {/* Disclaimer Section - Below CTA */}
-            <div className="mt-16 max-w-2xl mx-auto">
-              <button
-                onClick={() => setDisclaimerExpanded(!disclaimerExpanded)}
-                className="w-full flex items-center justify-center gap-2 text-white/40 hover:text-white/60 transition-colors text-xs py-2 cursor-pointer"
-                aria-expanded={disclaimerExpanded}
+          {/* Section 9 - CTA */}
+          <div
+            ref={section9Ref}
+            className="absolute inset-0 flex items-center justify-center z-50 cursor-auto"
+            style={{ opacity: 0, pointerEvents: 'none' }}
+          >
+            <div className="cta-inner relative z-10 flex flex-col items-center justify-center text-center px-4 cursor-auto">
+              <h2
+                className="text-3xl md:text-6xl text-white/80 leading-[1.1]"
+                style={{
+                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontWeight: 600
+                }}
               >
-                <span>Important Disclaimer</span>
-                <motion.svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  animate={{ rotate: disclaimerExpanded ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </motion.svg>
-              </button>
-              
-              <AnimatePresence>
-                {disclaimerExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className="overflow-hidden"
-                  >
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-5 mt-3 text-left border border-white/10">
-                      <p className="text-white/60 text-xs leading-relaxed mb-3">
-                        SeeMe LLC provides an AI-powered coaching and reflection tool. We do not provide medical, mental health, psychological, legal, or financial services, and we do not monitor or respond to emergencies.
-                      </p>
-                      <p className="text-white/70 text-xs leading-relaxed mb-2">
-                        <strong className="text-white/80">SeeMe does not and cannot:</strong>
-                      </p>
-                      <ul className="text-white/60 text-xs leading-relaxed mb-3 space-y-1.5 pl-4">
-                        <li className="list-disc">Monitor your content in real time</li>
-                        <li className="list-disc">Contact emergency services, law enforcement, or third parties for you</li>
-                        <li className="list-disc">Take responsibility for any harm, injury, or unlawful activity arising from your use of the app</li>
-                      </ul>
-                      <p className="text-white/60 text-xs leading-relaxed">
-                        You remain solely responsible for your own decisions, actions, safety, and well-being. Always seek help from qualified professionals and emergency services when needed.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                Begin your journey<br />
+                <span className="text-white font-bold">
+                  today.
+                </span>
+              </h2>
+              <p
+                className="text-white/90 text-base md:text-xl max-w-lg mt-6 font-normal"
+                style={{
+                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                }}
+              >
+                Start building your personal intelligence. Calmly, privately, and on your terms.
+              </p>
 
+              {/* App Store Button */}
+              <a
+                href="https://apps.apple.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer"
+                style={{
+                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
+                }}
+                onClick={() => {
+                  analytics.buttonClick('Download on the App Store', 'Final CTA');
+                }}
+              >
+                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                </svg>
+                <span className="text-lg font-semibold whitespace-nowrap">Download on the App Store</span>
+              </a>
+
+              {/* Disclaimer Section - Below CTA */}
+              <div className="mt-16 max-w-2xl mx-auto">
+                <button
+                  onClick={() => setDisclaimerExpanded(!disclaimerExpanded)}
+                  className="w-full flex items-center justify-center gap-2 text-white/40 hover:text-white/60 transition-colors text-xs py-2 cursor-pointer"
+                  aria-expanded={disclaimerExpanded}
+                >
+                  <span>Important Disclaimer</span>
+                  <motion.svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    animate={{ rotate: disclaimerExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </motion.svg>
+                </button>
+
+                <AnimatePresence>
+                  {disclaimerExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="bg-white/5 backdrop-blur-sm rounded-xl p-5 mt-3 text-left border border-white/10">
+                        <p className="text-white/60 text-xs leading-relaxed mb-3">
+                          SeeMe LLC provides an AI-powered coaching and reflection tool. We do not provide medical, mental health, psychological, legal, or financial services, and we do not monitor or respond to emergencies.
+                        </p>
+                        <p className="text-white/70 text-xs leading-relaxed mb-2">
+                          <strong className="text-white/80">SeeMe does not and cannot:</strong>
+                        </p>
+                        <ul className="text-white/60 text-xs leading-relaxed mb-3 space-y-1.5 pl-4">
+                          <li className="list-disc">Monitor your content in real time</li>
+                          <li className="list-disc">Contact emergency services, law enforcement, or third parties for you</li>
+                          <li className="list-disc">Take responsibility for any harm, injury, or unlawful activity arising from your use of the app</li>
+                        </ul>
+                        <p className="text-white/60 text-xs leading-relaxed">
+                          You remain solely responsible for your own decisions, actions, safety, and well-being. Always seek help from qualified professionals and emergency services when needed.
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+            </div>
           </div>
         </div>
-      </div>
 
       </div>
 
       {/* Footer - at absolute bottom of scroll */}
-      <footer 
+      <footer
         className="absolute bottom-0 left-0 right-0 z-20 py-6 text-center"
         style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
       >

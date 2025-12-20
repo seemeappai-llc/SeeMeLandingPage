@@ -33,33 +33,28 @@ export function getDeviceCapabilities(): DeviceCapabilities {
   const isIPadOS = navigator.platform === 'MacIntel' && (navigator as any).maxTouchPoints > 1;
   const isMobile = /iPhone|iPad|iPod|Android/i.test(ua) || isIPadOS;
   const isIOS = /iPhone|iPad|iPod/i.test(ua) || isIPadOS;
-  
+
   // Check for reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
+
   // Detect low-end devices
   let isLowEndDevice = false;
-  
-  if (isIOS) {
-    // Treat ALL iOS devices (iPhone + iPad) as needing video memory optimization
-    // Safari on iOS has strict video decoder limits regardless of device model
-    // This prevents crashes from multiple concurrent video decodes
-    isLowEndDevice = true;
-  } else if (/Android/i.test(ua)) {
+
+  if (/Android/i.test(ua)) {
     // Android: check for low RAM indicators
     // @ts-ignore - deviceMemory is experimental
     const deviceMemory = (navigator as any).deviceMemory;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
-    
+
     // Low-end Android: <= 4GB RAM or <= 4 cores
     isLowEndDevice = (deviceMemory && deviceMemory <= 4) || hardwareConcurrency <= 4;
   }
-  
+
   // Check GPU capabilities
   const canvas = document.createElement('canvas');
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   let hasLimitedGPU = false;
-  
+
   if (gl) {
     // @ts-ignore
     const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
@@ -70,17 +65,19 @@ export function getDeviceCapabilities(): DeviceCapabilities {
       hasLimitedGPU = /Apple A([0-9]|1[0-3]) GPU/i.test(renderer);
     }
   }
-  
-  const shouldReduceMotion = prefersReducedMotion || isLowEndDevice || hasLimitedGPU;
-  
+
+  // Only auto-reduce motion for actual low-end devices or user preference, NOT just all iOS
+  const shouldReduceMotion = prefersReducedMotion || (isLowEndDevice && !isIOS);
+
   return {
     isLowEndDevice: isLowEndDevice || hasLimitedGPU,
     isMobile,
     isIOS,
     shouldReduceMotion,
-    // Limit concurrent GPU-accelerated layers on low-end devices
+    // Ensure at least 2 backgrounds on mobile for crossfade, unless user explicitly wants reduced motion
     maxConcurrentBackgrounds: shouldReduceMotion ? 1 : (isMobile ? 2 : 3),
-    maxConcurrentVideos: shouldReduceMotion ? 1 : 2,
+    // Strict video limit for iOS to prevent decoder crashes
+    maxConcurrentVideos: (isIOS || shouldReduceMotion) ? 1 : 2,
   };
 }
 
@@ -100,7 +97,7 @@ export function getAnimationConfig(capabilities: DeviceCapabilities) {
       enableBlur: false,
     };
   }
-  
+
   if (capabilities.isMobile) {
     return {
       scrollScrub: 1.5,
@@ -111,7 +108,7 @@ export function getAnimationConfig(capabilities: DeviceCapabilities) {
       enableBlur: false,
     };
   }
-  
+
   // Desktop - full effects
   return {
     scrollScrub: 1.2,

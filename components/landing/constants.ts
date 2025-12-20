@@ -1,12 +1,11 @@
 export const BACKGROUNDS = [
   '/backgrounds/backg1.webp',
   '/backgrounds/backg2.webp',
-  '/backgrounds/backg2.webp',
+  '/backgrounds/backg2.webp', // Shared with Section 2
   '/backgrounds/backg3.webp',
-  '/backgrounds/backg3.webp',
+  '/backgrounds/backg3.webp', // Shared with Section 4
   '/backgrounds/backg4.webp',
   '/backgrounds/backg5.webp',
-  '/backgrounds/backg6.webp',
   '/backgrounds/backg6.webp',
 ];
 
@@ -26,9 +25,8 @@ export const SECTION_NAMES = [
   'Notifications',
   'Privacy First',
   'Rise',
-  'Testimonials',
   'Reviews',
   'CTA'
 ];
 
-export const TOTAL_SECTIONS = 9;
+export const TOTAL_SECTIONS = 8;

@@ -37,7 +37,7 @@ export const InsightsSection: React.FC<InsightsSectionProps> = ({
       </div>
 
       <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-        {((shouldReduceMotion && activeSection === 2) || (!shouldReduceMotion && (activeSection === 1 || activeSection === 2 || activeSection === 3))) && (
+        {((shouldReduceMotion && activeSection === 2) || (!shouldReduceMotion && (activeSection >= 1 && activeSection <= 3))) && (
           <SmartVideo
             src={videoUrls.video3}
             poster="/mockups/mock3.webp"

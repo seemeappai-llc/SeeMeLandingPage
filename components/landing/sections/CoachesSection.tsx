@@ -39,12 +39,12 @@ export const CoachesSection: React.FC<CoachesSectionProps> = ({
             className="hidden md:block text-white/90 text-lg mt-6 font-normal"
             style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
           >
-            Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
+            Crafted with <span className="text-white font-semibold">real coaches and experts</span>, supporting life, work, wellness, and mindset.
           </p>
         </div>
 
         <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-          {((shouldReduceMotion && activeSection === 1) || (!shouldReduceMotion && (activeSection === 0 || activeSection === 1 || activeSection === 2))) && (
+          {((shouldReduceMotion && activeSection === 1) || (!shouldReduceMotion && (activeSection >= 0 && activeSection <= 2))) && (
             <SmartVideo
               src={videoUrls.video2}
               poster="/mockups/mock2.webp"
@@ -105,7 +105,7 @@ export const CoachesSection: React.FC<CoachesSectionProps> = ({
           className="md:hidden text-white/90 text-sm text-center font-normal px-2"
           style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
         >
-          Crafted with <span className="text-white font-semibold">real coaches and therapists</span>, supporting life, work, wellness, and mindset.
+          Crafted with <span className="text-white font-semibold">real coaches and experts</span>, supporting life, work, wellness, and mindset.
         </p>
       </div>
     </div>

@@ -16,7 +16,6 @@ import { InsightsSection } from './sections/InsightsSection';
 import { NotificationsSection } from './sections/NotificationsSection';
 import { PrivacySection } from './sections/PrivacySection';
 import { RiseSection } from './sections/RiseSection';
-import { TestimonialsSection } from './sections/TestimonialsSection';
 import { ReviewsSection } from './sections/ReviewsSection';
 import { CTASection } from './sections/CTASection';
 import { BACKGROUNDS, COACHES, SECTION_NAMES } from './constants';
@@ -36,7 +35,6 @@ export const LandingPage = () => {
   const section4Ref = useRef<HTMLDivElement>(null);
   const section5Ref = useRef<HTMLDivElement>(null);
   const section6Ref = useRef<HTMLDivElement>(null);
-  const section7Ref = useRef<HTMLDivElement>(null);
   const section8Ref = useRef<HTMLDivElement>(null);
   const section9Ref = useRef<HTMLDivElement>(null);
   const riseTextRef = useRef<HTMLParagraphElement>(null);
@@ -48,9 +46,8 @@ export const LandingPage = () => {
     section4Ref,
     section5Ref,
     section6Ref,
-    section7Ref,
-    section8Ref,
-    section9Ref,
+    section8Ref, // Reviews
+    section9Ref, // CTA
   ];
 
   // State
@@ -67,15 +64,15 @@ export const LandingPage = () => {
   // Image preloading
   const imagesToPreload = deviceCapabilities.shouldReduceMotion
     ? [
-        BACKGROUNDS[0],
-        '/coaches/c1.png',
-        '/coaches/c2.png',
-        '/coaches/c3.png',
-      ]
+      BACKGROUNDS[0],
+      '/coaches/c1.png',
+      '/coaches/c2.png',
+      '/coaches/c3.png',
+    ]
     : [
-        ...BACKGROUNDS,
-        ...COACHES.map(c => c.img),
-      ];
+      ...BACKGROUNDS,
+      ...COACHES.map(c => c.img),
+    ];
 
   const imagesLoaded = useImagePreloader(imagesToPreload);
 
@@ -136,6 +133,25 @@ export const LandingPage = () => {
         maxConcurrentBackgrounds={deviceCapabilities.maxConcurrentBackgrounds}
       />
 
+      {/* Desktop Sticky CTA */}
+      <a
+        href="https://apps.apple.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed top-6 right-6 z-50 hidden md:flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2.5 rounded-full hover:bg-white/20 transition-all duration-300 hover:scale-105 group"
+        onClick={() => analytics.buttonClick('Sticky CTA', 'Global')}
+      >
+        <div className="relative w-6 h-6 rounded-lg overflow-hidden shadow-inner">
+          <img src="/logo.png" alt="SeeMe Logo" className="w-full h-full object-cover" />
+        </div>
+        <span
+          className="text-white text-sm font-medium tracking-wide"
+          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+        >
+          Download SeeMe
+        </span>
+      </a>
+
       <div ref={containerRef} className="h-[1800vh] w-screen max-w-full relative z-10 overflow-x-hidden">
         <div className="fixed inset-0 w-screen max-w-full" style={{ overflow: 'clip' }}>
           <HeroSection
@@ -183,11 +199,6 @@ export const LandingPage = () => {
             activeSection={activeSection}
           />
 
-          <TestimonialsSection
-            sectionRef={section7Ref}
-            activeSection={activeSection}
-          />
-
           <ReviewsSection
             sectionRef={section8Ref}
             activeSection={activeSection}
@@ -202,7 +213,7 @@ export const LandingPage = () => {
         </div>
       </div>
 
-      <footer 
+      <footer
         className="absolute bottom-0 left-0 right-0 z-20 py-6 text-center"
         style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
       >

@@ -32,8 +32,13 @@ export const BackgroundManager = forwardRef<HTMLDivElement, BackgroundManagerPro
         />
       ) : (
         backgrounds.map((bg, index) => {
-          const maxDistance = maxConcurrentBackgrounds - 1;
-          const shouldRender = Math.abs(index - currentBgIndex) <= maxDistance || index === 0;
+          const distance = Math.abs(index - currentBgIndex);
+          const isCurrent = index === currentBgIndex;
+
+          // Render if it's the current one, or within safe range
+          // With limit 2, we allow distance < 2 (0 and 1) -> Current and Neighbor
+          const shouldRender = distance < maxConcurrentBackgrounds;
+
           if (!shouldRender) return null;
 
           return (
@@ -42,12 +47,13 @@ export const BackgroundManager = forwardRef<HTMLDivElement, BackgroundManagerPro
               data-bg={index}
               className="absolute inset-0"
               style={{
-                opacity: index === 0 ? 1 : 0,
+                opacity: isCurrent ? 1 : 0,
                 backgroundImage: `url(${bg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                willChange: index === currentBgIndex ? 'opacity' : 'auto',
-                backfaceVisibility: 'hidden',
+                willChange: isCurrent ? 'opacity' : 'auto',
+                // Important: Ensure we don't hide the neighbor we are crossfading to!
+                visibility: 'visible',
               }}
             />
           );

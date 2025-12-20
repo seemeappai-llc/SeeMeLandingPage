@@ -24,8 +24,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <div
       ref={sectionRef}
       className="absolute inset-0 flex items-center justify-start"
-      style={{ 
-        opacity: 1, 
+      style={{
+        opacity: 1,
         pointerEvents: 'auto',
         paddingTop: 'max(env(safe-area-inset-top, 0px) + 3rem, 4rem)',
         paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
@@ -70,7 +70,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
           }}
         >
-          {(!shouldReduceMotion || activeSection === 0) && (
+          {((!shouldReduceMotion && activeSection <= 1) || (shouldReduceMotion && activeSection === 0)) && (
             <SmartVideo
               src={videoUrls.video1}
               poster="/mockups/mock1.webp"
