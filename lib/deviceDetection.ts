@@ -74,8 +74,8 @@ export function getDeviceCapabilities(): DeviceCapabilities {
     isMobile,
     isIOS,
     shouldReduceMotion,
-    // Ensure at least 2 backgrounds on mobile for crossfade, unless user explicitly wants reduced motion
-    maxConcurrentBackgrounds: shouldReduceMotion ? 1 : (isMobile ? 2 : 3),
+    // Ensure at least 2 backgrounds on mobile for crossfade, UNLESS iOS (crash prone) or reduced motion
+    maxConcurrentBackgrounds: (isIOS || shouldReduceMotion) ? 1 : (isMobile ? 2 : 3),
     // Strict video limit for iOS to prevent decoder crashes
     maxConcurrentVideos: (isIOS || shouldReduceMotion) ? 1 : 2,
   };
@@ -95,6 +95,19 @@ export function getAnimationConfig(capabilities: DeviceCapabilities) {
       enableBackgroundTransitions: false,
       enableParallax: false,
       enableBlur: false,
+    };
+  }
+
+  // iOS-specific safe mode to prevent crashes (iPhone 13+)
+  if (capabilities.isIOS) {
+    return {
+      scrollScrub: 1.5,
+      snapDuration: { min: 0.3, max: 0.8 },
+      snapDelay: 0.15,
+      // DISABLE transitions to prevent 2nd background layer from mounting
+      enableBackgroundTransitions: false,
+      enableParallax: false, // Save memory
+      enableBlur: true, // Keep blur if possible, but could disable if crashes persist
     };
   }
 
