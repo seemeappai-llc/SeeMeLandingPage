@@ -34,7 +34,58 @@ export const useScrollAnimation = (
         start: 'top top',
         end: 'bottom bottom',
         scrub: 1.0, // Reduced from 1.5 for snappier response
-        // Snap removed to prevent "unexpected scroll snap" issues
+        snap: {
+          snapTo: (progress) => {
+            // Don't snap at the very start (prevents auto-scroll on load)
+            if (progress < 0.01) {
+              return 0;
+            }
+
+            // Define section center points for snapping
+            const totalSections = TOTAL_SECTIONS;
+            const segment = 1 / totalSections;
+
+            const snapPoints = Array.from({ length: totalSections }, (_, index) => {
+              if (index === 0) return 0;          // Hero pinned at top
+              if (index === totalSections - 1) return 1; // CTA pinned at end
+              return (index + 0.5) * segment;    // Centers for middle sections
+            });
+
+            // Find closest snap point
+            const targetSnap = snapPoints.reduce((prev, curr) =>
+              Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev
+            );
+
+            // Calculate section progress to detect overlap zones
+            const currentSectionIndex = Math.floor(progress * totalSections);
+            const sectionProgress = (progress * totalSections) % 1;
+            
+
+            // This catches most cases where text overlaps
+            const isInOverlapZone = sectionProgress > 0.2 && sectionProgress < 0.8;
+            
+            // Always snap to nearest section if in overlap zone
+            // This ensures text never stays overlapping
+            if (isInOverlapZone) {
+              return targetSnap;
+            }
+
+            // For clean zones (near section centers), snap if close enough
+            const distanceToSnap = Math.abs(targetSnap - progress);
+            const snapThreshold = segment * 0.2; // 20% threshold
+            
+            if (distanceToSnap <= snapThreshold) {
+              return targetSnap;
+            }
+
+            // Otherwise, don't snap - let user continue scrolling
+            return progress;
+          },
+          duration: animConfig.snapDuration, // Device-optimized snap duration
+          delay: 0.3, // Longer delay to allow natural scrolling through sections
+          ease: "power2.inOut",
+          inertia: false // Disable inertia for more predictable snapping
+        },
         id: 'main-scroll',
         onUpdate: (self) => {
           const progress = self.progress;

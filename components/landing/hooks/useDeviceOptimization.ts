@@ -35,23 +35,7 @@ export const useDeviceOptimization = () => {
     setDeviceCapabilities(capabilities);
     setAnimConfig(getAnimationConfig(capabilities));
 
-    // Emergency memory cleanup for Safari crashes
-    if (capabilities.isIOS) {
-      const handleMemoryWarning = () => {
-        console.warn('Memory warning detected - cleaning up');
-        // Force garbage collection by clearing caches
-        const { ScrollTrigger } = require('gsap/ScrollTrigger');
-        ScrollTrigger.getAll().forEach((st: any) => st.kill());
-        const gsap = require('gsap');
-        gsap.globalTimeline.clear();
-      };
-
-      window.addEventListener('pagehide', handleMemoryWarning);
-
-      return () => {
-        window.removeEventListener('pagehide', handleMemoryWarning);
-      };
-    }
+    // No cleanup needed - Intersection Observer handles its own memory management
   }, []);
 
   return { deviceCapabilities, animConfig };

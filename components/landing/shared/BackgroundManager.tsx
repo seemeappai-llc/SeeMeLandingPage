@@ -32,27 +32,18 @@ export const BackgroundManager = forwardRef<HTMLDivElement, BackgroundManagerPro
         />
       ) : (
         backgrounds.map((bg, index) => {
-          const distance = Math.abs(index - currentBgIndex);
-          const isCurrent = index === currentBgIndex;
-
-          // Render if it's the current one, or within safe range
-          // With limit 2, we allow distance < 2 (0 and 1) -> Current and Neighbor
-          const shouldRender = distance < maxConcurrentBackgrounds;
-
-          if (!shouldRender) return null;
-
+          // Render all backgrounds so V2 scroll animation can control their opacities
+          // V2 handles the crossfading logic
           return (
             <div
               key={`bg-${index}`}
               data-bg={index}
               className="absolute inset-0"
               style={{
-                opacity: isCurrent ? 1 : 0,
+                opacity: 0, // V2 will control this via gsap.set
                 backgroundImage: `url(${bg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                willChange: isCurrent ? 'opacity' : 'auto',
-                // Important: Ensure we don't hide the neighbor we are crossfading to!
                 visibility: 'visible',
               }}
             />

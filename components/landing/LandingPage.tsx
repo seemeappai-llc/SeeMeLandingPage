@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useDeviceOptimization } from './hooks/useDeviceOptimization';
 import { useImagePreloader } from './hooks/useImagePreloader';
 import { useVideoPreloader } from './hooks/useVideoPreloader';
 import { useBackgroundManager } from './hooks/useBackgroundManager';
-import { useScrollAnimation } from './hooks/useScrollAnimation';
+import { useIntersectionScroll } from './hooks/useIntersectionScroll';
 import { BackgroundManager } from './shared/BackgroundManager';
 import { HeroSection } from './sections/HeroSection';
 import { CoachesSection } from './sections/CoachesSection';
@@ -19,8 +17,6 @@ import { RiseSection } from './sections/RiseSection';
 import { ReviewsSection } from './sections/ReviewsSection';
 import { CTASection } from './sections/CTASection';
 import { BACKGROUNDS, COACHES, SECTION_NAMES } from './constants';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export const LandingPage = () => {
   const analytics = useAnalytics();
@@ -79,29 +75,20 @@ export const LandingPage = () => {
   // Video preloading
   useVideoPreloader(imagesLoaded, deviceCapabilities.isIOS, deviceCapabilities.shouldReduceMotion);
 
-  // GSAP ScrollTrigger configuration
-  useEffect(() => {
-    if (deviceCapabilities.shouldReduceMotion) {
-      ScrollTrigger.config({
-        autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
-        limitCallbacks: true,
-      });
-    }
-  }, [deviceCapabilities]);
-
-  // Scroll animation
-  const { scrollToSection } = useScrollAnimation(
-    containerRef,
-    backgroundRef,
+  // Use Intersection Observer for simple, performant scroll animations
+  const { activeSection: observedSection, currentBgIndex: observedBgIndex, scrollToSection } = useIntersectionScroll(
     sectionRefs,
-    animConfig,
-    imagesLoaded,
-    deviceCapabilities.shouldReduceMotion,
-    currentBgIndexRef,
-    setCurrentBgIndex,
-    setActiveSection,
+    backgroundRef,
     BACKGROUNDS
   );
+
+  // Sync the observed section with state
+  useEffect(() => {
+    if (imagesLoaded) {
+      setActiveSection(observedSection);
+      setCurrentBgIndex(observedBgIndex);
+    }
+  }, [observedSection, observedBgIndex, imagesLoaded]);
 
   // Track section changes
   useEffect(() => {
