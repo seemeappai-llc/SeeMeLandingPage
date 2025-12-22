@@ -6,6 +6,7 @@ import SmartVideo from '@/components/SmartVideo';
 import { videoUrls } from '@/config/videoUrls';
 import Image from 'next/image';
 import { REVIEWS } from './data/reviews';
+import { COACHES, BACKGROUNDS } from './constants';
 
 // --- Types ---
 type SectionData = {
@@ -81,7 +82,16 @@ const SECTIONS: SectionData[] = [
 
 export const TestLandingPage = () => {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Detect desktop on client side to avoid hydration mismatch
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Handle scroll to update active section
   useEffect(() => {
@@ -115,10 +125,27 @@ export const TestLandingPage = () => {
 
   return (
     <div className="bg-black min-h-screen text-white font-sans selection:bg-white/20">
-      {/* 1. Shared Background Layer - Low Memory Footprint */}
+      {/* 1. Optimized Background Layer - Only loads current + adjacent */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800" />
-        <div className="absolute inset-0 bg-black/20" />
+        {BACKGROUNDS.map((bg: string, index: number) => {
+          // Only render backgrounds within 1 index of active section
+          const distance = Math.abs(index - activeSectionIndex);
+          if (distance > 1) return null;
+          
+          return (
+            <div
+              key={`bg-${index}`}
+              className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+              style={{
+                backgroundImage: `url(${bg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                opacity: index === activeSectionIndex ? 1 : 0,
+              }}
+            />
+          );
+        })}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* 2. Sticky Phone Container - Single Video Instance */}
@@ -130,9 +157,8 @@ export const TestLandingPage = () => {
           style={{
             width: '280px',
             height: '600px',
-            // Shift phone right on desktop to allow text on left
             transform: showPhone 
-              ? (typeof window !== 'undefined' && window.innerWidth >= 768 ? 'translateX(25vw)' : 'translateY(15vh)') 
+              ? (isDesktop ? 'translateX(20vw) translateY(0)' : 'translateY(10vh)') 
               : 'translateY(100vh)'
           }}
         >
@@ -174,6 +200,47 @@ export const TestLandingPage = () => {
               </div>
               
               {/* Extra content for specific sections */}
+              {section.id === 'coaches' && (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] pointer-events-none z-0">
+                  {activeSectionIndex === index && COACHES.map((coach: any, i: number) => {
+                    const angle = (i / COACHES.length) * Math.PI * 2;
+                    const radius = isDesktop ? 350 : 160; 
+                    const startX = Math.cos(angle) * radius;
+                    const startY = Math.sin(angle) * radius;
+                    
+                    return (
+                      <motion.div
+                        key={coach.id}
+                        initial={{ x: startX, y: startY, opacity: 0, scale: 0.8 }}
+                        animate={{
+                          x: [startX, 0],
+                          y: [startY, 0],
+                          opacity: [0, 1, 1, 0],
+                          scale: [0.8, 1, 0.6, 0.3]
+                        }}
+                        transition={{
+                          duration: 3,
+                          delay: coach.delay,
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                          repeatDelay: 2
+                        }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16"
+                      >
+                        <div className="relative w-full h-full rounded-full border-2 border-white shadow-lg overflow-hidden">
+                          <Image
+                            src={coach.img}
+                            alt={`Coach ${coach.id}`}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+
               {section.id === 'testimonials' && (
                 <div className="mt-12 flex gap-4 overflow-x-auto pb-4 mask-linear-fade">
                    {REVIEWS.slice(0, 3).map((review, i) => (
