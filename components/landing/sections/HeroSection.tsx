@@ -70,7 +70,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             marginTop: 'clamp(0.5rem, 1vh, 1.5rem)'
           }}
         >
-          {((!shouldReduceMotion && activeSection <= 1) || (shouldReduceMotion && activeSection === 0)) && (
+          {activeSection === 0 && (
             <SmartVideo
               src={videoUrls.video1}
               poster="/mockups/mock1.webp"

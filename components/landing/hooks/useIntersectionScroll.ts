@@ -42,17 +42,17 @@ export function useIntersectionScroll(
         }
       });
 
-      // Update backgrounds
+      // Update backgrounds - only the ones that are rendered
       if (backgroundRef.current) {
         const bgLayers = backgroundRef.current.querySelectorAll('[data-bg]');
-        bgLayers.forEach((layer, idx) => {
+        bgLayers.forEach((layer) => {
           const bgElement = layer as HTMLElement;
-          if (idx === sectionIndex) {
+          const bgIndex = parseInt(bgElement.getAttribute('data-bg') || '0');
+          
+          if (bgIndex === sectionIndex) {
             bgElement.style.opacity = '1';
-            bgElement.style.transition = 'opacity 0.6s ease-in-out';
           } else {
             bgElement.style.opacity = '0';
-            bgElement.style.transition = 'opacity 0.6s ease-in-out';
           }
         });
       }

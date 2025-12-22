@@ -8,19 +8,8 @@ export const useVideoPreloader = (
   shouldReduceMotion: boolean
 ) => {
   useEffect(() => {
-    if (!imagesLoaded) return;
-    if (isIOS) return; // Skip video preloading on iOS
-
-    if (shouldReduceMotion) {
-      preloadVideosSequentially(
-        [videoUrls.video1],
-        []
-      );
-    } else {
-      preloadVideosSequentially(
-        [videoUrls.video1],
-        [videoUrls.video2, videoUrls.video3, videoUrls.video4, videoUrls.video5]
-      );
-    }
+    // Disabled video preloading to reduce memory usage
+    // Videos will load on-demand when their section becomes active
+    // This prevents loading all 5 videos into memory at once
   }, [imagesLoaded, isIOS, shouldReduceMotion]);
 };

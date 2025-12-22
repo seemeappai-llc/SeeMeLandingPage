@@ -44,7 +44,7 @@ export const CoachesSection: React.FC<CoachesSectionProps> = ({
         </div>
 
         <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-          {((shouldReduceMotion && activeSection === 1) || (!shouldReduceMotion && (activeSection >= 0 && activeSection <= 2))) && (
+          {activeSection === 1 && (
             <SmartVideo
               src={videoUrls.video2}
               poster="/mockups/mock2.webp"

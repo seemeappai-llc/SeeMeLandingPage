@@ -37,7 +37,7 @@ export const PrivacySection: React.FC<PrivacySectionProps> = ({
       </div>
 
       <div className="relative rounded-[32px] border-4 border-white/30 bg-black shadow-lg overflow-hidden w-[240px] h-[520px] md:w-[280px] md:h-[615px] flex-shrink-0">
-        {((shouldReduceMotion && activeSection === 4) || (!shouldReduceMotion && (activeSection === 3 || activeSection === 4 || activeSection === 5))) && (
+        {activeSection === 4 && (
           <SmartVideo
             src={videoUrls.video5}
             poster="/mockups/mock5.webp"
