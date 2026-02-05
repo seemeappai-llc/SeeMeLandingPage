@@ -184,13 +184,76 @@ export const TestLandingPage = () => {
           <div 
             key={section.id}
             data-section-index={index}
-            className="min-h-screen flex items-center p-6 md:p-20"
+            className={`min-h-screen flex items-center p-6 md:p-20 relative ${
+              section.id === 'testimonials' || section.id === 'cta' ? 'justify-center' : ''
+            } ${section.id === 'hero' ? 'md:justify-start' : ''}`}
           >
-            <div className={`max-w-xl transition-all duration-500 ${
+            {/* Rise notifications - OUTSIDE content wrapper, spans full section width */}
+            {section.id === 'rise' && (
+              <div className="absolute inset-0 hidden md:block">
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif5:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[10%] left-[55%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif5.png" alt="Notification" width={280} height={90} />
+                </motion.div>
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif6:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[25%] left-[70%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif6.png" alt="Notification" width={270} height={88} />
+                </motion.div>
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif3:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[40%] left-[58%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif3.png" alt="Notification" width={285} height={92} />
+                </motion.div>
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif4:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[55%] left-[68%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif4.png" alt="Notification" width={275} height={88} />
+                </motion.div>
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif1:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[70%] left-[62%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif1.png" alt="Notification" width={280} height={90} />
+                </motion.div>
+                <motion.div
+                  drag
+                  dragMomentum={false}
+                  onDragEnd={(e, info) => console.log('notif2:', { x: info.point.x, y: info.point.y })}
+                  whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+                  className="absolute top-[85%] left-[72%] cursor-grab z-50"
+                >
+                  <Image src="/notifications/notif2.png" alt="Notification" width={285} height={92} />
+                </motion.div>
+              </div>
+            )}
+
+            {/* Content wrapper */}
+            <div className={`${section.id === 'testimonials' ? 'w-full max-w-6xl mx-auto' : section.id === 'hero' ? 'md:absolute md:left-[5vw] md:right-[calc(50%+20vw-100px)] md:top-1/2 md:-translate-y-1/2 md:flex md:flex-col md:items-center md:justify-center' : 'max-w-xl'} transition-all duration-500 ${
               activeSectionIndex === index ? 'opacity-100 translate-y-0' : 'opacity-30 translate-y-10'
             }`}>
               {/* Text Content */}
-              <div className="mb-6">
+              <div className={`mb-6 ${section.id === 'testimonials' || section.id === 'cta' ? 'text-center' : ''} ${section.id === 'hero' ? 'md:text-center' : ''}`}>
                 <div className="text-4xl md:text-6xl mb-6 font-medium leading-tight text-white/90">
                   {section.title}
                 </div>
@@ -198,8 +261,7 @@ export const TestLandingPage = () => {
                   {section.subtitle}
                 </div>
               </div>
-              
-              {/* Extra content for specific sections */}
+
               {section.id === 'coaches' && (
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] pointer-events-none z-0">
                   {activeSectionIndex === index && COACHES.map((coach: any, i: number) => {
@@ -242,30 +304,130 @@ export const TestLandingPage = () => {
               )}
 
               {section.id === 'testimonials' && (
-                <div className="mt-12 flex gap-4 overflow-x-auto pb-4 mask-linear-fade">
-                   {REVIEWS.slice(0, 3).map((review, i) => (
-                     <div key={i} className="bg-white/10 p-6 rounded-2xl min-w-[300px] border border-white/10 backdrop-blur-sm">
-                       <p className="mb-4 text-sm opacity-80">"{review.text}"</p>
-                       <p className="text-xs font-bold opacity-60">{review.name}</p>
-                     </div>
-                   ))}
+                <div className="overflow-hidden rounded-2xl mt-12 px-4 md:px-8">
+                  <motion.div
+                    className="flex gap-6"
+                    initial={{ x: 0 }}
+                    animate={{
+                      x: -((350 + 24) * REVIEWS.length)
+                    }}
+                    transition={{
+                      x: {
+                        duration: 40,
+                        repeat: Infinity,
+                        ease: "linear",
+                        repeatType: "loop"
+                      }
+                    }}
+                  >
+                    {[...REVIEWS, ...REVIEWS].map((review, i) => (
+                      <div key={i} className="bg-white/[0.03] backdrop-blur-md p-6 rounded-xl w-[300px] md:w-[350px] border border-white/10 flex-shrink-0">
+                        <div className="flex gap-1 mb-3">
+                          {[...Array(review.rating)].map((_, j) => (
+                            <svg key={j} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-white/50">{review.category}</p>
+                        <p className="mb-4 text-sm leading-relaxed text-white/80">"{review.text}"</p>
+                        <p className="text-xs font-semibold text-white/60">{review.name}</p>
+                      </div>
+                    ))}
+                  </motion.div>
                 </div>
               )}
 
               {section.id === 'cta' && (
-                <a
-                  href="https://apps.apple.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform mt-8"
-                >
-                  Download on the App Store
-                </a>
+                <div className="flex flex-col items-center">
+                  <a
+                    href="https://apps.apple.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform mt-8 shadow-lg"
+                  >
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                    </svg>
+                    Download on the App Store
+                  </a>
+                  <CTADisclaimer />
+                </div>
               )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Footer */}
+      <footer className="relative z-20 py-12">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center gap-3 text-center">
+          <div className="flex items-center gap-4 text-sm text-white/40">
+            <a href="/privacy" className="hover:text-white/70 transition-colors">Privacy Policy</a>
+            <span>·</span>
+            <a href="mailto:info@seemeapp.ai" className="hover:text-white/70 transition-colors">Contact</a>
+          </div>
+          <p className="text-xs text-white/30">© 2025 SeeMe. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// Disclaimer component
+const CTADisclaimer = () => {
+  const [disclaimerExpanded, setDisclaimerExpanded] = useState(false);
+
+  return (
+    <div className="mt-10 max-w-2xl mx-auto">
+      <button
+        onClick={() => setDisclaimerExpanded(!disclaimerExpanded)}
+        className="w-full flex items-center justify-center gap-2 text-white/40 hover:text-white/60 transition-colors text-xs py-2 cursor-pointer"
+        aria-expanded={disclaimerExpanded}
+      >
+        <span>Important Disclaimer</span>
+        <motion.svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          animate={{ rotate: disclaimerExpanded ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </motion.svg>
+      </button>
+
+      {disclaimerExpanded && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="overflow-hidden"
+        >
+          <div className="bg-white/[0.02] backdrop-blur-sm rounded-xl p-5 mt-3 text-left border border-white/10">
+            <p className="text-white/60 text-xs leading-relaxed mb-3">
+              SeeMe LLC provides an AI-powered coaching and reflection tool. We do not provide medical, mental health, psychological, legal, or financial services, and we do not monitor or respond to emergencies.
+            </p>
+            <p className="text-white/70 text-xs leading-relaxed mb-2">
+              <strong className="text-white/80">SeeMe does not and cannot:</strong>
+            </p>
+            <ul className="text-white/60 text-xs leading-relaxed mb-3 space-y-1.5 pl-4">
+              <li className="list-disc">Monitor your content in real time</li>
+              <li className="list-disc">Contact emergency services, law enforcement, or third parties for you</li>
+              <li className="list-disc">Take responsibility for any harm, injury, or unlawful activity arising from your use of the app</li>
+            </ul>
+            <p className="text-white/60 text-xs leading-relaxed">
+              You remain solely responsible for your own decisions, actions, safety, and well-being. Always seek help from qualified professionals and emergency services when needed.
+            </p>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 };
