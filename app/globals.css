@@ -200,3 +200,708 @@ body > div {
     backface-visibility: hidden;
   }
 }
+
+/* ====================================================================
+   NEW LANDING PAGE STYLES
+   Created by Mohan
+   ==================================================================== */
+
+/* SF Pro Display font stack — uses native Apple system font on macOS/iOS,
+   falls back to system UI on other platforms */
+:root {
+  --font-sf-pro: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro',
+    'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+}
+
+.new-landing-root {
+  width: 100%;
+  overflow-x: hidden;
+  background: #000;
+}
+
+/* ---------- HERO SECTION ---------- */
+.new-landing-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.new-landing-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.new-landing-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.15) 40%,
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+/* Hero content (big SeeMe text + tagline) */
+.new-landing-hero-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  width: 100%;
+}
+
+/* Big "SeeMe" title — Phase 1 */
+.new-landing-seeme-title {
+  font-family: var(--font-sf-pro);
+  font-weight: 800;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0;
+}
+
+/* "Private. Personal. Intelligent." — Phase 2 (desktop) */
+.new-landing-title {
+  font-family: var(--font-sf-pro);
+  font-weight: 700;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 20px 0;
+  font-style: normal;
+}
+
+/* Mobile: bold, non-italic, no periods — matches Figma */
+.new-landing-title-mobile {
+  font-family: var(--font-sf-pro);
+  font-weight: 800;
+  font-size: clamp(2.8rem, 12vw, 4rem);
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  font-style: normal;
+  text-align: center;
+}
+
+.new-landing-tagline {
+  font-family: var(--font-sf-pro);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* ---------- MOCKUPS WRAPPER (after hero fades) ---------- */
+.new-landing-mockups-wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 60px 24px 40px;
+  gap: 32px;
+}
+
+.new-landing-mockups-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.new-landing-mockups-title {
+  font-family: var(--font-sf-pro);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+  font-style: normal;
+}
+
+.new-landing-mockups-title-mobile {
+  font-family: var(--font-sf-pro);
+  font-weight: 800;
+  font-size: clamp(2rem, 10vw, 3rem);
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+  font-style: normal;
+  text-align: center;
+}
+
+.new-landing-mockups-tagline {
+  font-family: var(--font-sf-pro);
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* Phone container */
+.new-landing-phones {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  flex-wrap: nowrap;
+}
+
+.new-landing-phone {
+  flex-shrink: 0;
+  width: 220px;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+}
+
+.new-landing-phone-single {
+  width: 280px;
+}
+
+/* App Store button */
+.new-landing-appstore-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.new-landing-appstore-btn:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Scroll indicator */
+.new-landing-scroll-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* ---------- SHARED SECTION STYLES ---------- */
+.new-landing-section {
+  position: relative;
+  width: 100%;
+  padding: 70px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.new-landing-section-heading {
+  font-family: var(--font-sf-pro);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+}
+
+.new-landing-section-subtext {
+  font-family: var(--font-sf-pro);
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  color: #ffffff;
+  font-weight: 400;
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+  max-width: 750px;
+}
+
+/* ---------- KNOWS YOU SECTION ---------- */
+.new-landing-knows-you {
+  background: #333;
+  padding-top: 80px;
+  padding-bottom: 60px;
+}
+
+/* Integration icons row */
+.new-landing-integrations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  max-width: 700px;
+}
+
+.new-landing-integration-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 52px;
+}
+
+/* ---------- FRAMEWORKS SECTION ---------- */
+.new-landing-frameworks {
+  background: #333;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.new-landing-frameworks .new-landing-section-subtext {
+  color: #ffffff;
+  max-width: none;
+}
+
+/* Coach cards */
+.new-landing-coaches {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+.new-landing-coach-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #4a4a4a;
+  border-radius: 999px;
+  padding: 10px 24px 10px 10px;
+  min-width: 200px;
+}
+
+.new-landing-coach-avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.new-landing-coach-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.new-landing-coach-name {
+  font-family: var(--font-sf-pro);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.new-landing-coach-role {
+  font-family: var(--font-sf-pro);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.3;
+}
+
+/* ---------- INTEGRATED SECTION ---------- */
+.new-landing-integrated {
+  background: #333;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.new-landing-integrated-heading {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  max-width: 800px;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .new-landing-integrated-heading {
+    white-space: normal;
+  }
+}
+
+/* Notification cards grid (desktop) */
+.new-landing-notif-grid {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 20px;
+  max-width: 960px;
+  width: 100%;
+}
+
+/* Notification frame (image-based cards) */
+.new-landing-notif-frame {
+  position: relative;
+  width: 320px;
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+/* SeeMe app icon overlay (covers the baked-in 'i' icon) */
+.new-landing-notif-icon-overlay {
+  position: absolute;
+  top: 11px;
+  left: 30px;
+  width: 26px;
+  height: 26px;
+  z-index: 2;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Slider overlay for Charlotte's card */
+.new-landing-notif-slider-overlay {
+  position: absolute;
+  bottom: 66px;
+  left: 28px;
+  right: 28px;
+  z-index: 1;
+}
+
+/* Carousel class for notification frames */
+.new-landing-notif-carousel .new-landing-notif-frame {
+  flex-shrink: 0;
+}
+
+/* ---------- TESTIMONIALS SECTION ---------- */
+.new-landing-testimonials {
+  background: #1a1a1a;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.new-landing-testimonial-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  width: 420px;
+  min-height: 200px;
+  padding: 44px 52px 96px 52px;
+  flex-shrink: 0;
+}
+
+.new-landing-testimonial-card p {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sf-pro);
+  font-size: 1.35rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #ffffff;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Carousel class for testimonial cards */
+.new-landing-testimonials-carousel .new-landing-testimonial-card {
+  flex-shrink: 0;
+}
+
+/* ---------- PRIVACY SECTION ---------- */
+.new-landing-privacy {
+  background: #1a1a1a;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.new-landing-privacy-subtext {
+  max-width: 680px;
+}
+
+.new-landing-privacy-lock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.new-landing-privacy-lock img {
+  filter: invert(1);
+}
+
+/* ---------- COACH SECTION (Works with your coach) ---------- */
+.new-landing-coach-section {
+  background: #1a1a1a;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.new-landing-coach-subtext {
+  max-width: 720px;
+}
+
+.new-landing-partner-rectangle {
+  position: relative;
+  display: inline-block;
+  margin-top: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.new-landing-partner-rectangle-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-sf-pro);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #000000;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.new-landing-b2b-text {
+  font-family: var(--font-sf-pro);
+  font-size: 0.85rem;
+  color: #ffffff;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ---------- TRY FOR FREE SECTION ---------- */
+.new-landing-try-free {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  overflow: hidden;
+}
+
+.new-landing-try-free-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.new-landing-try-free-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.new-landing-try-free-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.new-landing-try-free-heading {
+  color: #ffffff;
+}
+
+.new-landing-try-free-subtext {
+  color: #ffffff;
+  max-width: 500px;
+}
+
+.new-landing-try-free-btn {
+  display: inline-block;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.new-landing-disclaimer-link {
+  font-family: var(--font-sf-pro);
+  font-size: 0.85rem;
+  color: #ffffff;
+  text-decoration: none;
+  margin-top: 8px;
+  transition: color 0.2s;
+}
+
+.new-landing-disclaimer-link:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: underline;
+}
+
+/* ---------- INFINITE CAROUSEL ---------- */
+@keyframes carouselScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+.new-landing-carousel-mask {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.new-landing-carousel-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: carouselScroll linear infinite;
+  will-change: transform;
+}
+
+.new-landing-integrations-carousel .new-landing-integration-icon {
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.new-landing-coaches-carousel .new-landing-coach-card {
+  flex-shrink: 0;
+}
+
+/* ---------- RESPONSIVE: MOBILE ---------- */
+@media (max-width: 768px) {
+  .new-landing-tagline {
+    font-size: 0.95rem;
+  }
+
+  .new-landing-mockups-wrapper {
+    padding: 40px 16px 32px;
+    gap: 24px;
+  }
+
+  .new-landing-phones {
+    gap: 12px;
+  }
+
+  .new-landing-phone-single {
+    width: 260px;
+  }
+
+  .new-landing-section {
+    padding: 50px 20px;
+  }
+
+  .new-landing-knows-you {
+    padding-top: 60px;
+    padding-bottom: 50px;
+  }
+
+  .new-landing-section-heading {
+    font-family: var(--font-sf-pro);
+    font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+    font-weight: 700;
+  }
+
+  .new-landing-section-subtext {
+    font-size: 0.82rem;
+  }
+  
+  .new-landing-section-subtext br {
+    display: none;
+  }
+
+  .new-landing-integration-icon {
+    height: 44px;
+  }
+
+  .new-landing-integration-icon img {
+    max-height: 44px !important;
+  }
+
+  .new-landing-coach-card {
+    min-width: 190px;
+  }
+
+  .new-landing-notif-frame {
+    width: calc(100vw - 48px);
+    min-width: 280px;
+    max-width: 360px;
+  }
+
+  .new-landing-notif-icon-overlay {
+    top: 14px;
+    left: 38px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .new-landing-notif-slider-overlay {
+    bottom: 76px;
+    left: 32px;
+    right: 32px;
+  }
+
+  .new-landing-integrated {
+    padding-bottom: 60px;
+  }
+
+  .new-landing-testimonials {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .new-landing-testimonial-card {
+    width: 340px;
+    min-height: 160px;
+    padding: 36px 40px;
+  }
+
+  .new-landing-testimonial-card p {
+    font-size: 1.1rem;
+  }
+
+  .new-landing-privacy {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .new-landing-partner {
+    padding-top: 50px;
+    padding-bottom: 80px;
+  }
+
+  .new-landing-partner-btn {
+    font-size: 0.85rem;
+    padding: 12px 32px;
+  }
+}
