@@ -687,7 +687,7 @@ body > div {
 .new-landing-b2b-text {
   font-family: var(--font-sf-pro);
   font-size: 0.85rem;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.4);
   margin-top: 12px;
   text-align: center;
 }
@@ -754,6 +754,41 @@ body > div {
 .new-landing-disclaimer-link:hover {
   color: rgba(255, 255, 255, 1);
   text-decoration: underline;
+}
+
+/* ---------- FOOTER ---------- */
+.new-landing-footer {
+  background: #000;
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-landing-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.new-landing-footer-link {
+  color: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.new-landing-footer-link:hover {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.new-landing-footer-dot {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.new-landing-footer-copy {
+  color: rgba(255, 255, 255, 0.2);
 }
 
 /* ---------- INFINITE CAROUSEL ---------- */
