@@ -86,11 +86,11 @@ const FadeInWhenVisible = ({
 
 // ========== INTEGRATION ICONS DATA ==========
 const INTEGRATION_ICONS = [
-  { src: '/Microsoft_Outlook_Icon_(2025–present).svg 1.png', alt: 'Microsoft Outlook', width: 52, height: 52 },
+  { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 52, height: 52 },
   { src: '/Group.png', alt: 'Google Calendar', width: 52, height: 52 },
   { src: '/appleHealth.png', alt: 'Apple Health', width: 140, height: 52 },
-  { src: '/calendar-2021-04-29.png 1.png', alt: 'Apple Calendar', width: 52, height: 52 },
-  { src: '/Screen_Time 1.png', alt: 'Screen Time', width: 52, height: 52 },
+  { src: '/AppleCalendar.png', alt: 'Apple Calendar', width: 52, height: 52 },
+  { src: '/ScreenTime.png', alt: 'Screen Time', width: 52, height: 52 },
 ];
 
 // ========== COACHES DATA ==========
@@ -110,9 +110,9 @@ const TESTIMONIALS = [
 
 // ========== NOTIFICATION FRAME IMAGES ==========
 const NOTIF_FRAMES = [
-  { id: 'session', src: '/Frame (1).png', alt: 'Upcoming Session notification', hasSlider: false },
-  { id: 'charlotte', src: '/Frame (2).png', alt: 'From Charlotte notification', hasSlider: true },
-  { id: 'mo', src: '/Frame (3).png', alt: 'From Mo notification', hasSlider: false },
+  { id: 'session', src: '/Frame1.png', alt: 'Upcoming Session notification', hasSlider: false },
+  { id: 'charlotte', src: '/Frame2.png', alt: 'From Charlotte notification', hasSlider: true },
+  { id: 'mo', src: '/Frame3.png', alt: 'From Mo notification', hasSlider: false },
 ];
 
 // ========== MAIN COMPONENT ==========
@@ -167,14 +167,14 @@ export const NewLandingPage = () => {
                 className="new-landing-hero-content"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -60 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                exit={{ opacity: 0, y: -40, filter: 'blur(8px)' }}
+                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
               >
                 <motion.h1
                   className="new-landing-seeme-title"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
                 >
                   SeeMe
                 </motion.h1>
@@ -183,9 +183,9 @@ export const NewLandingPage = () => {
               <motion.div
                 key="content-text"
                 className="new-landing-mockups-header"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
               >
                 <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
                   {isMobile ? (
@@ -279,8 +279,8 @@ export const NewLandingPage = () => {
                 <Image
                   src="/downloadbutton.png"
                   alt="Download on the App Store"
-                  width={160}
-                  height={54}
+                  width={200}
+                  height={67}
                   style={{ height: 'auto' }}
                 />
               </motion.a>
@@ -301,9 +301,9 @@ export const NewLandingPage = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <motion.svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+                  width="36"
+                  height="36"
+                  viewBox="0 0 36 36"
                   fill="none"
                   stroke="white"
                   strokeWidth="2"
@@ -312,7 +312,7 @@ export const NewLandingPage = () => {
                   animate={{ y: [0, 6, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <polyline points="6 9 12 15 18 9" />
+                  <polyline points="6 13 18 25 30 13" />
                 </motion.svg>
               </motion.div>
             )}
@@ -461,7 +461,7 @@ export const NewLandingPage = () => {
                 <div key={frame.id} className="new-landing-notif-frame">
                   <div className="new-landing-notif-icon-overlay">
                     <Image
-                      src="/SeeMe-iOS-Dark-1024x1024@1x 2.png"
+                      src="/SeeMe-iOS-Dark.png"
                       alt="SeeMe"
                       width={28}
                       height={28}
@@ -502,7 +502,7 @@ export const NewLandingPage = () => {
                 >
                   <div className="new-landing-notif-icon-overlay">
                     <Image
-                      src="/SeeMe-iOS-Dark-1024x1024@1x 2.png"
+                      src="/SeeMe-iOS-Dark.png"
                       alt="SeeMe"
                       width={28}
                       height={28}
@@ -572,8 +572,8 @@ export const NewLandingPage = () => {
             <Image
               src="/lock.png"
               alt="Privacy Lock"
-              width={100}
-              height={120}
+              width={56}
+              height={68}
               style={{ objectFit: 'contain' }}
             />
           </div>
@@ -657,8 +657,8 @@ export const NewLandingPage = () => {
               <Image
                 src="/downloadbutton.png"
                 alt="Download on the App Store"
-                width={160}
-                height={54}
+                width={200}
+                height={67}
                 style={{ height: 'auto' }}
               />
             </motion.a>
@@ -671,6 +671,17 @@ export const NewLandingPage = () => {
           </FadeInWhenVisible>
         </div>
       </section>
+
+      {/* ==================== FOOTER ==================== */}
+      <footer className="new-landing-footer">
+        <div className="new-landing-footer-links">
+          <a href="/privacy" className="new-landing-footer-link">Privacy</a>
+          <span className="new-landing-footer-dot">·</span>
+          <a href="mailto:info@seemeapp.ai" className="new-landing-footer-link">Contact</a>
+          <span className="new-landing-footer-dot">·</span>
+          <span className="new-landing-footer-copy">© 2025 SeeMe</span>
+        </div>
+      </footer>
     </div>
   );
 };
