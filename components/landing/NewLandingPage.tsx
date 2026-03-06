@@ -265,7 +265,7 @@ export const NewLandingPage = () => {
           <AnimatePresence>
             {phase === 'content' && (
               <motion.a
-                href="https://apps.apple.com/app/seeme"
+                href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="new-landing-appstore-btn"
@@ -647,10 +647,10 @@ export const NewLandingPage = () => {
 
           <FadeInWhenVisible delay={0.3}>
             <motion.a
-              href="https://apps.apple.com/app/seeme"
+              href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
               target="_blank"
               rel="noopener noreferrer"
-              className="new-landing-try-free-btn"
+              className="new-landing-appstore-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
