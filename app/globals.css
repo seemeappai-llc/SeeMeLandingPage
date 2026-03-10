@@ -22,7 +22,7 @@
 
 /* Base elements */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Lenis handles smooth scrolling */
   margin: 0;
   padding: 0;
   width: 100%;
@@ -250,6 +250,30 @@ body > div {
   z-index: 1;
 }
 
+/* Fixed-height text container — locks height so phones never shift during transition */
+.new-landing-text-container {
+  position: relative;
+  width: 100%;
+  height: clamp(5rem, 13vw, 10rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Both text variants sit absolutely inside the container */
+.new-landing-text-abs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  z-index: 10;
+}
+
 /* Hero content (big SeeMe text + tagline) */
 .new-landing-hero-content {
   position: relative;
@@ -327,7 +351,7 @@ body > div {
 
 .new-landing-mockups-header {
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .new-landing-mockups-title {
