@@ -159,56 +159,58 @@ export const NewLandingPage = () => {
 
         {/* Hero content wrapper — mockups persist across phases */}
         <div className="new-landing-mockups-wrapper">
-          {/* Text area: swaps between SeeMe title and Private/Personal/Intelligent */}
-          <AnimatePresence mode="wait">
-            {phase === 'seeme' ? (
-              <motion.div
-                key="seeme-text"
-                className="new-landing-hero-content"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -40, filter: 'blur(8px)' }}
-                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <motion.h1
-                  className="new-landing-seeme-title"
+          {/* Text area: fixed-height container so phones never shift during transition */}
+          <div className="new-landing-text-container">
+            <AnimatePresence mode="wait">
+              {phase === 'seeme' ? (
+                <motion.div
+                  key="seeme-text"
+                  className="new-landing-text-abs"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, y: -40, filter: 'blur(8px)' }}
+                  transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <motion.h1
+                    className="new-landing-seeme-title"
+                    initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    SeeMe
+                  </motion.h1>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="content-text"
+                  className="new-landing-text-abs new-landing-mockups-header"
                   initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
                   animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  SeeMe
-                </motion.h1>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="content-text"
-                className="new-landing-mockups-header"
-                initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
-                  {isMobile ? (
-                    <>
-                      Private<br />
-                      Personal<br />
-                      Intelligent
-                    </>
-                  ) : (
-                    'Private. Personal. Intelligent.'
-                  )}
-                </h2>
-                <motion.p
-                  className="new-landing-mockups-tagline"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.3 }}
-                >
-                  Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
-                </motion.p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
+                    {isMobile ? (
+                      <>
+                        Private<br />
+                        Personal<br />
+                        Intelligent
+                      </>
+                    ) : (
+                      'Private. Personal. Intelligent.'
+                    )}
+                  </h2>
+                  <motion.p
+                    className="new-landing-mockups-tagline"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.3 }}
+                  >
+                    Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
+                  </motion.p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Phone Mockups — always visible, animate in once on mount */}
           <div className="new-landing-phones">

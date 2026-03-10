@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from '@vercel/analytics/next';
 import { Space_Grotesk, Syne, Manrope } from 'next/font/google';
+import SmoothScroll from '@/components/SmoothScroll';
 import "./globals.css";
 
 // Dramatic display font for headlines
@@ -48,7 +49,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${syne.variable} ${spaceGrotesk.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${syne.variable} ${spaceGrotesk.variable} ${manrope.variable}`}>
       <head>
         {/* iOS Web App Meta Tags */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -85,8 +86,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-manrope antialiased">
-        {children}
+      <body className="font-manrope antialiased" suppressHydrationWarning>
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         <Analytics />
       </body>
     </html>
