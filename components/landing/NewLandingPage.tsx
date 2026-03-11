@@ -403,7 +403,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.15}>
           <p className="new-landing-section-subtext">
-            We partnered with coaches, and life experts worldwide to make sure every interaction is grounded in what actually works.
+            We partnered with coaches and experts worldwide to make sure every interaction is grounded in what actually works.
           </p>
         </FadeInWhenVisible>
 
