@@ -881,17 +881,33 @@ body > div {
     font-size: 0.95rem;
   }
 
+  .new-landing-hero {
+    padding-top: 55px;
+    min-height: calc(100dvh + 70px);
+  }
+
+  .new-landing-mockups-title-mobile {
+    font-size: clamp(1.5rem, 7.5vw, 2.2rem);
+  }
+
   .new-landing-mockups-wrapper {
-    padding: 40px 16px 32px;
+    padding: 20px 16px 32px;
     gap: 24px;
+    min-height: calc(100dvh + 70px);
+    justify-content: flex-start;
   }
 
   .new-landing-phones {
     gap: 12px;
+    margin-top: -10px;
   }
 
   .new-landing-phone-single {
-    width: 260px;
+    width: 200px;
+  }
+
+  .new-landing-hero .new-landing-appstore-btn {
+    margin-top: 10px;
   }
 
   .new-landing-section {
