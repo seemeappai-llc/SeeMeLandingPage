@@ -250,15 +250,27 @@ body > div {
   z-index: 1;
 }
 
-/* Fixed-height text container — locks height so phones never shift during transition */
+/* Text container — height is determined by the invisible sizer (title + subtitle) */
 .new-landing-text-container {
   position: relative;
   width: 100%;
-  height: clamp(5rem, 13vw, 10rem);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* Invisible sizer — always rendered, defines height = title + subtitle combined */
+.new-landing-text-sizer {
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  width: 100%;
 }
 
 /* Both text variants sit absolutely inside the container */
@@ -287,11 +299,11 @@ body > div {
   width: 100%;
 }
 
-/* Big "SeeMe" title — Phase 1 */
+/* Big "SeeMe" title — Phase 1, sized to fill the exact same height as title+subtitle */
 .new-landing-seeme-title {
   font-family: var(--font-sf-pro);
   font-weight: 800;
-  font-size: clamp(4.5rem, 12vw, 9rem);
+  font-size: clamp(3.5rem, 7vw, 5.3rem);
   color: #ffffff;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -392,7 +404,7 @@ body > div {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
   width: 100%;
   max-width: 1100px;
   flex-wrap: nowrap;
@@ -400,7 +412,7 @@ body > div {
 
 .new-landing-phone {
   flex-shrink: 0;
-  width: 220px;
+  width: 185px;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
 }
 
@@ -423,6 +435,11 @@ body > div {
 .new-landing-appstore-btn img {
   border-radius: 14px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 165px;
+}
+
+.new-landing-hero .new-landing-appstore-btn {
+  margin-top: 20px;
 }
 
 .new-landing-appstore-btn:hover {

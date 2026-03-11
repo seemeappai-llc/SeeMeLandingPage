@@ -119,13 +119,25 @@ const NOTIF_FRAMES = [
 export const NewLandingPage = () => {
   const [phase, setPhase] = useState<Phase>('seeme');
   const [isMobile, setIsMobile] = useState(false);
+  const [seemeSize, setSeemeSize] = useState<number | null>(null);
   const knowsYouRef = useRef<HTMLDivElement>(null);
+  const textContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
+  useEffect(() => {
+    if (!textContainerRef.current) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setSeemeSize(entry.contentRect.height);
+    });
+    ro.observe(textContainerRef.current);
+    return () => ro.disconnect();
   }, []);
 
   const scrollToNextSection = () => {
@@ -159,34 +171,41 @@ export const NewLandingPage = () => {
 
         {/* Hero content wrapper — mockups persist across phases */}
         <div className="new-landing-mockups-wrapper">
-          {/* Text area: fixed-height container so phones never shift during transition */}
-          <div className="new-landing-text-container">
+          {/* Text container — height locked by invisible sizer matching title+subtitle */}
+          <div className="new-landing-text-container" ref={textContainerRef}>
+            {/* Sizer: always rendered, invisible — defines stable container height */}
+            <div className="new-landing-text-sizer" aria-hidden="true">
+              <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
+                {isMobile ? (<>Private<br />Personal<br />Intelligent</>) : 'Private. Personal. Intelligent.'}
+              </h2>
+              <p className="new-landing-mockups-tagline">
+                Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
+              </p>
+            </div>
+
+            {/* Animated overlay — both phases absolutely fill the sizer */}
             <AnimatePresence mode="wait">
               {phase === 'seeme' ? (
                 <motion.div
                   key="seeme-text"
                   className="new-landing-text-abs"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: -40, filter: 'blur(8px)' }}
-                  transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: -16, filter: 'blur(10px)' }}
+                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <motion.h1
+                  <h1
                     className="new-landing-seeme-title"
-                    initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    transition={{ duration: 1.0, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    SeeMe
-                  </motion.h1>
+                    style={seemeSize ? { fontSize: `${seemeSize}px` } : undefined}
+                  >SeeMe</h1>
                 </motion.div>
               ) : (
                 <motion.div
                   key="content-text"
-                  className="new-landing-text-abs new-landing-mockups-header"
-                  initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+                  className="new-landing-text-abs"
+                  initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
                   animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
                     {isMobile ? (
@@ -201,9 +220,10 @@ export const NewLandingPage = () => {
                   </h2>
                   <motion.p
                     className="new-landing-mockups-tagline"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.3 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.7, delay: 0.35 }}
+                    style={{ textAlign: 'center' }}
                   >
                     Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
                   </motion.p>
@@ -263,62 +283,52 @@ export const NewLandingPage = () => {
             )}
           </div>
 
-          {/* App Store Button — fades in after phase 2 */}
-          <AnimatePresence>
-            {phase === 'content' && (
-              <motion.a
-                href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="new-landing-appstore-btn"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Image
-                  src="/downloadbutton.png"
-                  alt="Download on the App Store"
-                  width={200}
-                  height={67}
-                  style={{ height: 'auto' }}
-                />
-              </motion.a>
-            )}
-          </AnimatePresence>
+          {/* App Store Button — always present, fades in with phones */}
+          <motion.a
+            href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="new-landing-appstore-btn"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Image
+              src="/appstore.png"
+              alt="Download on the App Store"
+              width={200}
+              height={67}
+              style={{ height: 'auto' }}
+            />
+          </motion.a>
 
-          {/* Scroll indicator — fades in after phase 2 */}
-          <AnimatePresence>
-            {phase === 'content' && (
-              <motion.div
-                className="new-landing-scroll-indicator"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 1.0, duration: 0.6 }}
-                onClick={scrollToNextSection}
-                whileHover={{ scale: 1.1, opacity: 1 }}
-                style={{ cursor: 'pointer' }}
-              >
-                <motion.svg
-                  width="36"
-                  height="36"
-                  viewBox="0 0 36 36"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  animate={{ y: [0, 6, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <polyline points="6 13 18 25 30 13" />
-                </motion.svg>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Scroll indicator — always present, fades in with phones */}
+          <motion.div
+            className="new-landing-scroll-indicator"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ duration: 0.7, delay: 1.0 }}
+            onClick={scrollToNextSection}
+            whileHover={{ scale: 1.1, opacity: 1 }}
+            style={{ cursor: 'pointer' }}
+          >
+            <motion.svg
+              width="36"
+              height="12"
+              viewBox="0 0 36 12"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <polyline points="2 2 18 10 34 2" />
+            </motion.svg>
+          </motion.div>
         </div>
       </section>
 
@@ -657,7 +667,7 @@ export const NewLandingPage = () => {
               whileTap={{ scale: 0.97 }}
             >
               <Image
-                src="/downloadbutton.png"
+                src="/appstore.png"
                 alt="Download on the App Store"
                 width={200}
                 height={67}
