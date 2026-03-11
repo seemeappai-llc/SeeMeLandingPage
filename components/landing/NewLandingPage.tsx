@@ -637,7 +637,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.45}>
           <p className="new-landing-b2b-text">
-            and explore our B2B platform
+            and explore our coaches platform
           </p>
         </FadeInWhenVisible>
       </section>
