@@ -211,6 +211,8 @@ body > div {
 :root {
   --font-sf-pro: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro',
     'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+  --new-landing-section-space-desktop: 72px;
+  --new-landing-section-space-mobile: 56px;
 }
 
 .new-landing-root {
@@ -459,7 +461,7 @@ body > div {
 .new-landing-section {
   position: relative;
   width: 100%;
-  padding: 70px 24px;
+  padding: var(--new-landing-section-space-desktop) 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -489,8 +491,6 @@ body > div {
 /* ---------- KNOWS YOU SECTION ---------- */
 .new-landing-knows-you {
   background: #333;
-  padding-top: 80px;
-  padding-bottom: 60px;
 }
 
 /* Integration icons row */
@@ -514,8 +514,6 @@ body > div {
 /* ---------- FRAMEWORKS SECTION ---------- */
 .new-landing-frameworks {
   background: #333;
-  padding-top: 60px;
-  padding-bottom: 60px;
 }
 
 .new-landing-frameworks .new-landing-section-subtext {
@@ -537,16 +535,17 @@ body > div {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #4a4a4a;
+  background: #333;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 10px 24px 10px 10px;
+  padding: 4px 24px 4px 4px;
   min-width: 200px;
 }
 
 .new-landing-coach-avatar {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -576,15 +575,11 @@ body > div {
 /* ---------- INTEGRATED SECTION ---------- */
 .new-landing-integrated {
   background: #333;
-  padding-top: 60px;
-  padding-bottom: 80px;
 }
 
+
 .new-landing-integrated-heading {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 700;
   max-width: 800px;
-  letter-spacing: -0.03em;
   white-space: nowrap;
 }
 
@@ -599,7 +594,7 @@ body > div {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  gap: 20px;
+  gap: 0px;
   max-width: 960px;
   width: 100%;
 }
@@ -607,18 +602,19 @@ body > div {
 /* Notification frame (image-based cards) */
 .new-landing-notif-frame {
   position: relative;
-  width: 320px;
-  min-width: 280px;
+  width: 305px;
+  min-width: 240px;
   flex-shrink: 0;
+  margin: 0 -14px;
 }
 
-/* SeeMe app icon overlay (covers the baked-in 'i' icon) */
+/* SeeMe app icon overlay — percentage-based so it scales with frame width */
 .new-landing-notif-icon-overlay {
   position: absolute;
-  top: 11px;
-  left: 30px;
-  width: 26px;
-  height: 26px;
+  top: 3.4%;
+  left: 9.4%;
+  width: 6.8%;
+  aspect-ratio: 1;
   z-index: 2;
   border-radius: 6px;
   overflow: hidden;
@@ -641,35 +637,50 @@ body > div {
 /* ---------- TESTIMONIALS SECTION ---------- */
 .new-landing-testimonials {
   background: #1a1a1a;
-  padding-top: 80px;
-  padding-bottom: 80px;
 }
 
 .new-landing-testimonial-card {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   text-align: center;
   width: 420px;
-  min-height: 200px;
-  padding: 44px 52px 96px 52px;
+  height: 176px;
+  padding: 0;
   flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.new-landing-testimonial-card-inner {
+  width: 100%;
+  height: 100%;
+  padding: 18px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .new-landing-testimonial-card p {
-  position: relative;
-  z-index: 1;
   font-family: var(--font-sf-pro);
-  font-size: 1.35rem;
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
   font-weight: 400;
   font-style: italic;
   color: #ffffff;
-  line-height: 1.5;
+  line-height: 1.62;
   margin: 0;
+  width: 100%;
 }
 
 /* Carousel class for testimonial cards */
+.new-landing-testimonials-carousel {
+  margin-top: 16px;
+}
+
 .new-landing-testimonials-carousel .new-landing-testimonial-card {
   flex-shrink: 0;
 }
@@ -677,8 +688,6 @@ body > div {
 /* ---------- PRIVACY SECTION ---------- */
 .new-landing-privacy {
   background: #1a1a1a;
-  padding-top: 80px;
-  padding-bottom: 80px;
 }
 
 .new-landing-privacy-subtext {
@@ -700,29 +709,23 @@ body > div {
 /* ---------- COACH SECTION (Works with your coach) ---------- */
 .new-landing-coach-section {
   background: #1a1a1a;
-  padding-top: 60px;
-  padding-bottom: 80px;
 }
 
 .new-landing-coach-subtext {
   max-width: 720px;
 }
 
-.new-landing-partner-rectangle {
-  position: relative;
-  display: inline-block;
-  margin-top: 24px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.new-landing-partner-rectangle-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.new-landing-partner-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 165px;
+  height: 34px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   font-family: var(--font-sf-pro);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #000000;
   white-space: nowrap;
@@ -744,7 +747,7 @@ body > div {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 24px;
+  padding: var(--new-landing-section-space-desktop) 24px;
   overflow: hidden;
 }
 
@@ -784,18 +787,32 @@ body > div {
   margin-top: 8px;
 }
 
-.new-landing-disclaimer-link {
-  font-family: var(--font-sf-pro);
-  font-size: 0.85rem;
-  color: #ffffff;
-  text-decoration: none;
-  margin-top: 8px;
-  transition: color 0.2s;
+.new-landing-disclaimer {
+  margin-top: 10px;
+  max-width: 760px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
-.new-landing-disclaimer-link:hover {
-  color: rgba(255, 255, 255, 1);
-  text-decoration: underline;
+.new-landing-disclaimer-title {
+  font-family: var(--font-sf-pro);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  margin: 0 0 6px 0;
+}
+
+.new-landing-disclaimer-text {
+  font-family: var(--font-sf-pro);
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0;
 }
 
 /* ---------- FOOTER ---------- */
@@ -911,12 +928,12 @@ body > div {
   }
 
   .new-landing-section {
-    padding: 50px 20px;
+    padding: var(--new-landing-section-space-mobile) 20px;
   }
 
-  .new-landing-knows-you {
-    padding-top: 60px;
-    padding-bottom: 50px;
+
+  .new-landing-try-free {
+    padding: var(--new-landing-section-space-mobile) 20px;
   }
 
   .new-landing-section-heading {
@@ -951,12 +968,6 @@ body > div {
     max-width: 360px;
   }
 
-  .new-landing-notif-icon-overlay {
-    top: 14px;
-    left: 38px;
-    width: 32px;
-    height: 32px;
-  }
 
   .new-landing-notif-slider-overlay {
     bottom: 76px;
@@ -964,33 +975,20 @@ body > div {
     right: 32px;
   }
 
-  .new-landing-integrated {
-    padding-bottom: 60px;
-  }
-
-  .new-landing-testimonials {
-    padding-top: 60px;
-    padding-bottom: 60px;
-  }
-
   .new-landing-testimonial-card {
     width: 340px;
-    min-height: 160px;
-    padding: 36px 40px;
+    height: 156px;
+    border-radius: 24px;
+  }
+
+  .new-landing-testimonial-card-inner {
+    padding: 12px 24px;
   }
 
   .new-landing-testimonial-card p {
-    font-size: 1.1rem;
-  }
-
-  .new-landing-privacy {
-    padding-top: 60px;
-    padding-bottom: 60px;
-  }
-
-  .new-landing-partner {
-    padding-top: 50px;
-    padding-bottom: 80px;
+    font-size: 0.82rem;
+    text-align: center;
+    line-height: 1.58;
   }
 
   .new-landing-partner-btn {

@@ -86,26 +86,27 @@ const FadeInWhenVisible = ({
 
 // ========== INTEGRATION ICONS DATA ==========
 const INTEGRATION_ICONS = [
-  { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 52, height: 52 },
-  { src: '/Group.png', alt: 'Google Calendar', width: 52, height: 52 },
-  { src: '/appleHealth.png', alt: 'Apple Health', width: 140, height: 52 },
+  { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 42, height: 42, mobileMaxHeight: 30 },
+  { src: '/Group.png', alt: 'Google Calendar', width: 42, height: 42, mobileMaxHeight: 30 },
+  { src: '/appleHealth.png', alt: 'Apple Health', width: 136, height: 50 },
   { src: '/AppleCalendar.png', alt: 'Apple Calendar', width: 52, height: 52 },
   { src: '/ScreenTime.png', alt: 'Screen Time', width: 52, height: 52 },
 ];
 
 // ========== COACHES DATA ==========
 const COACHES = [
-  { name: 'Marius Ketels', role: 'Life Coach', img: '/Marius.png' },
-  { name: 'Justin Javorek', role: 'Life Coach', img: '/Justin.png' },
-  { name: 'Sylvia Schmidt', role: 'Mentor', img: '/Sylvia.png' },
+  { name: 'Marius Ketels', role: 'Life Coach', img: '/Marius.png', link: 'https://www.ketelsconsulting.com' },
+  { name: 'Justin Richey', role: 'Life Coach', img: '/Justin.png', link: undefined },
+  { name: 'Sylvia Schmidt', role: 'Mentor', img: '/Sylvia.png', link: undefined },
 ];
 
 // ========== TESTIMONIALS DATA ==========
 const TESTIMONIALS = [
-  { id: 't1', text: "I've done therapy, read every self-help book. Nothing actually stuck. This did. First week." },
+  { id: 't1', text: "My journal used to just sit there. Now it talks back — and it actually knows what to say." },
   { id: 't2', text: "I've done therapy, read every self-help book. Nothing actually stuck. This did. First week." },
-  { id: 't3', text: "I've done therapy, read every self-help book. Nothing actually stuck. This did. First week." },
-  { id: 't4', text: "I've done therapy, read every self-help book. Nothing actually stuck. This did. First week." },
+  { id: 't3', text: "It's like texting a friend who actually has their life together and genuinely wants to help with yours." },
+  { id: 't4', text: "I check in every morning now. It's the ten minutes that make the rest of the day make sense." },
+  { id: 't5', text: "Went in thinking I just needed to be more productive. Came out understanding myself a lot better than that." },
 ];
 
 // ========== NOTIFICATION FRAME IMAGES ==========
@@ -354,7 +355,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.3}>
           {isMobile ? (
-            <InfiniteCarousel speed={25} className="new-landing-integrations-carousel">
+            <InfiniteCarousel speed={42} className="new-landing-integrations-carousel">
               {INTEGRATION_ICONS.map((icon) => (
                 <div key={icon.alt} className="new-landing-integration-icon">
                   <Image
@@ -362,7 +363,7 @@ export const NewLandingPage = () => {
                     alt={icon.alt}
                     width={icon.width}
                     height={icon.height}
-                    style={{ objectFit: 'contain', height: 'auto', maxHeight: '44px' }}
+                    style={{ objectFit: 'contain', height: 'auto', maxHeight: icon.mobileMaxHeight ? `${icon.mobileMaxHeight}px` : '44px' }}
                   />
                 </div>
               ))}
@@ -408,58 +409,68 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.3}>
           {isMobile ? (
-            <InfiniteCarousel speed={20} className="new-landing-coaches-carousel">
-              {COACHES.map((coach) => (
-                <div key={coach.name} className="new-landing-coach-card">
-                  <div className="new-landing-coach-avatar">
-                    <Image
-                      src={coach.img}
-                      alt={coach.name}
-                      width={44}
-                      height={44}
-                      style={{ borderRadius: '50%', objectFit: 'cover' }}
-                    />
+            <InfiniteCarousel speed={34} className="new-landing-coaches-carousel">
+              {COACHES.map((coach) => {
+                const card = (
+                  <div key={coach.name} className="new-landing-coach-card">
+                    <div className="new-landing-coach-avatar">
+                      <Image
+                        src={coach.img}
+                        alt={coach.name}
+                        width={48}
+                        height={48}
+                        style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="new-landing-coach-info">
+                      <span className="new-landing-coach-name">{coach.name}</span>
+                      <span className="new-landing-coach-role">{coach.role}</span>
+                    </div>
                   </div>
-                  <div className="new-landing-coach-info">
-                    <span className="new-landing-coach-name">{coach.name}</span>
-                    <span className="new-landing-coach-role">{coach.role}</span>
-                  </div>
-                </div>
-              ))}
+                );
+                return coach.link ? (
+                  <a key={coach.name} href={coach.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{card}</a>
+                ) : card;
+              })}
             </InfiniteCarousel>
           ) : (
             <div className="new-landing-coaches">
-              {COACHES.map((coach, i) => (
-                <motion.div
-                  key={coach.name}
-                  className="new-landing-coach-card"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.15 * i, duration: 0.6 }}
-                >
-                  <div className="new-landing-coach-avatar">
-                    <Image
-                      src={coach.img}
-                      alt={coach.name}
-                      width={44}
-                      height={44}
-                      style={{ borderRadius: '50%', objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div className="new-landing-coach-info">
-                    <span className="new-landing-coach-name">{coach.name}</span>
-                    <span className="new-landing-coach-role">{coach.role}</span>
-                  </div>
-                </motion.div>
-              ))}
+              {COACHES.map((coach, i) => {
+                const card = (
+                  <motion.div
+                    key={coach.name}
+                    className="new-landing-coach-card"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 * i, duration: 0.6 }}
+                  >
+                    <div className="new-landing-coach-avatar">
+                      <Image
+                        src={coach.img}
+                        alt={coach.name}
+                        width={48}
+                        height={48}
+                        style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="new-landing-coach-info">
+                      <span className="new-landing-coach-name">{coach.name}</span>
+                      <span className="new-landing-coach-role">{coach.role}</span>
+                    </div>
+                  </motion.div>
+                );
+                return coach.link ? (
+                  <a key={coach.name} href={coach.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{card}</a>
+                ) : card;
+              })}
             </div>
           )}
         </FadeInWhenVisible>
       </section>
 
       {/* ==================== SECTION 4: INTEGRATED TO MAKE YOU BETTER ==================== */}
-      <section className="new-landing-section new-landing-integrated">
+      <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
             Growth doesn't stop when the sessions end.
@@ -474,7 +485,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.3}>
           {isMobile ? (
-            <InfiniteCarousel speed={18} gap={20} className="new-landing-notif-carousel">
+            <InfiniteCarousel speed={32} gap={0} className="new-landing-notif-carousel">
               {NOTIF_FRAMES.map((frame) => (
                 <div key={frame.id} className="new-landing-notif-frame">
                   <div className="new-landing-notif-icon-overlay">
@@ -555,16 +566,15 @@ export const NewLandingPage = () => {
       {/* ==================== SECTION 5: TESTIMONIALS ==================== */}
       <section className="new-landing-section new-landing-testimonials">
         <FadeInWhenVisible delay={0.15}>
-          <InfiniteCarousel speed={22} gap={20} className="new-landing-testimonials-carousel">
+          <InfiniteCarousel speed={36} gap={20} className="new-landing-testimonials-carousel">
             {TESTIMONIALS.map((t) => (
-              <div key={t.id} className="new-landing-testimonial-card">
-                <Image
-                  src="/RectangleFrame.png"
-                  alt=""
-                  fill
-                  style={{ objectFit: 'fill' }}
-                />
-                <p>{t.text}</p>
+              <div
+                key={t.id}
+                className="new-landing-testimonial-card"
+              >
+                <div className="new-landing-testimonial-card-inner">
+                  <p>{t.text}</p>
+                </div>
               </div>
             ))}
           </InfiniteCarousel>
@@ -614,19 +624,14 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.3}>
           <motion.a
-            href="#"
-            className="new-landing-partner-rectangle"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            href="/partner"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="new-landing-appstore-btn"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <Image
-              src="/PartnerRectangle.png"
-              alt="Partner with us"
-              width={240}
-              height={44}
-              style={{ width: '100%', height: 'auto', maxWidth: '240px' }}
-            />
-            <span className="new-landing-partner-rectangle-text">Partner with us</span>
+            <span className="new-landing-partner-btn">Partner with us</span>
           </motion.a>
         </FadeInWhenVisible>
 
@@ -659,7 +664,7 @@ export const NewLandingPage = () => {
 
           <FadeInWhenVisible delay={0.15}>
             <p className="new-landing-section-subtext new-landing-try-free-subtext">
-              No account required. First experience completely on us.
+              No account and signup required.
             </p>
           </FadeInWhenVisible>
 
@@ -683,9 +688,12 @@ export const NewLandingPage = () => {
           </FadeInWhenVisible>
 
           <FadeInWhenVisible delay={0.45}>
-            <a href="#" className="new-landing-disclaimer-link">
-              Disclaimer
-            </a>
+            <div className="new-landing-disclaimer" role="note" aria-label="Disclaimer">
+              <p className="new-landing-disclaimer-title">Disclaimer</p>
+              <p className="new-landing-disclaimer-text">
+                SeeMe is a personal coaching and wellness platform and is not a substitute for professional medical advice, diagnosis, or treatment. If you are experiencing a mental health crisis or emergency, please contact a qualified healthcare provider or emergency services immediately. Use of SeeMe does not create a therapist-patient or doctor-patient relationship. Results may vary.
+              </p>
+            </div>
           </FadeInWhenVisible>
         </div>
       </section>
@@ -697,7 +705,7 @@ export const NewLandingPage = () => {
           <span className="new-landing-footer-dot">·</span>
           <a href="mailto:info@seemeapp.ai" className="new-landing-footer-link">Contact</a>
           <span className="new-landing-footer-dot">·</span>
-          <span className="new-landing-footer-copy">© 2025 SeeMe</span>
+          <span className="new-landing-footer-copy">© 2026 SeeMe</span>
         </div>
       </footer>
     </div>

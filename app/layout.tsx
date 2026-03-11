@@ -40,8 +40,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover", // important for iOS edge-to-edge
 };
 
@@ -60,7 +58,6 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="apple-touch-fullscreen" content="yes" />
 
-        {/* Optional: keep or remove; not required for the black bar fix */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -68,20 +65,6 @@ export default function RootLayout({
                 history.scrollRestoration = 'manual';
               }
               window.scrollTo(0, 0);
-              
-              // Prevent keyboard zoom (Ctrl/Cmd +/-)
-              document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
-                  e.preventDefault();
-                }
-              }, { passive: false });
-              
-              // Prevent mouse wheel zoom
-              document.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || e.metaKey) {
-                  e.preventDefault();
-                }
-              }, { passive: false });
             `,
           }}
         />
