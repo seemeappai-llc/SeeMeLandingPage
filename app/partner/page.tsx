@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import SeemeButton from '@/components/ui/SeemeButton';
 
 const SLIDE_COUNT = 4;
 
@@ -16,6 +17,10 @@ export default function PartnerPage() {
     }, 4500);
 
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 70);
   }, []);
 
   const goTo = (idx: number) => {
@@ -33,9 +38,9 @@ export default function PartnerPage() {
           SeeMe
         </Link>
         <div className="new-landing-topbar-actions">
-          <Link href="/partner" className="new-landing-topbar-link">
+          <SeemeButton href="/partner" variant="unfilled" size="sm">
             Partner with us
-          </Link>
+          </SeemeButton>
         </div>
       </div>
 
@@ -50,8 +55,8 @@ export default function PartnerPage() {
           The AI layer that handles between-session work so your live time stays focused on deep coaching.
         </p>
         <div className="cta-row">
-          <a className="btn-solid" href="#apply">Apply to pilot</a>
-          <a className="btn-ghost" href="#how">How it works</a>
+          <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
+          <SeemeButton href="#how" variant="unfilled" size="lg">How it works</SeemeButton>
         </div>
       </section>
 
@@ -362,7 +367,7 @@ export default function PartnerPage() {
               <div className="p-feat">3 mini-session templates</div>
               <div className="p-feat">Secure messaging</div>
               <div className="p-feat">Progress dashboard</div>
-              <button className="p-btn ghost">Get started</button>
+              <SeemeButton variant="unfilled" size="md" fullWidth>Get started</SeemeButton>
             </div>
             <div className="p-card feat-card">
               <div className="feat-tag">Most popular</div>
@@ -376,7 +381,7 @@ export default function PartnerPage() {
               <div className="p-feat">AI coach persona</div>
               <div className="p-feat">Engagement analytics</div>
               <div className="p-feat">AI content suggestions</div>
-              <button className="p-btn solid">Get started</button>
+              <SeemeButton variant="filled" size="md" fullWidth>Get started</SeemeButton>
             </div>
             <div className="p-card">
               <div className="p-tier">Studio</div>
@@ -389,7 +394,7 @@ export default function PartnerPage() {
               <div className="p-feat">Group programs</div>
               <div className="p-feat">Team &amp; associate coaches</div>
               <div className="p-feat">Priority support</div>
-              <button className="p-btn ghost">Get started</button>
+              <SeemeButton variant="unfilled" size="md" fullWidth>Get started</SeemeButton>
             </div>
           </div>
         </div>
@@ -434,7 +439,7 @@ export default function PartnerPage() {
               </select>
             </div>
           </div>
-          <button className="f-submit">Apply to join →</button>
+          <SeemeButton variant="filled" size="lg" fullWidth>Apply to join →</SeemeButton>
           <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p>
         </div>
       </div>

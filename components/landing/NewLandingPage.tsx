@@ -5,6 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import SeemeButton from '@/components/ui/SeemeButton';
 
 // ========== TYPES ==========
 type Phase = 'seeme' | 'content';
@@ -165,9 +166,9 @@ export const NewLandingPage = () => {
           SeeMe
         </Link>
         <div className="new-landing-topbar-actions">
-          <Link href="/partner" className="new-landing-topbar-link">
+          <SeemeButton href="/partner" variant="unfilled" size="sm">
             Partner with us
-          </Link>
+          </SeemeButton>
         </div>
       </div>
 
@@ -301,10 +302,7 @@ export const NewLandingPage = () => {
           </div>
 
           {/* App Store Button — always present, fades in with phones */}
-          <motion.a
-            href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
             className="new-landing-appstore-btn"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -312,14 +310,23 @@ export const NewLandingPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
           >
-            <Image
-              src="/appstore.png"
-              alt="Download on the App Store"
-              width={200}
-              height={67}
-              style={{ height: 'auto' }}
-            />
-          </motion.a>
+            <SeemeButton
+              href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="filled"
+              size="lg"
+              className="seeme-button--appstore"
+            >
+              <Image
+                src="/appstorebadge.png"
+                alt="Download on the App Store"
+                width={200}
+                height={67}
+                className="seeme-button-appstore-image"
+              />
+            </SeemeButton>
+          </motion.div>
 
           {/* Scroll indicator — always present, fades in with phones */}
           <motion.div
@@ -633,14 +640,15 @@ export const NewLandingPage = () => {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.3}>
-          <motion.a
-            href="/partner"
+          <motion.div
             className="new-landing-appstore-btn"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
           >
-            <span className="new-landing-partner-btn">Partner with us</span>
-          </motion.a>
+            <SeemeButton href="/partner" variant="filled" size="lg">
+              Partner with us
+            </SeemeButton>
+          </motion.div>
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.45}>
@@ -677,22 +685,28 @@ export const NewLandingPage = () => {
           </FadeInWhenVisible>
 
           <FadeInWhenVisible delay={0.3}>
-            <motion.a
-              href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
-              target="_blank"
-              rel="noopener noreferrer"
+            <motion.div
               className="new-landing-appstore-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
-              <Image
-                src="/appstore.png"
-                alt="Download on the App Store"
-                width={200}
-                height={67}
-                style={{ height: 'auto' }}
-              />
-            </motion.a>
+              <SeemeButton
+                href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="filled"
+                size="lg"
+                className="seeme-button--appstore"
+              >
+                <Image
+                  src="/appstorebadge.png"
+                  alt="Download on the App Store"
+                  width={200}
+                  height={67}
+                  className="seeme-button-appstore-image"
+                />
+              </SeemeButton>
+            </motion.div>
           </FadeInWhenVisible>
 
           <FadeInWhenVisible delay={0.45}>
