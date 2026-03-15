@@ -4,6 +4,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // ========== TYPES ==========
 type Phase = 'seeme' | 'content';
@@ -131,12 +132,6 @@ export const NewLandingPage = () => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      window.scrollTo(0, 70);
-    }
-  }, []);
-
   // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
   useEffect(() => {
     if (!textContainerRef.current) return;
@@ -161,6 +156,20 @@ export const NewLandingPage = () => {
 
   return (
     <div className="new-landing-root">
+      <div className="new-landing-topbar is-visible">
+        <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
+          SeeMe
+        </Link>
+        <div className="new-landing-topbar-actions">
+          <Link href="/partner" className="new-landing-topbar-link">
+            Partner with us
+          </Link>
+          <Link href="/privacy" className="new-landing-topbar-link">
+            Privacy
+          </Link>
+        </div>
+      </div>
+
       {/* ==================== HERO SECTION ==================== */}
       <section className="new-landing-hero">
         {/* Background image */}
@@ -473,7 +482,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
-            Growth doesn't stop when the sessions end.
+            Growth doesn&apos;t stop when the sessions end.
           </h2>
         </FadeInWhenVisible>
 
@@ -625,8 +634,6 @@ export const NewLandingPage = () => {
         <FadeInWhenVisible delay={0.3}>
           <motion.a
             href="/partner"
-            target="_blank"
-            rel="noopener noreferrer"
             className="new-landing-appstore-btn"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
