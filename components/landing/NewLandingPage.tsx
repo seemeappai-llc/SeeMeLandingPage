@@ -132,6 +132,10 @@ export const NewLandingPage = () => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 70);
+  }, []);
+
   // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
   useEffect(() => {
     if (!textContainerRef.current) return;
@@ -163,9 +167,6 @@ export const NewLandingPage = () => {
         <div className="new-landing-topbar-actions">
           <Link href="/partner" className="new-landing-topbar-link">
             Partner with us
-          </Link>
-          <Link href="/privacy" className="new-landing-topbar-link">
-            Privacy
           </Link>
         </div>
       </div>
@@ -212,7 +213,7 @@ export const NewLandingPage = () => {
                 >
                   <h1
                     className="new-landing-seeme-title"
-                    style={seemeSize ? { fontSize: `${Math.round(seemeSize * (isMobile ? 0.58 : 1))}px` } : undefined}
+                    style={seemeSize ? { fontSize: `${Math.round(seemeSize * (isMobile ? 0.45 : 1))}px` } : undefined}
                   >SeeMe</h1>
                 </motion.div>
               ) : (
