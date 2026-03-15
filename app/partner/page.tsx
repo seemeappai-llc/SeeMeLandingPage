@@ -28,14 +28,16 @@ export default function PartnerPage() {
 
   return (
     <div className="partner-page">
-      <nav>
-        <Link className="nav-logo" href="/">
-          See<em>Me</em>
+      <div className="new-landing-topbar is-visible">
+        <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
+          SeeMe
         </Link>
-        <Link className="nav-back" href="/">
-          ← Back
-        </Link>
-      </nav>
+        <div className="new-landing-topbar-actions">
+          <Link href="/partner" className="new-landing-topbar-link">
+            Partner with us
+          </Link>
+        </div>
+      </div>
 
       <section className="hero">
         <div className="eyebrow">For Coaches</div>

@@ -722,7 +722,7 @@ body > div {
   width: 165px;
   height: 34px;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   font-family: var(--font-sf-pro);
   font-size: 0.9rem;
@@ -1006,10 +1006,10 @@ body > div {
 :root {
   --seeme-bg: #000000;
   --seeme-surface: #1a1a1a;
-  --seeme-card: #232323;
-  --seeme-border: rgba(255, 255, 255, 0.12);
-  --seeme-text: #f5f5f5;
-  --seeme-subtext: rgba(255, 255, 255, 0.68);
+  --seeme-card: #333333;
+  --seeme-border: rgba(255, 255, 255, 0.15);
+  --seeme-text: #ffffff;
+  --seeme-subtext: rgba(255, 255, 255, 0.7);
   --seeme-muted: rgba(255, 255, 255, 0.46);
   --seeme-accent: #ffffff;
   --seeme-red: #e05252;
@@ -1092,6 +1092,22 @@ body > div {
   color: var(--seeme-text);
   font-family: var(--font-sf-pro);
   min-height: 100dvh;
+}
+
+.partner-page h1,
+.partner-page h2,
+.partner-page h3,
+.partner-page h4,
+.partner-page h5,
+.partner-page h6,
+.partner-page p,
+.partner-page a,
+.partner-page button,
+.partner-page input,
+.partner-page select,
+.partner-page label,
+.partner-page span {
+  font-family: var(--font-sf-pro);
 }
 
 .partner-page *,
