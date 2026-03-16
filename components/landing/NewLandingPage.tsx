@@ -166,7 +166,7 @@ export const NewLandingPage = () => {
           SeeMe
         </Link>
         <div className="new-landing-topbar-actions">
-          <SeemeButton href="/partner" variant="unfilled" size="sm">
+          <SeemeButton href="/partner" variant="unfilled" size="sm" className="new-landing-topbar-cta">
             Partner with us
           </SeemeButton>
         </div>

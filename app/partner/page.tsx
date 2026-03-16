@@ -38,44 +38,76 @@ export default function PartnerPage() {
           SeeMe
         </Link>
         <div className="new-landing-topbar-actions">
-          <SeemeButton href="/partner" variant="unfilled" size="sm">
+          <SeemeButton href="/partner" variant="unfilled" size="sm" className="new-landing-topbar-cta">
             Partner with us
           </SeemeButton>
         </div>
       </div>
 
       <section className="hero">
-        <div className="eyebrow">For Coaches</div>
+        <div className="eyebrow">Coaching 3.0</div>
         <h1>
           More clients.
           <br />
           <em>Less overhead.</em>
         </h1>
         <p>
-          The AI layer that handles between-session work so your live time stays focused on deep coaching.
+          Give every client a personal intelligence platform between sessions - so your live time stays focused on the work only you can do.
         </p>
         <div className="cta-row">
           <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
-          <SeemeButton href="#how" variant="unfilled" size="lg">How it works</SeemeButton>
+          <SeemeButton href="#pricing" variant="unfilled" size="lg">See pricing</SeemeButton>
         </div>
       </section>
 
-      <div className="stats">
-        <div className="stat">
-          <div className="stat-n">5-7</div>
-          <div className="stat-l">extra clients without<br />extra hours</div>
-        </div>
-        <div className="stat">
-          <div className="stat-n">15min</div>
-          <div className="stat-l">of catch-up eliminated<br />per session</div>
-        </div>
-        <div className="stat">
-          <div className="stat-n">30:1</div>
-          <div className="stat-l">ROI at $79/mo vs<br />added client revenue</div>
-        </div>
-        <div className="stat">
-          <div className="stat-n">24/7</div>
-          <div className="stat-l">client engagement<br />without your time</div>
+      <div className="section alt">
+        <div className="inner">
+          <div className="sh">
+            <div className="eyebrow">What changes</div>
+            <h2>Three things that shift<br />when you coach with <em>SeeMe</em>.</h2>
+            <p>Coaching 3.0 isn&apos;t about replacing the coach - it&apos;s about extending what&apos;s possible between sessions.</p>
+          </div>
+
+          <div className="pillars-wrap">
+            <div className="pillar-row">
+              <div className="pillar-badge">1</div>
+              <div className="pillar-body">
+                <div className="pillar-label">Capacity</div>
+                <h3>More clients, same hours</h3>
+                <p>Between-session continuity is handled by the platform - homework delivered, check-ins tracked, context surfaced before every call. Coaches typically add 5-7 clients without adding a single hour to their schedule.</p>
+              </div>
+              <div className="pillar-stat-block">
+                <div className="pillar-stat-n">+$24-34K</div>
+                <div className="pillar-stat-l">per year<br />same schedule</div>
+              </div>
+            </div>
+
+            <div className="pillar-row">
+              <div className="pillar-badge">2</div>
+              <div className="pillar-body">
+                <div className="pillar-label">Coaching 3.0 - Client Experience</div>
+                <h3>A personal intelligence platform for every client</h3>
+                <p>Coaching 1.0 was directive. Coaching 2.0 was non-directive and ICF-certified. Coaching 3.0 is the coach augmented - your client has an AI that reflects your methodology, guides their journaling, runs their homework, and tracks their progress 24/7. The relationship doesn&apos;t end when the session does.</p>
+              </div>
+              <div className="pillar-stat-block">
+                <div className="pillar-stat-n">24/7</div>
+                <div className="pillar-stat-l">client engagement<br />without your time</div>
+              </div>
+            </div>
+
+            <div className="pillar-row">
+              <div className="pillar-badge">3</div>
+              <div className="pillar-body">
+                <div className="pillar-label">Operations</div>
+                <h3>Less overhead, one place</h3>
+                <p>Client CRM, mini-session builder, secure messaging, and scheduling - unified. No patchwork of tools, no manual follow-up, no context-switching between platforms before a call.</p>
+              </div>
+              <div className="pillar-stat-block">
+                <div className="pillar-stat-n">All-in-one</div>
+                <div className="pillar-stat-l">practice management<br />built for coaches</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -238,10 +270,11 @@ export default function PartnerPage() {
           </div>
 
           <div className="carousel-controls">
-            <button className="carr-btn" id="prevBtn" onClick={() => moveCarousel(-1)} aria-label="Previous slide">←</button>
+            <button type="button" className="carr-btn" onClick={() => moveCarousel(-1)} aria-label="Previous slide">←</button>
             <div className="carr-dots" id="carrDots">
               {dots.map((_, idx) => (
                 <button
+                  type="button"
                   key={idx}
                   className={`carr-dot${idx === currentSlide ? ' active' : ''}`}
                   onClick={() => goTo(idx)}
@@ -249,55 +282,7 @@ export default function PartnerPage() {
                 />
               ))}
             </div>
-            <button className="carr-btn" id="nextBtn" onClick={() => moveCarousel(1)} aria-label="Next slide">→</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="section">
-        <div className="inner">
-          <div className="sh">
-            <div className="eyebrow">The shift</div>
-            <h2>Sessions are only <em>half</em> the relationship.</h2>
-            <p>What happens between sessions determines outcomes. Until now, there was no infrastructure for it.</p>
-          </div>
-          <div className="ba-grid">
-            <div className="ba-cell"><div className="ba-label b">Before</div><h3>Sessions start with catch-up.</h3><p>15 minutes rebuilding context you already had. Momentum fades. Paid time gets wasted.</p></div>
-            <div className="ba-cell"><div className="ba-label a">With SeeMe</div><h3>Sessions start at depth.</h3><p>Clients arrive having done the work. You open the session already knowing where to go.</p></div>
-            <div className="ba-cell"><div className="ba-label b">Before</div><h3>Capacity is capped by cognitive load.</h3><p>Holding 15+ clients in your head is exhausting. Quality slips before hours run out.</p></div>
-            <div className="ba-cell"><div className="ba-label a">With SeeMe</div><h3>The platform holds the context.</h3><p>Your dashboard surfaces who needs attention, what exercises were completed, and where scores moved.</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div className="section alt" id="how">
-        <div className="inner">
-          <div className="sh">
-            <div className="eyebrow">How it works</div>
-            <h2>Built around how<br />you already coach.</h2>
-          </div>
-          <div className="steps">
-            <div className="step"><div className="step-n">01</div><div><h3>Set up your profile</h3><p>Upload your methodology and frameworks. Your clients interact with an AI that genuinely reflects your approach.</p></div></div>
-            <div className="step"><div className="step-n">02</div><div><h3>Invite your clients</h3><p>Clients connect to you via the SeeMe app. They opt in to share progress - everything private by default.</p></div></div>
-            <div className="step"><div className="step-n">03</div><div><h3>Assign mini-sessions</h3><p>Build exercises and reflections in the session builder. Schedule them between live sessions. The AI delivers and tracks.</p></div></div>
-            <div className="step"><div className="step-n">04</div><div><h3>Coach from insight</h3><p>Check your dashboard before each session. See completions, check-in scores, and what surfaced. Every session starts fully briefed.</p></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div className="section">
-        <div className="inner">
-          <div className="sh">
-            <div className="eyebrow">Platform</div>
-            <h2>Everything your practice needs.<br /><em>One place.</em></h2>
-          </div>
-          <div className="feat-grid">
-            <div className="feat"><span className="feat-icon">🗂</span><h3>Client CRM</h3><p>Profiles, session history, goals, and notes. See who&apos;s active and who needs attention at a glance.</p></div>
-            <div className="feat"><span className="feat-icon">✏️</span><h3>Mini-Session Builder</h3><p>Design exercises and homework sequences. Schedule delivery to any client automatically.</p></div>
-            <div className="feat"><span className="feat-icon">🔒</span><h3>Secure Messaging</h3><p>End-to-end encrypted. We cannot read it. ICF confidentiality enforced by architecture, not policy.</p></div>
-            <div className="feat"><span className="feat-icon">📊</span><h3>Progress Dashboard</h3><p>Check-in scores, homework completion, focus area trends - only what clients choose to share.</p></div>
-            <div className="feat"><span className="feat-icon">🤖</span><h3>AI Coach Persona</h3><p>Your tone and frameworks power the AI. It sounds like you - not a generic assistant.</p></div>
-            <div className="feat"><span className="feat-icon">📅</span><h3>Scheduling</h3><p>Live sessions and between-session work, scheduled from one place. Clients get notified automatically.</p></div>
+            <button type="button" className="carr-btn" onClick={() => moveCarousel(1)} aria-label="Next slide">→</button>
           </div>
         </div>
       </div>
@@ -315,86 +300,26 @@ export default function PartnerPage() {
               <div className="arr">→</div>
               <div className="calc-col"><div className="calc-lbl a">With SeeMe</div><div className="calc-big a">20-22</div><div className="calc-sm">active clients - $8,000-8,800/mo</div></div>
               <div className="arr">→</div>
-              <div className="calc-col"><div className="calc-lbl a">Difference</div><div className="calc-big a">+$24-34K</div><div className="calc-sm">per year - $2-3K/month</div></div>
+              <div className="calc-col"><div className="calc-lbl a">DIFFERENCE</div><div className="calc-big a">+$24-34K</div><div className="calc-sm">per year - $2-3K/month</div></div>
             </div>
             <div className="calc-foot">SeeMe Pro is $79/mo. <strong>That&apos;s a 30:1 return on the extra revenue alone.</strong></div>
           </div>
         </div>
       </div>
 
-      <div className="section">
-        <div className="inner">
-          <div className="priv-grid">
-            <div>
-              <div className="eyebrow" style={{ marginBottom: 18 }}>Built for ICF ethics</div>
-              <h2>Confidentiality isn&apos;t a promise.<br /><em>It&apos;s architecture.</em></h2>
-              <p>SeeMe is a zero-knowledge relay. We route encrypted data between you and your clients - we are mathematically incapable of reading it.</p>
-              <div className="priv-list">
-                <div className="priv-item"><div className="priv-dot" /><span><strong>Client data lives on their device.</strong> Nothing leaves without explicit consent.</span></div>
-                <div className="priv-item"><div className="priv-dot" /><span><strong>Granular opt-in sharing.</strong> Clients control exactly what you see. Revocable anytime.</span></div>
-                <div className="priv-item"><div className="priv-dot" /><span><strong>Your methodology stays yours.</strong> Not used to train any model. Ever.</span></div>
-              </div>
-            </div>
-            <div className="priv-card">
-              <div className="priv-card-title">🔐 Data access policy</div>
-              <div className="priv-row"><span>Client journal entries</span><span className="no">No coach access</span></div>
-              <div className="priv-row"><span>Health &amp; calendar data</span><span className="no">No coach access</span></div>
-              <div className="priv-row"><span>Session summaries</span><span className="yes">Client opt-in only</span></div>
-              <div className="priv-row"><span>Progress check-ins</span><span className="yes">Client opt-in only</span></div>
-              <div className="priv-row"><span>Homework responses</span><span className="yes">Coach-assigned only</span></div>
-              <div className="priv-row"><span>Messages</span><span className="yes">E2E encrypted</span></div>
-              <div className="priv-row"><span>SeeMe can read messages</span><span className="no">Never</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="section alt">
+      <div className="section" id="pricing">
         <div className="inner">
           <div className="sh" style={{ textAlign: 'center' }}>
             <div className="eyebrow">Pricing</div>
             <h2>Scales with your practice.</h2>
           </div>
           <div className="price-grid">
-            <div className="p-card">
-              <div className="p-tier">Starter</div>
-              <div className="p-amt"><sup>$</sup>39</div>
-              <div className="p-period">per month</div>
-              <div className="p-clients">Up to 10 clients</div>
-              <hr className="p-divider" />
-              <div className="p-feat">Client CRM &amp; profiles</div>
-              <div className="p-feat">Session scheduling</div>
-              <div className="p-feat">3 mini-session templates</div>
-              <div className="p-feat">Secure messaging</div>
-              <div className="p-feat">Progress dashboard</div>
-              <SeemeButton variant="unfilled" size="md" fullWidth>Get started</SeemeButton>
-            </div>
             <div className="p-card feat-card">
               <div className="feat-tag">Most popular</div>
               <div className="p-tier">Pro</div>
               <div className="p-amt"><sup>$</sup>79</div>
               <div className="p-period">per month</div>
               <div className="p-clients">Up to 30 clients</div>
-              <hr className="p-divider" />
-              <div className="p-feat">Everything in Starter</div>
-              <div className="p-feat">Unlimited session builder</div>
-              <div className="p-feat">AI coach persona</div>
-              <div className="p-feat">Engagement analytics</div>
-              <div className="p-feat">AI content suggestions</div>
-              <SeemeButton variant="filled" size="md" fullWidth>Get started</SeemeButton>
-            </div>
-            <div className="p-card">
-              <div className="p-tier">Studio</div>
-              <div className="p-amt"><sup>$</sup>149</div>
-              <div className="p-period">per month</div>
-              <div className="p-clients">Unlimited clients</div>
-              <hr className="p-divider" />
-              <div className="p-feat">Everything in Pro</div>
-              <div className="p-feat">White-label experience</div>
-              <div className="p-feat">Group programs</div>
-              <div className="p-feat">Team &amp; associate coaches</div>
-              <div className="p-feat">Priority support</div>
-              <SeemeButton variant="unfilled" size="md" fullWidth>Get started</SeemeButton>
             </div>
           </div>
         </div>
@@ -405,8 +330,7 @@ export default function PartnerPage() {
         <p>We&apos;re onboarding a small cohort of coaches to shape the platform. We&apos;ll be in touch within 48 hours.</p>
         <div className="form">
           <div className="f-row">
-            <div className="f-field"><label>First name</label><input type="text" placeholder="Sarah" /></div>
-            <div className="f-field"><label>Last name</label><input type="text" placeholder="Kim" /></div>
+            <div className="f-field full"><label>Name</label><input type="text" placeholder="Sarah Kim" /></div>
           </div>
           <div className="f-row">
             <div className="f-field full"><label>Email</label><input type="email" placeholder="sarah@yourpractice.com" /></div>
@@ -439,8 +363,17 @@ export default function PartnerPage() {
               </select>
             </div>
           </div>
-          <SeemeButton variant="filled" size="lg" fullWidth>Apply to join →</SeemeButton>
-          <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p>
+          <div className="f-row">
+            <div className="f-field full">
+              <label>Has/uses Apple products</label>
+              <select defaultValue="">
+                <option value="" disabled>Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+          <SeemeButton variant="filled" size="lg" fullWidth className="partner-apply-submit">Apply to join →</SeemeButton>
         </div>
       </div>
 
@@ -454,7 +387,6 @@ export default function PartnerPage() {
         </ul>
         <div className="f-copy">© 2026 SeeMe</div>
       </footer>
-
     </div>
   );
 }
