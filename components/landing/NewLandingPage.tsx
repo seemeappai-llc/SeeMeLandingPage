@@ -4,6 +4,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+import SeemeButton from '@/components/ui/SeemeButton';
 
 // ========== TYPES ==========
 type Phase = 'seeme' | 'content';
@@ -132,9 +134,7 @@ export const NewLandingPage = () => {
   }, []);
 
   useEffect(() => {
-    if (window.innerWidth < 768) {
-      window.scrollTo(0, 70);
-    }
+    window.scrollTo(0, 70);
   }, []);
 
   // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
@@ -161,6 +161,17 @@ export const NewLandingPage = () => {
 
   return (
     <div className="new-landing-root">
+      <div className="new-landing-topbar is-visible">
+        <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
+          SeeMe
+        </Link>
+        <div className="new-landing-topbar-actions">
+          <SeemeButton href="/partner" variant="unfilled" size="sm" className="new-landing-topbar-cta">
+            Partner with us
+          </SeemeButton>
+        </div>
+      </div>
+
       {/* ==================== HERO SECTION ==================== */}
       <section className="new-landing-hero">
         {/* Background image */}
@@ -203,7 +214,7 @@ export const NewLandingPage = () => {
                 >
                   <h1
                     className="new-landing-seeme-title"
-                    style={seemeSize ? { fontSize: `${Math.round(seemeSize * (isMobile ? 0.58 : 1))}px` } : undefined}
+                    style={seemeSize ? { fontSize: `${Math.round(seemeSize * (isMobile ? 0.45 : 1))}px` } : undefined}
                   >SeeMe</h1>
                 </motion.div>
               ) : (
@@ -291,10 +302,7 @@ export const NewLandingPage = () => {
           </div>
 
           {/* App Store Button — always present, fades in with phones */}
-          <motion.a
-            href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
             className="new-landing-appstore-btn"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -302,14 +310,23 @@ export const NewLandingPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
           >
-            <Image
-              src="/appstore.png"
-              alt="Download on the App Store"
-              width={200}
-              height={67}
-              style={{ height: 'auto' }}
-            />
-          </motion.a>
+            <SeemeButton
+              href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="filled"
+              size="lg"
+              className="seeme-button--appstore"
+            >
+              <Image
+                src="/appstorebadge.png"
+                alt="Download on the App Store"
+                width={200}
+                height={67}
+                className="seeme-button-appstore-image"
+              />
+            </SeemeButton>
+          </motion.div>
 
           {/* Scroll indicator — always present, fades in with phones */}
           <motion.div
@@ -473,7 +490,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
-            Growth doesn't stop when the sessions end.
+            Growth doesn&apos;t stop when the sessions end.
           </h2>
         </FadeInWhenVisible>
 
@@ -623,16 +640,15 @@ export const NewLandingPage = () => {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.3}>
-          <motion.a
-            href="/partner"
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
             className="new-landing-appstore-btn"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
           >
-            <span className="new-landing-partner-btn">Partner with us</span>
-          </motion.a>
+            <SeemeButton href="/partner" variant="filled" size="lg">
+              Partner with us
+            </SeemeButton>
+          </motion.div>
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.45}>
@@ -669,22 +685,28 @@ export const NewLandingPage = () => {
           </FadeInWhenVisible>
 
           <FadeInWhenVisible delay={0.3}>
-            <motion.a
-              href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
-              target="_blank"
-              rel="noopener noreferrer"
+            <motion.div
               className="new-landing-appstore-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
-              <Image
-                src="/appstore.png"
-                alt="Download on the App Store"
-                width={200}
-                height={67}
-                style={{ height: 'auto' }}
-              />
-            </motion.a>
+              <SeemeButton
+                href="https://apps.apple.com/us/app/seeme-personal-growth/id6739706517"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="filled"
+                size="lg"
+                className="seeme-button--appstore"
+              >
+                <Image
+                  src="/appstorebadge.png"
+                  alt="Download on the App Store"
+                  width={200}
+                  height={67}
+                  className="seeme-button-appstore-image"
+                />
+              </SeemeButton>
+            </motion.div>
           </FadeInWhenVisible>
 
           <FadeInWhenVisible delay={0.45}>
