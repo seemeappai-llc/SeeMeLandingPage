@@ -98,8 +98,8 @@ const INTEGRATION_ICONS = [
 // ========== COACHES DATA ==========
 const COACHES = [
   { name: 'Marius Ketels', role: 'Life Coach', img: '/Marius.png', link: 'https://www.ketelsconsulting.com' },
-  { name: 'Justin Richey', role: 'Life Coach', img: '/Justin.png', link: undefined },
-  { name: 'Sylvia Schmidt', role: 'Mentor', img: '/Sylvia.png', link: undefined },
+  { name: 'Ken Russel', role: 'Life Coach', img: '/ken1.png', link: 'https://www.linkedin.com/in/cavedraw' },
+  { name: 'Dr. Andrea Cherman', role: 'Mentor', img: '/andrea.png', link: 'https://www.linkedin.com/in/chermanandrea' },
 ];
 
 // ========== TESTIMONIALS DATA ==========
