@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import SeemeButton from '@/components/ui/SeemeButton';
+import { getSupabase } from '@/lib/supabase';
 
 const SLIDE_COUNT = 4;
 
 const CLIENT_EXPERIENCE_CARDS = [
   {
-    icon: '💬',
+    num: '01',
     label: 'Between-session check-ins',
     title: "Momentum that doesn't wait for the next call",
     body: "Your AI sends personalised check-in prompts - written in your tone - at exactly the right moments. Clients feel supported, not abandoned, between sessions.",
@@ -21,7 +22,7 @@ const CLIENT_EXPERIENCE_CARDS = [
     ),
   },
   {
-    icon: '📓',
+    num: '02',
     label: 'Guided reflection & homework',
     title: 'Your frameworks, delivered between every session',
     body: "Clients receive guided journaling prompts, exercises, and reflections drawn from your methodology - not generic AI content. The work you assign actually gets done.",
@@ -34,7 +35,7 @@ const CLIENT_EXPERIENCE_CARDS = [
     ),
   },
   {
-    icon: '📈',
+    num: '03',
     label: 'Visible progress over time',
     title: 'Clients see their own growth - and so do you',
     body: 'Every check-in and session builds a picture of progress. Clients feel the arc of the work. You arrive to every live call already knowing what shifted - without asking.',
@@ -48,7 +49,7 @@ const CLIENT_EXPERIENCE_CARDS = [
     ),
   },
   {
-    icon: '🔓',
+    num: '04',
     label: 'A new client tier',
     title: "Reach people who couldn't afford you before",
     body: "Weekly sessions at your full rate isn't accessible to everyone who needs your work. SeeMe lets you offer an AI-led programme at a lower price point - opening your practice to a broader audience without compromising what you charge for the real thing.",
@@ -71,7 +72,7 @@ const PILLARS = [
     badge: '2',
     label: 'Client Experience',
     title: 'Your coaching philosophy, always present.',
-    body: "You train SeeMe on your methodology, your language, and the way you work. It handles the between-session layer - check-ins, guided reflections, and homework delivery - in a voice that sounds like you, not like a chatbot. In full-AI mode it runs the entire client relationship. You stay in control via a dashboard and step in whenever needed.",
+    body: "You train SeeMe on your methodology, your language, and how you work. It handles check-ins, guided reflections, and homework delivery in a voice that sounds like you. In full-AI mode it runs the entire client relationship while you stay in control.",
     stat: '10x',
     statLabel: 'more clients',
     statSubLabel: 'full-AI mode',
@@ -159,6 +160,7 @@ export default function PartnerPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const dots = useMemo(() => Array.from({ length: SLIDE_COUNT }), []);
   const subtypeData = coachType ? SUBTYPES[coachType] : null;
@@ -171,9 +173,7 @@ export default function PartnerPage() {
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 70);
-  }, []);
+  // Hero renders in correct position on load — no scroll hack needed
 
   const goTo = (idx: number) => {
     setCurrentSlide((idx + SLIDE_COUNT) % SLIDE_COUNT);
@@ -191,7 +191,7 @@ export default function PartnerPage() {
     setSubmitError('');
   };
 
-  const handleApply = () => {
+  const handleApply = async () => {
     if (!name.trim() || !email.trim() || !coachType) {
       setSubmitError('Please fill in your name, email, and coach type before applying.');
       setSubmitted(false);
@@ -199,7 +199,43 @@ export default function PartnerPage() {
     }
 
     setSubmitError('');
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      const supabase = getSupabase();
+      if (!supabase) {
+        setSubmitError('Unable to connect. Please try again later.');
+        setSubmitting(false);
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any).from('partner_applications').insert({
+        name: name.trim(),
+        email: email.trim(),
+        coach_type: coachType,
+        specialization: specialization || null,
+        client_count: clientCount || null,
+        uses_apple: usesApple,
+        selected_mode: selectedMode,
+      });
+
+      if (error) {
+        if (error.code === '23505') {
+          setSubmitError('This email has already been submitted. We\'ll be in touch!');
+        } else {
+          setSubmitError('Something went wrong. Please try again.');
+        }
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setSubmitError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -222,8 +258,8 @@ export default function PartnerPage() {
           <br />
           <em>Without multiplying your hours.</em>
         </h1>
-        <p>
-          SeeMe keeps your methodology working between every call - so clients stay on track, momentum doesn&apos;t fade, and your live time goes deeper than ever before.
+        <p className="hero-sub">
+          SeeMe keeps your methodology working between every call — so clients stay on track, momentum doesn&apos;t fade, and your live time goes deeper than ever before.
         </p>
         <div className="cta-row">
           <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
@@ -231,7 +267,7 @@ export default function PartnerPage() {
         </div>
       </section>
 
-      <div className="section">
+      <div className="section sec-client">
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">What your client gets</div>
@@ -245,24 +281,27 @@ export default function PartnerPage() {
             </p>
           </div>
 
-          <div className="cx-grid cx-grid-4">
-            {CLIENT_EXPERIENCE_CARDS.map((card) => (
+          <div className="cx-features">
+            {CLIENT_EXPERIENCE_CARDS.map((card, i) => (
               <div
                 key={card.title}
-                className={`cx-card${card.type === 'highlight' ? ' cx-card-hi' : ''}${card.type === 'access' ? ' cx-card-access' : ''}`}
+                className={`cx-row${i % 2 === 1 ? ' cx-row-reverse' : ''}${card.type === 'highlight' ? ' cx-row-hi' : ''}`}
               >
-                <div className="cx-icon">{card.icon}</div>
-                <div className="cx-label">{card.label}</div>
-                <h4>{card.title}</h4>
-                <p>{card.body}</p>
-                {card.example}
+                <div className="cx-text">
+                  <span className="cx-label">{card.label}</span>
+                  <h4>{card.title}</h4>
+                  <p>{card.body}</p>
+                </div>
+                <div className="cx-visual">
+                  {card.example}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="section alt">
+      <div className="section sec-pillars">
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">What shifts</div>
@@ -271,96 +310,155 @@ export default function PartnerPage() {
               <br />
               when you coach with <em>SeeMe</em>.
             </h2>
-            <p>This isn&apos;t about replacing the work you do - it&apos;s about making sure that work continues to have impact between every session.</p>
           </div>
 
-          <div className="pillars-wrap">
+          <div className="pillars-grid">
             {PILLARS.map((pillar) => (
-              <div key={pillar.badge} className="pillar-row">
-                <div className="pillar-badge">{pillar.badge}</div>
-                <div className="pillar-body">
-                  <div className="pillar-label">{pillar.label}</div>
-                  <h3>{pillar.title}</h3>
-                  <p>{pillar.body}</p>
+              <div key={pillar.badge} className="pillar-card-v2">
+                <div className="pillar-card-num">{pillar.badge}</div>
+                <div className="pillar-card-stat">
+                  <span className="pillar-card-stat-value">{pillar.stat}</span>
+                  <span className="pillar-card-stat-label">{pillar.statLabel}</span>
                 </div>
-                <div className="pillar-stat-block">
-                  <div className="pillar-stat-n">{pillar.stat}</div>
-                  <div className="pillar-stat-l">{pillar.statLabel}<br />{pillar.statSubLabel}</div>
-                </div>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.body}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="section">
+      <div className="section sec-modes">
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">Pilot Access</div>
             <h2>
-              You lead every session, or
+              Choose how you
               <br />
-              <em>your AI does</em> - your call.
+              want to <em>scale.</em>
             </h2>
-            <p>Both modes give every client a personalised experience built on your methodology. Select the one that fits your practice and apply below.</p>
+            <p>Both modes give every client a personalised experience built on your methodology.</p>
           </div>
 
-          <div className="modes-grid" id="modes-grid">
-            <button
-              type="button"
-              className={`mode-card mode-selectable${selectedMode === 'hybrid' ? ' selected' : ''}`}
-              onClick={() => setSelectedMode('hybrid')}
-            >
-              <div className="mode-chip">Hybrid · Most popular</div>
-              <h3>You coach live.<br />Your AI handles the rest.</h3>
-              <p>Your AI handles all between-session work in your voice - homework delivery, reflective prompts, check-ins, and progress tracking. Your live sessions shift from catch-up to the deep work only you can do.</p>
-              <div className="mode-items">
-                <div className="mode-item"><strong>AI delivers</strong> homework, journaling, and check-ins between sessions</div>
-                <div className="mode-item"><strong>You arrive</strong> to every session with full context and zero catch-up</div>
-                <div className="mode-item"><strong>Space out sessions</strong> to bi-weekly - double the room in your calendar</div>
-              </div>
-              <div className="mode-scale">
-                <div>
-                  <div className="mode-scale-n">2-3×</div>
-                  <div className="mode-scale-l">more clients<br />same live hours</div>
-                </div>
-                <div className="mode-scale-copy">15 clients today → <span>30-50 clients</span> with the same weekly schedule</div>
-              </div>
-            </button>
+          <div className="modes-toggle-wrap" id="modes-grid">
+            <div className="modes-toggle">
+              <button
+                type="button"
+                className={`modes-toggle-btn${selectedMode === 'hybrid' ? ' active' : ''}`}
+                onClick={() => setSelectedMode('hybrid')}
+              >
+                Hybrid
+              </button>
+              <button
+                type="button"
+                className={`modes-toggle-btn${selectedMode === 'fullai' ? ' active' : ''}`}
+                onClick={() => setSelectedMode('fullai')}
+              >
+                Full AI
+              </button>
+              <div className={`modes-toggle-indicator${selectedMode === 'fullai' ? ' right' : ''}`} />
+            </div>
+          </div>
 
-            <button
-              type="button"
-              className={`mode-card glow mode-selectable${selectedMode === 'fullai' ? ' selected' : ''}`}
-              onClick={() => setSelectedMode('fullai')}
-            >
-              <div className="mode-chip">✦ Full AI · Scale mode</div>
-              <h3>Your AI runs the<br />full programme.</h3>
-              <p>Train SeeMe deeply on your methodology, tone, and session structure. Your AI conducts every programme session and check-in. You oversee from a dashboard, review progress, and step in directly whenever a client needs you. Best suited for structured coaching programmes, not clinical or therapeutic work.</p>
-              <div className="mode-items">
-                <div className="mode-item"><strong>AI conducts</strong> sessions using your frameworks and voice</div>
-                <div className="mode-item"><strong>You oversee</strong> from a dashboard - review, flag clients, intervene</div>
-                <div className="mode-item"><strong>Client escalation</strong> anyone can request a live session at any time</div>
+          <div className="mode-detail">
+            <div className={`mode-detail-inner${selectedMode === 'fullai' ? ' fullai' : ''}`}>
+              <div className="mode-detail-header">
+                <span className="mode-detail-badge">
+                  {selectedMode === 'hybrid' ? 'Most popular' : 'Scale mode'}
+                </span>
+                <h3>
+                  {selectedMode === 'hybrid'
+                    ? 'You coach live. Your AI handles the rest.'
+                    : 'Your AI runs the full programme.'}
+                </h3>
+                <p>
+                  {selectedMode === 'hybrid'
+                    ? 'Your AI handles all between-session work in your voice — homework delivery, reflective prompts, check-ins, and progress tracking.'
+                    : 'Train SeeMe on your methodology, tone, and session structure. Your AI conducts every programme session. You oversee from a dashboard and step in whenever needed.'}
+                </p>
               </div>
-              <div className="mode-scale">
-                <div>
-                  <div className="mode-scale-n">100+</div>
-                  <div className="mode-scale-l">clients from<br />one dashboard</div>
+
+              <div className="mode-detail-features">
+                {selectedMode === 'hybrid' ? (
+                  <>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>AI delivers</strong> homework, journaling &amp; check-ins between sessions
+                      </div>
+                    </div>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>You arrive</strong> to every session with full context, zero catch-up
+                      </div>
+                    </div>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>Space out sessions</strong> to bi-weekly — double your calendar room
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon accent">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>AI conducts</strong> sessions using your frameworks and voice
+                      </div>
+                    </div>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon accent">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>You oversee</strong> from a dashboard — review, flag, intervene
+                      </div>
+                    </div>
+                    <div className="mode-feature">
+                      <div className="mode-feature-icon accent">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                      </div>
+                      <div>
+                        <strong>Client escalation</strong> — anyone can request a live session anytime
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="mode-detail-metric">
+                <div className="mode-metric-number">
+                  {selectedMode === 'hybrid' ? '2-3×' : '100+'}
                 </div>
-                <div className="mode-scale-copy">15 clients today → <span>150+ clients</span> with your AI running the programme</div>
+                <div className="mode-metric-label">
+                  {selectedMode === 'hybrid'
+                    ? 'more clients, same live hours'
+                    : 'clients from one dashboard'}
+                </div>
               </div>
-            </button>
+            </div>
           </div>
 
           <div className="modes-cta">
-            <SeemeButton href="#apply" variant="filled" size="lg" className="modes-apply-btn">Apply to pilot →</SeemeButton>
-            <p className="modes-note">No commitment · Invite-only · We&apos;ll follow up within 48 hours</p>
+            <SeemeButton href="#apply" variant="filled" size="lg" className="modes-apply-btn">Apply to pilot</SeemeButton>
+            <p className="modes-note">No commitment · Invite-only · 48-hour response</p>
           </div>
         </div>
       </div>
 
-      <div className="section" style={{ overflow: 'hidden', paddingBottom: 0 }}>
+      <div className="section sec-platform" style={{ overflow: 'hidden', paddingBottom: 0 }}>
         <div className="inner">
-          <div className="sh" style={{ marginBottom: 40 }}>
+          <div className="sh" style={{ marginBottom: 40, textAlign: 'center' }}>
             <div className="eyebrow">The platform</div>
             <h2>See it in action.</h2>
           </div>
@@ -368,6 +466,7 @@ export default function PartnerPage() {
 
         <div className="carousel-wrap">
           <div className="carousel" id="carousel" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            {/* Slide 1: Client CRM */}
             <div className="carousel-slide">
               <div className="ipad">
                 <div className="ipad-screen">
@@ -378,6 +477,8 @@ export default function PartnerPage() {
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item" />
+                      <div className="dummy-sidebar-spacer" />
+                      <div className="dummy-nav-item dim" />
                     </div>
                     <div className="dummy-main">
                       <div className="dummy-header">
@@ -393,6 +494,9 @@ export default function PartnerPage() {
                         <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status amber" /></div>
                         <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status green" /></div>
                         <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status red" /></div>
+                        <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status green" /></div>
+                        <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status green" /></div>
+                        <div className="dummy-client-row"><div className="dummy-avatar" /><div className="dummy-client-info"><div className="dummy-name" /><div className="dummy-meta" /></div><div className="dummy-status amber" /></div>
                       </div>
                     </div>
                   </div>
@@ -401,6 +505,7 @@ export default function PartnerPage() {
               </div>
             </div>
 
+            {/* Slide 2: Session Builder */}
             <div className="carousel-slide">
               <div className="ipad">
                 <div className="ipad-screen">
@@ -411,6 +516,8 @@ export default function PartnerPage() {
                       <div className="dummy-nav-item active" />
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item" />
+                      <div className="dummy-sidebar-spacer" />
+                      <div className="dummy-nav-item dim" />
                     </div>
                     <div className="dummy-main">
                       <div className="dummy-header">
@@ -436,6 +543,11 @@ export default function PartnerPage() {
                           <div className="dummy-block-line" />
                           <div className="dummy-block-line short" />
                         </div>
+                        <div className="dummy-builder-block">
+                          <div className="dummy-block-tag">Homework delivery</div>
+                          <div className="dummy-block-line" />
+                          <div className="dummy-block-line short" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -444,6 +556,7 @@ export default function PartnerPage() {
               </div>
             </div>
 
+            {/* Slide 3: Progress Dashboard */}
             <div className="carousel-slide">
               <div className="ipad">
                 <div className="ipad-screen">
@@ -454,6 +567,8 @@ export default function PartnerPage() {
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item active" />
                       <div className="dummy-nav-item" />
+                      <div className="dummy-sidebar-spacer" />
+                      <div className="dummy-nav-item dim" />
                     </div>
                     <div className="dummy-main">
                       <div className="dummy-header">
@@ -468,11 +583,14 @@ export default function PartnerPage() {
                         <div className="dummy-stat-card"><div className="dummy-stat-n teal">↑</div><div className="dummy-stat-l">Trend</div></div>
                       </div>
                       <div className="dummy-chart">
-                        <div className="dummy-bar" style={{ height: '40%' }} />
-                        <div className="dummy-bar" style={{ height: '55%' }} />
-                        <div className="dummy-bar" style={{ height: '50%' }} />
-                        <div className="dummy-bar" style={{ height: '70%' }} />
-                        <div className="dummy-bar" style={{ height: '65%' }} />
+                        <div className="dummy-bar" style={{ height: '35%' }} />
+                        <div className="dummy-bar" style={{ height: '48%' }} />
+                        <div className="dummy-bar" style={{ height: '42%' }} />
+                        <div className="dummy-bar" style={{ height: '58%' }} />
+                        <div className="dummy-bar" style={{ height: '52%' }} />
+                        <div className="dummy-bar" style={{ height: '68%' }} />
+                        <div className="dummy-bar" style={{ height: '62%' }} />
+                        <div className="dummy-bar" style={{ height: '75%' }} />
                         <div className="dummy-bar active" style={{ height: '82%' }} />
                       </div>
                     </div>
@@ -482,6 +600,7 @@ export default function PartnerPage() {
               </div>
             </div>
 
+            {/* Slide 4: Secure Messaging */}
             <div className="carousel-slide">
               <div className="ipad">
                 <div className="ipad-screen">
@@ -492,6 +611,8 @@ export default function PartnerPage() {
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item" />
                       <div className="dummy-nav-item active" />
+                      <div className="dummy-sidebar-spacer" />
+                      <div className="dummy-nav-item dim" />
                     </div>
                     <div className="dummy-main">
                       <div className="dummy-header">
@@ -506,6 +627,8 @@ export default function PartnerPage() {
                         <div className="dummy-msg client"><div className="dummy-msg-bubble" /></div>
                         <div className="dummy-msg coach"><div className="dummy-msg-bubble short" /></div>
                         <div className="dummy-msg client"><div className="dummy-msg-bubble" /><div className="dummy-msg-bubble short" /></div>
+                        <div className="dummy-msg coach"><div className="dummy-msg-bubble" /></div>
+                        <div className="dummy-msg client"><div className="dummy-msg-bubble short" /></div>
                       </div>
                       <div className="dummy-input-row"><div className="dummy-input" /><div className="dummy-send" /></div>
                     </div>
@@ -534,7 +657,7 @@ export default function PartnerPage() {
         </div>
       </div>
 
-      <div className="section alt">
+      <div className="section sec-math">
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">The math</div>
@@ -558,14 +681,12 @@ export default function PartnerPage() {
         </div>
       </div>
 
-      <div className="section alt" id="faq">
-        <div className="inner">
-          <div className="sh" style={{ marginBottom: 40 }}>
-            <div className="eyebrow">Before you apply</div>
+      <div className="section sec-faq" id="faq">
+        <div className="inner faq-inner">
+          <div className="faq-header">
+            <div className="eyebrow">FAQ</div>
             <h2>
-              Answers to what
-              <br />
-              coaches ask <em>first</em>.
+              Before you <em>apply.</em>
             </h2>
           </div>
           <div className="faq-list">
@@ -581,8 +702,11 @@ export default function PartnerPage() {
                   aria-expanded={isOpen}
                 >
                   <div className="faq-q">
-                    {item.question}
-                    <span className="faq-arrow">↓</span>
+                    <span className="faq-num">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="faq-q-text">{item.question}</span>
+                    <span className="faq-arrow">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </span>
                   </div>
                   <div className="faq-a">{item.answer}</div>
                 </button>
@@ -681,7 +805,9 @@ export default function PartnerPage() {
             </div>
           </div>
 
-          <button type="button" className="f-submit" onClick={handleApply}>Apply to join →</button>
+          <button type="button" className="f-submit" onClick={handleApply} disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Apply to join →'}
+          </button>
           {submitError ? <p className="f-note partner-form-error">{submitError}</p> : null}
           {!submitError && submitted ? <p className="f-note partner-form-success">Thanks, {name.trim().split(' ')[0]}! We&apos;ll be in touch within 48 hours.</p> : null}
           {!submitError && !submitted ? <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p> : null}
