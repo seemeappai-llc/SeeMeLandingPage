@@ -1558,12 +1558,13 @@ body > div {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--seeme-subtext);
+  color: #ffffff;
   margin-bottom: 20px;
   padding: 6px 16px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 180, 160, 0.1);
-  background: rgba(255, 200, 180, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
 }
 
 .partner-page .hero h1 {
@@ -1572,6 +1573,7 @@ body > div {
   letter-spacing: -3px;
   line-height: 1;
   margin-bottom: 24px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .partner-page .hero h1 em,
@@ -1582,21 +1584,27 @@ body > div {
   color: var(--seeme-accent);
 }
 
+.partner-page .hero h1 em {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
 .partner-page .hero p {
   font-size: clamp(15px, 1.7vw, 18px);
-  color: var(--seeme-subtext);
+  color: rgba(255, 255, 255, 0.9);
   max-width: 480px;
   margin: 0 auto 44px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
   line-height: 1.6;
 }
 
 .partner-page .hero-sub {
   font-size: clamp(15px, 1.5vw, 17px);
-  color: var(--seeme-subtext);
+  color: rgba(255, 255, 255, 0.9);
   max-width: 520px;
   margin: 0 auto 48px;
   line-height: 1.7;
   letter-spacing: -0.1px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 .partner-page .cta-row {
@@ -2883,9 +2891,10 @@ body > div {
 /* hero bg already set above */
 
 .partner-page .eyebrow {
-  color: #e88a9a;
-  border-color: rgba(232, 138, 154, 0.15);
-  background: rgba(232, 138, 154, 0.04);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
 }
 
 .partner-page .inner {
