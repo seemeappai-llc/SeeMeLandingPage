@@ -90,7 +90,7 @@ const FadeInWhenVisible = ({
 const INTEGRATION_ICONS = [
   { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 42, height: 42, mobileMaxHeight: 30 },
   { src: '/Group.png', alt: 'Google Calendar', width: 42, height: 42, mobileMaxHeight: 30 },
-  { src: '/appleHealth.png', alt: 'Apple Health', width: 136, height: 50 },
+  { src: '/appleHealth.png', alt: 'Apple Health', width: 136, height: 50, wide: true },
   { src: '/AppleCalendar.png', alt: 'Apple Calendar', width: 52, height: 52 },
   { src: '/ScreenTime.png', alt: 'Screen Time', width: 52, height: 52 },
 ];
@@ -133,9 +133,7 @@ export const NewLandingPage = () => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 70);
-  }, []);
+  // Hero renders in correct position on load — no scroll hack needed
 
   // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
   useEffect(() => {
@@ -174,16 +172,8 @@ export const NewLandingPage = () => {
 
       {/* ==================== HERO SECTION ==================== */}
       <section className="new-landing-hero">
-        {/* Background image */}
+        {/* Background overlay (image is set via CSS on .new-landing-hero) */}
         <div className="new-landing-hero-bg">
-          <Image
-            src="/backgroundLandingPage.png"
-            alt="Tuscan landscape"
-            fill
-            priority
-            quality={85}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-          />
           <div className="new-landing-hero-overlay" />
         </div>
 
@@ -371,42 +361,41 @@ export const NewLandingPage = () => {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.3}>
-          {isMobile ? (
-            <InfiniteCarousel speed={42} className="new-landing-integrations-carousel">
-              {INTEGRATION_ICONS.map((icon) => (
-                <div key={icon.alt} className="new-landing-integration-icon">
-                  <Image
-                    src={icon.src}
-                    alt={icon.alt}
-                    width={icon.width}
-                    height={icon.height}
-                    style={{ objectFit: 'contain', height: 'auto', maxHeight: icon.mobileMaxHeight ? `${icon.mobileMaxHeight}px` : '44px' }}
-                  />
-                </div>
-              ))}
-            </InfiniteCarousel>
-          ) : (
+          <div className="new-landing-integrations-card">
+            <span className="new-landing-integrations-label">Connects with</span>
             <div className="new-landing-integrations">
               {INTEGRATION_ICONS.map((icon, i) => (
-                <motion.div
-                  key={icon.alt}
-                  className="new-landing-integration-icon"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 * i, duration: 0.5 }}
-                >
-                  <Image
-                    src={icon.src}
-                    alt={icon.alt}
-                    width={icon.width}
-                    height={icon.height}
-                    style={{ objectFit: 'contain', height: 'auto', maxHeight: '52px' }}
-                  />
-                </motion.div>
+                isMobile ? (
+                  <div key={icon.alt} className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}`}>
+                    <Image
+                      src={icon.src}
+                      alt={icon.alt}
+                      width={icon.width}
+                      height={icon.height}
+                      style={{ objectFit: 'contain', height: 'auto' }}
+                    />
+                  </div>
+                ) : (
+                  <motion.div
+                    key={icon.alt}
+                    className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * i, duration: 0.5 }}
+                  >
+                    <Image
+                      src={icon.src}
+                      alt={icon.alt}
+                      width={icon.width}
+                      height={icon.height}
+                      style={{ objectFit: 'contain', height: 'auto', maxHeight: '48px' }}
+                    />
+                  </motion.div>
+                )
               ))}
             </div>
-          )}
+          </div>
         </FadeInWhenVisible>
       </section>
 
@@ -414,7 +403,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-frameworks">
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading">
-            Built with the best in the field.
+            Built with the <em>best</em> in the field.
           </h2>
         </FadeInWhenVisible>
 
@@ -425,64 +414,53 @@ export const NewLandingPage = () => {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.3}>
-          {isMobile ? (
-            <InfiniteCarousel speed={34} className="new-landing-coaches-carousel">
-              {COACHES.map((coach) => {
-                const card = (
-                  <div key={coach.name} className="new-landing-coach-card">
-                    <div className="new-landing-coach-avatar">
-                      <Image
-                        src={coach.img}
-                        alt={coach.name}
-                        width={48}
-                        height={48}
-                        style={{ borderRadius: '50%', objectFit: 'cover' }}
-                      />
-                    </div>
-                    <div className="new-landing-coach-info">
-                      <span className="new-landing-coach-name">{coach.name}</span>
-                      <span className="new-landing-coach-role">{coach.role}</span>
-                    </div>
+          <div className="new-landing-coaches">
+            {COACHES.map((coach, i) => {
+              const card = isMobile ? (
+                <div key={coach.name} className="new-landing-coach-card">
+                  <div className="new-landing-coach-avatar">
+                    <Image
+                      src={coach.img}
+                      alt={coach.name}
+                      width={64}
+                      height={64}
+                      style={{ borderRadius: '50%', objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
                   </div>
-                );
-                return coach.link ? (
-                  <a key={coach.name} href={coach.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{card}</a>
-                ) : card;
-              })}
-            </InfiniteCarousel>
-          ) : (
-            <div className="new-landing-coaches">
-              {COACHES.map((coach, i) => {
-                const card = (
-                  <motion.div
-                    key={coach.name}
-                    className="new-landing-coach-card"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 * i, duration: 0.6 }}
-                  >
-                    <div className="new-landing-coach-avatar">
-                      <Image
-                        src={coach.img}
-                        alt={coach.name}
-                        width={48}
-                        height={48}
-                        style={{ borderRadius: '50%', objectFit: 'cover' }}
-                      />
-                    </div>
-                    <div className="new-landing-coach-info">
-                      <span className="new-landing-coach-name">{coach.name}</span>
-                      <span className="new-landing-coach-role">{coach.role}</span>
-                    </div>
-                  </motion.div>
-                );
-                return coach.link ? (
-                  <a key={coach.name} href={coach.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{card}</a>
-                ) : card;
-              })}
-            </div>
-          )}
+                  <div className="new-landing-coach-info">
+                    <span className="new-landing-coach-name">{coach.name}</span>
+                    <span className="new-landing-coach-role">{coach.role}</span>
+                  </div>
+                </div>
+              ) : (
+                <motion.div
+                  key={coach.name}
+                  className="new-landing-coach-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.15 * i, duration: 0.6 }}
+                >
+                  <div className="new-landing-coach-avatar">
+                    <Image
+                      src={coach.img}
+                      alt={coach.name}
+                      width={72}
+                      height={72}
+                      style={{ borderRadius: '50%', objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  </div>
+                  <div className="new-landing-coach-info">
+                    <span className="new-landing-coach-name">{coach.name}</span>
+                    <span className="new-landing-coach-role">{coach.role}</span>
+                  </div>
+                </motion.div>
+              );
+              return coach.link ? (
+                <a key={coach.name} href={coach.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>{card}</a>
+              ) : card;
+            })}
+          </div>
         </FadeInWhenVisible>
       </section>
 
@@ -490,7 +468,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
-            Growth doesn&apos;t stop when the sessions end.
+            Growth doesn&apos;t <em>stop</em> when the sessions end.
           </h2>
         </FadeInWhenVisible>
 
@@ -502,7 +480,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.3}>
           {isMobile ? (
-            <InfiniteCarousel speed={32} gap={0} className="new-landing-notif-carousel">
+            <div className="new-landing-notif-stack">
               {NOTIF_FRAMES.map((frame) => (
                 <div key={frame.id} className="new-landing-notif-frame">
                   <div className="new-landing-notif-icon-overlay">
@@ -534,7 +512,7 @@ export const NewLandingPage = () => {
                   )}
                 </div>
               ))}
-            </InfiniteCarousel>
+            </div>
           ) : (
             <div className="new-landing-notif-grid">
               {NOTIF_FRAMES.map((frame, i) => (
@@ -602,7 +580,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-privacy">
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading">
-            Completely Private
+            Completely <em>Private</em>
           </h2>
         </FadeInWhenVisible>
 
@@ -629,7 +607,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-coach-section">
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading">
-            Works with your coach. Works without one.
+            Works with your coach. Works <em>without</em> one.
           </h2>
         </FadeInWhenVisible>
 
@@ -660,16 +638,6 @@ export const NewLandingPage = () => {
 
       {/* ==================== SECTION 8: TRY FOR FREE ==================== */}
       <section className="new-landing-section new-landing-try-free">
-        <div className="new-landing-try-free-bg">
-          <Image
-            src="/EndBackground.png"
-            alt="Tuscan landscape"
-            fill
-            quality={85}
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-          />
-          <div className="new-landing-try-free-overlay" />
-        </div>
 
         <div className="new-landing-try-free-content">
           <FadeInWhenVisible>
