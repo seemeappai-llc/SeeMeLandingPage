@@ -88,8 +88,8 @@ const FadeInWhenVisible = ({
 
 // ========== INTEGRATION ICONS DATA ==========
 const INTEGRATION_ICONS = [
-  { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 42, height: 42, mobileMaxHeight: 30 },
-  { src: '/Group.png', alt: 'Google Calendar', width: 42, height: 42, mobileMaxHeight: 30 },
+  { src: '/MicrosoftOutlookIcon.png', alt: 'Microsoft Outlook', width: 34, height: 34, mobileMaxHeight: 24, compact: true },
+  { src: '/Group.png', alt: 'Google Calendar', width: 34, height: 34, mobileMaxHeight: 24, compact: true },
   { src: '/appleHealth.png', alt: 'Apple Health', width: 136, height: 50, wide: true },
   { src: '/AppleCalendar.png', alt: 'Apple Calendar', width: 52, height: 52 },
   { src: '/ScreenTime.png', alt: 'Screen Time', width: 52, height: 52 },
@@ -188,10 +188,12 @@ export const NewLandingPage = () => {
             {/* Sizer: always rendered, invisible — defines stable container height */}
             <div className="new-landing-text-sizer" aria-hidden="true">
               <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
-                {isMobile ? (<>Private<br />Personal<br />Intelligent</>) : 'Private. Personal. Intelligent.'}
+                {isMobile ? (<>Private.<br />Personal.<br />Intelligent.</>) : 'Private. Personal. Intelligent.'}
               </h2>
               <p className="new-landing-mockups-tagline">
-                Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
+                Built around how you think, work, and want to grow
+                {isMobile ? '\n' : ' '}
+                with your personal expert coaches beside you.
               </p>
             </div>
 
@@ -201,15 +203,49 @@ export const NewLandingPage = () => {
                 <motion.div
                   key="seeme-text"
                   className="new-landing-text-abs"
-                  initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: -16, filter: 'blur(10px)' }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        duration: 0.55,
+                        ease: [0.22, 1, 0.36, 1],
+                        when: 'beforeChildren',
+                      },
+                    },
+                    exit: {
+                      opacity: 0,
+                      transition: {
+                        duration: 0.3,
+                        ease: [0.22, 1, 0.36, 1],
+                        when: 'afterChildren',
+                      },
+                    },
+                  }}
                 >
-                  <h1
+                  <motion.h1
                     className="new-landing-seeme-title"
+                    variants={{
+                      hidden: { opacity: 0, filter: 'blur(10px)', scale: 0.985 },
+                      visible: {
+                        opacity: 1,
+                        filter: 'blur(0px)',
+                        scale: 1,
+                        transition: { duration: 1.35, ease: [0.22, 1, 0.36, 1], delay: 0.18 },
+                      },
+                      exit: {
+                        opacity: 0,
+                        filter: 'blur(10px)',
+                        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+                      },
+                    }}
                     style={seemeSize ? { fontSize: `${Math.round(seemeSize * (isMobile ? 0.45 : 1))}px` } : undefined}
-                  >SeeMe</h1>
+                  >
+                    SeeMe
+                  </motion.h1>
                 </motion.div>
               ) : (
                 <motion.div
@@ -222,9 +258,9 @@ export const NewLandingPage = () => {
                   <h2 className={isMobile ? 'new-landing-mockups-title-mobile' : 'new-landing-mockups-title'}>
                     {isMobile ? (
                       <>
-                        Private<br />
-                        Personal<br />
-                        Intelligent
+                        Private.<br />
+                        Personal.<br />
+                        Intelligent.
                       </>
                     ) : (
                       'Private. Personal. Intelligent.'
@@ -237,7 +273,9 @@ export const NewLandingPage = () => {
                     transition={{ duration: 0.7, delay: 0.35 }}
                     style={{ textAlign: 'center' }}
                   >
-                    Organize your life and integrate{isMobile ? '\n' : ' '}with expert coaches
+                    Built around how you think, work, and want to grow
+                    {isMobile ? '\n' : ' '}
+                    with your personal expert coaches beside you.
                   </motion.p>
                 </motion.div>
               )}
@@ -265,20 +303,34 @@ export const NewLandingPage = () => {
             ) : (
               <>
                 {[
-                  { src: '/updatedmockup1.png', alt: 'Check-in', x: 0, delay: 1.1, zIndex: 1 },
-                  { src: '/updatedmockup2.png', alt: 'Capacity View', x: 0, delay: 0.85, zIndex: 2 },
-                  { src: '/updatedmockup3.png', alt: 'Affirmation', x: 0, delay: 0.5, zIndex: 5 },
-                  { src: '/updatedmockup4.png', alt: 'Voice Call', x: 0, delay: 0.85, zIndex: 2 },
-                  { src: '/updatedmockup5.png', alt: 'Chat', x: 0, delay: 1.1, zIndex: 1 },
+                  { src: '/updatedmockup1.png', alt: 'Check-in', initialX: 372, initialY: 18, initialRotate: -20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
+                  { src: '/updatedmockup2.png', alt: 'Capacity View', initialX: 196, initialY: 10, initialRotate: -11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
+                  { src: '/updatedmockup3.png', alt: 'Affirmation', initialX: 0, initialY: 36, initialRotate: 0, initialScale: 0.86, delay: 0.72, zIndex: 5 },
+                  { src: '/updatedmockup4.png', alt: 'Voice Call', initialX: -196, initialY: 10, initialRotate: 11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
+                  { src: '/updatedmockup5.png', alt: 'Chat', initialX: -372, initialY: 18, initialRotate: 20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
                 ].map((mock) => (
                   <motion.div
                     key={mock.src}
                     className="new-landing-phone"
                     style={{ zIndex: mock.zIndex }}
-                    initial={{ opacity: 0, y: 30, scale: 0.92, x: mock.x }}
-                    animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
+                    initial={{
+                      opacity: 0,
+                      x: mock.initialX,
+                      y: mock.initialY,
+                      scale: mock.initialScale,
+                      rotate: mock.initialRotate,
+                      filter: 'blur(10px)',
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      y: 0,
+                      scale: 1,
+                      rotate: 0,
+                      filter: 'blur(0px)',
+                    }}
                     transition={{
-                      duration: 0.9,
+                      duration: 1.45,
                       delay: mock.delay,
                       ease: [0.22, 1, 0.36, 1],
                     }}
@@ -372,7 +424,10 @@ export const NewLandingPage = () => {
             <div className="new-landing-integrations">
               {INTEGRATION_ICONS.map((icon, i) => (
                 isMobile ? (
-                  <div key={icon.alt} className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}`}>
+                  <div
+                    key={icon.alt}
+                    className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}${'compact' in icon && icon.compact ? ' compact' : ''}`}
+                  >
                     <Image
                       src={icon.src}
                       alt={icon.alt}
@@ -384,7 +439,7 @@ export const NewLandingPage = () => {
                 ) : (
                   <motion.div
                     key={icon.alt}
-                    className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}`}
+                    className={`new-landing-integration-icon${'wide' in icon && icon.wide ? ' wide' : ''}${'compact' in icon && icon.compact ? ' compact' : ''}`}
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
