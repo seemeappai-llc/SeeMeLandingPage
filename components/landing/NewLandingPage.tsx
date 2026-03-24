@@ -165,7 +165,7 @@ export const NewLandingPage = () => {
     <div className="new-landing-root">
       <div className="new-landing-topbar is-visible">
         <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
-          SeeMe
+          <Image src="/SeeMeB2CIcon.png" alt="SeeMe" width={36} height={36} style={{ display: 'block' }} />
         </Link>
         <div className="new-landing-topbar-actions">
           <SeemeButton href="/partner" variant="unfilled" size="sm" className="new-landing-topbar-cta">
@@ -297,13 +297,13 @@ export const NewLandingPage = () => {
                   width={280}
                   height={580}
                   quality={90}
-                  style={{ borderRadius: '32px', width: '100%', height: 'auto' }}
+                  style={{ width: '100%', height: 'auto' }}
                 />
               </motion.div>
             ) : (
               <>
                 {[
-                  { src: '/updatedmockup1.png', alt: 'Check-in', initialX: 372, initialY: 18, initialRotate: -20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
+                  { src: '/FirstMockupUpdated.png', alt: 'Check-in', initialX: 372, initialY: 18, initialRotate: -20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
                   { src: '/updatedmockup2.png', alt: 'Capacity View', initialX: 196, initialY: 10, initialRotate: -11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
                   { src: '/updatedmockup3.png', alt: 'Affirmation', initialX: 0, initialY: 36, initialRotate: 0, initialScale: 0.86, delay: 0.72, zIndex: 5 },
                   { src: '/updatedmockup4.png', alt: 'Voice Call', initialX: -196, initialY: 10, initialRotate: 11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
@@ -341,7 +341,7 @@ export const NewLandingPage = () => {
                       width={220}
                       height={450}
                       quality={90}
-                      style={{ borderRadius: '28px', width: '100%', height: 'auto' }}
+                      style={{ width: '100%', height: 'auto' }}
                     />
                   </motion.div>
                 ))}
