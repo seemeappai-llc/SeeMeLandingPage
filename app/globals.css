@@ -392,6 +392,7 @@ body > div {
   line-height: 1.1;
   margin: 0 0 12px 0;
   font-style: normal;
+  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
 }
 
 .new-landing-mockups-title-mobile {
@@ -404,6 +405,7 @@ body > div {
   margin: 0 0 12px 0;
   font-style: normal;
   text-align: center;
+  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
 }
 
 .new-landing-mockups-tagline {
@@ -414,6 +416,7 @@ body > div {
   line-height: 1.5;
   margin: 0;
   white-space: pre-line;
+  text-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Phone container */
@@ -579,12 +582,22 @@ body > div {
   flex-shrink: 0;
 }
 
+.new-landing-integration-icon.compact {
+  width: 40px;
+  height: 40px;
+}
+
 .new-landing-integration-icon img {
   max-height: 42px !important;
   max-width: 42px !important;
   width: auto !important;
   height: auto !important;
   object-fit: contain !important;
+}
+
+.new-landing-integration-icon.compact img {
+  max-height: 34px !important;
+  max-width: 34px !important;
 }
 
 .new-landing-integration-icon.wide {
@@ -725,15 +738,19 @@ body > div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 2px;
   width: 100%;
-  padding: 0 8px;
+  padding: 0;
 }
 
 .new-landing-notif-stack .new-landing-notif-frame {
   width: 100%;
   max-width: 340px;
   margin: 0;
+}
+
+.new-landing-notif-stack .new-landing-notif-frame + .new-landing-notif-frame {
+  margin-top: -30px;
 }
 
 /* SeeMe app icon overlay — percentage-based so it scales with frame width */
@@ -928,23 +945,16 @@ body > div {
   align-items: center;
   text-align: center;
   gap: 12px;
-  background: url('/2ndLayerBackground_optimized.png') center / cover no-repeat;
-  border-radius: 24px;
+  background:
+    linear-gradient(160deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.5) 100%),
+    url('/2ndLayerBackground_optimized.png') center / cover no-repeat;
+  border-radius: 28px;
   padding: 56px 48px;
   overflow: hidden;
   max-width: 720px;
   width: 100%;
   border: 1px solid rgba(255, 180, 160, 0.1);
   box-shadow: 0 16px 64px rgba(0, 0, 0, 0.4), 0 0 80px rgba(254, 63, 106, 0.04);
-}
-
-.new-landing-try-free-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.5) 100%);
-  border-radius: 24px;
-  z-index: -1;
 }
 
 .new-landing-try-free-heading {
@@ -1121,7 +1131,7 @@ body > div {
 
   .new-landing-try-free-content {
     padding: 36px 20px;
-    border-radius: 16px;
+    border-radius: 20px;
   }
 
   .new-landing-section-heading {
@@ -1139,29 +1149,40 @@ body > div {
   }
 
   .new-landing-integrations-card {
-    padding: 20px 16px;
+    padding: 18px 12px;
     border-radius: 16px;
   }
 
   .new-landing-integrations {
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    justify-content: space-between;
   }
 
   .new-landing-integration-icon {
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+  }
+
+  .new-landing-integration-icon.compact {
+    width: 28px;
+    height: 28px;
   }
 
   .new-landing-integration-icon img {
-    max-height: 34px !important;
-    max-width: 34px !important;
+    max-height: 26px !important;
+    max-width: 26px !important;
+  }
+
+  .new-landing-integration-icon.compact img {
+    max-height: 20px !important;
+    max-width: 20px !important;
   }
 
   .new-landing-integration-icon.wide img {
-    max-width: 90px !important;
-    max-height: 34px !important;
+    max-width: 70px !important;
+    max-height: 26px !important;
   }
 
   .new-landing-coaches {
@@ -3106,6 +3127,10 @@ body > div {
   color: var(--seeme-text);
   line-height: 1.2;
   margin: 0;
+}
+
+.partner-page .partner-pillars-grid .cx-card h4 {
+  margin-bottom: 12px;
 }
 
 .partner-page .cx-row-hi .cx-text h4 {
