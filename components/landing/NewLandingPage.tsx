@@ -118,10 +118,21 @@ const NOTIF_FRAMES = [
   { id: 'mo', src: '/Frame3.png', alt: 'From Mo notification', hasSlider: false },
 ];
 
+const HERO_MOCKUPS = [
+  { src: '/FirstMockupUpdated.png', alt: 'Check-in', initialX: 372, initialY: 18, initialRotate: -20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
+  { src: '/updatedmockup2.png', alt: 'Capacity View', initialX: 196, initialY: 10, initialRotate: -11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
+  { src: '/updatedmockup3.png', alt: 'Affirmation', initialX: 0, initialY: 36, initialRotate: 0, initialScale: 0.86, delay: 0.72, zIndex: 5 },
+  { src: '/updatedmockup4.png', alt: 'Voice Call', initialX: -196, initialY: 10, initialRotate: 11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
+  { src: '/updatedmockup5.png', alt: 'Chat', initialX: -372, initialY: 18, initialRotate: 20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
+] as const;
+
+const MOBILE_HERO_SEQUENCE = [2, 1, 3, 0, 4] as const;
+
 // ========== MAIN COMPONENT ==========
 export const NewLandingPage = () => {
   const [phase, setPhase] = useState<Phase>('seeme');
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileHeroIndex, setMobileHeroIndex] = useState(0);
   const [seemeSize, setSeemeSize] = useState<number | null>(null);
   const knowsYouRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
@@ -161,6 +172,14 @@ export const NewLandingPage = () => {
     return () => clearTimeout(t1);
   }, []);
 
+  useEffect(() => {
+    if (!isMobile) return;
+    const interval = window.setInterval(() => {
+      setMobileHeroIndex((current) => (current + 1) % HERO_MOCKUPS.length);
+    }, 4000);
+    return () => window.clearInterval(interval);
+  }, [isMobile]);
+
   return (
     <div className="new-landing-root">
       <div className="new-landing-topbar is-visible">
@@ -176,8 +195,17 @@ export const NewLandingPage = () => {
 
       {/* ==================== HERO SECTION ==================== */}
       <section className="new-landing-hero">
-        {/* Background overlay (image is set via CSS on .new-landing-hero) */}
         <div className="new-landing-hero-bg">
+          <img
+            src="/updatedB2CBackground.png"
+            alt=""
+            className="new-landing-hero-bg-image new-landing-hero-bg-image-desktop"
+          />
+          <img
+            src="/b2c-mobile-hero-current.png"
+            alt=""
+            className="new-landing-hero-bg-image new-landing-hero-bg-image-mobile"
+          />
           <div className="new-landing-hero-overlay" />
         </div>
 
@@ -285,30 +313,28 @@ export const NewLandingPage = () => {
           {/* Phone Mockups — center mockup appears first, others fan out from behind it */}
           <div className="new-landing-phones">
             {isMobile ? (
-              <motion.div
-                className="new-landing-phone new-landing-phone-single"
-                initial={{ opacity: 0, y: 40, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.9, delay: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
-              >
-                <Image
-                  src="/updatedmockup3.png"
-                  alt="SeeMe App - Home Screen"
-                  width={280}
-                  height={580}
-                  quality={90}
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </motion.div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].src}
+                  className="new-landing-phone new-landing-phone-single"
+                  initial={{ opacity: 0, y: 22, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -22, scale: 0.98 }}
+                  transition={{ duration: 0.65, ease: [0.25, 0.4, 0.25, 1] }}
+                >
+                  <Image
+                    src={HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].src}
+                    alt={`SeeMe App - ${HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].alt}`}
+                    width={280}
+                    height={580}
+                    quality={90}
+                    style={{ width: '100%', height: 'auto', borderRadius: '22px' }}
+                  />
+                </motion.div>
+              </AnimatePresence>
             ) : (
               <>
-                {[
-                  { src: '/FirstMockupUpdated.png', alt: 'Check-in', initialX: 372, initialY: 18, initialRotate: -20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
-                  { src: '/updatedmockup2.png', alt: 'Capacity View', initialX: 196, initialY: 10, initialRotate: -11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
-                  { src: '/updatedmockup3.png', alt: 'Affirmation', initialX: 0, initialY: 36, initialRotate: 0, initialScale: 0.86, delay: 0.72, zIndex: 5 },
-                  { src: '/updatedmockup4.png', alt: 'Voice Call', initialX: -196, initialY: 10, initialRotate: 11, initialScale: 0.88, delay: 0.8, zIndex: 2 },
-                  { src: '/updatedmockup5.png', alt: 'Chat', initialX: -372, initialY: 18, initialRotate: 20, initialScale: 0.82, delay: 0.88, zIndex: 1 },
-                ].map((mock) => (
+                {HERO_MOCKUPS.map((mock) => (
                   <motion.div
                     key={mock.src}
                     className="new-landing-phone"
@@ -529,13 +555,13 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
-            Growth doesn&apos;t stop when the sessions end.
+            Your coaches are with <em>you</em> every day.
           </h2>
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.15}>
           <p className="new-landing-section-subtext">
-            SeeMe fills the space between sessions — daily nudges, check-ins, and insights so nothing gets lost. Your scheduled sessions keep you on track, and whenever you need to talk, your coach is ready.
+            SeeMe fills the space between your scheduled sessions with the nudges, check-ins, and insights that keep you moving. Your coaches always know what&apos;s next for you — whether that&apos;s a reflection, a new session, or just the right push at the right moment. When your next session comes, nothing has been lost — and you walk in ready.
           </p>
         </FadeInWhenVisible>
 
@@ -647,7 +673,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.15}>
           <p className="new-landing-section-subtext new-landing-privacy-subtext">
-            The more you share, the better SeeMe works — so we made sure none of it has to ever leave your device. No cloud, no ads, no one reading your journal but you.
+            We believe privacy is a fundamental human right — so we built SeeMe with it at the core. All your personal data lives solely on your device. Not in the cloud, not on anybody&apos;s servers. And with on-device AI models, your most personal thoughts never even leave your phone.
           </p>
         </FadeInWhenVisible>
 
@@ -674,11 +700,17 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.15}>
           <p className="new-landing-section-subtext new-landing-coach-subtext">
-            SeeMe fills the space between your real sessions — tracking your moods, thoughts, progress, and light check-ins that keep you moving and arrive ready. When you walk in, your coach is already caught up. No coach? Our AI network is ready whenever you are.
+            SeeMe works as your always-on AI guide — but it&apos;s also built to bring real coaches into your journey. Connect with a human coach on the platform and they get a richer picture of you than any coach has ever had before: your patterns, your progress, your history — all shared securely, all context they can actually use.
           </p>
         </FadeInWhenVisible>
 
         <FadeInWhenVisible delay={0.3}>
+          <p className="new-landing-b2b-text new-landing-b2b-text-above">
+            Are you a coach?
+          </p>
+        </FadeInWhenVisible>
+
+        <FadeInWhenVisible delay={0.38}>
           <motion.div
             className="new-landing-appstore-btn"
             whileHover={{ scale: 1.05 }}
@@ -690,7 +722,7 @@ export const NewLandingPage = () => {
           </motion.div>
         </FadeInWhenVisible>
 
-        <FadeInWhenVisible delay={0.45}>
+        <FadeInWhenVisible delay={0.53}>
           <p className="new-landing-b2b-text">
             and explore our coaches platform
           </p>

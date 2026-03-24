@@ -251,7 +251,27 @@ body > div {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url('/updatedB2CBackground.png') center center / cover no-repeat;
+  overflow: hidden;
+}
+
+.new-landing-hero-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.new-landing-hero-bg-image-desktop {
+  opacity: 0.8;
+  filter: brightness(0.78);
+}
+
+.new-landing-hero-bg-image-mobile {
+  display: none;
+  opacity: 0.78;
+  filter: brightness(0.74);
 }
 
 .new-landing-hero-overlay {
@@ -259,10 +279,10 @@ body > div {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(28, 18, 16, 0.3) 0%,
-    rgba(28, 18, 16, 0.1) 30%,
-    rgba(28, 18, 16, 0.15) 60%,
-    rgba(28, 18, 16, 0.6) 85%,
+    rgba(28, 18, 16, 0.42) 0%,
+    rgba(28, 18, 16, 0.22) 30%,
+    rgba(28, 18, 16, 0.26) 60%,
+    rgba(28, 18, 16, 0.68) 85%,
     #1c1210 100%
   );
 }
@@ -434,13 +454,10 @@ body > div {
   flex-shrink: 0;
   width: 170px;
   filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
-  border-radius: 28px;
-  overflow: hidden;
 }
 
 .new-landing-phone-single {
   width: 280px;
-  border-radius: 46px;
 }
 
 /* App Store button */
@@ -921,6 +938,10 @@ body > div {
   letter-spacing: 0.01em;
 }
 
+.new-landing-b2b-text-above {
+  margin-bottom: 14px;
+}
+
 .new-landing-b2b-text:hover {
   color: var(--nl-text-secondary);
 }
@@ -1093,6 +1114,24 @@ body > div {
   .new-landing-hero {
     padding-top: 55px;
     min-height: 100dvh;
+  }
+
+  .new-landing-hero-bg {
+    inset: 0;
+    border-radius: 0;
+  }
+
+  .new-landing-hero-bg-image-desktop {
+    display: none;
+  }
+
+  .new-landing-hero-bg-image-mobile {
+    display: block;
+    border-radius: 20px;
+  }
+
+  .new-landing-hero-overlay {
+    border-radius: 20px;
   }
 
   .new-landing-mockups-title-mobile {
@@ -1576,7 +1615,9 @@ body > div {
   min-height: calc(100dvh + 70px);
   padding: 96px 32px 144px;
   text-align: center;
-  background: transparent;
+  background:
+    linear-gradient(to bottom, rgba(28, 18, 16, 0.5) 0%, rgba(28, 18, 16, 0.36) 38%, rgba(28, 18, 16, 0.78) 84%, var(--seeme-bg) 100%),
+    url('/b2b-hero-bg.jpeg') center top / cover no-repeat;
   border-bottom: none;
   position: relative;
   box-sizing: border-box;
@@ -1587,26 +1628,10 @@ body > div {
   gap: 0;
 }
 
-.partner-page .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('/b2b-hero-bg.jpeg') center top / cover no-repeat;
-  opacity: 0.7;
-  z-index: 0;
-}
-
-.partner-page .hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(28, 18, 16, 0.42) 0%, rgba(28, 18, 16, 0.3) 38%, rgba(28, 18, 16, 0.72) 84%, var(--seeme-bg) 100%);
-  z-index: 1;
-}
-
-.partner-page .hero > * {
+.partner-page .hero > *,
+.partner-page .partner-hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .partner-page .eyebrow {
