@@ -133,7 +133,11 @@ export const NewLandingPage = () => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Hero renders in correct position on load — no scroll hack needed
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      window.scrollTo(0, 70);
+    }
+  }, []);
 
   // Measure container height (set by sizer) and sync SeeMe font-size to it exactly
   useEffect(() => {
@@ -470,7 +474,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-integrated" style={{ paddingBottom: isMobile ? '14px' : '30px' }}>
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading new-landing-integrated-heading">
-            Growth doesn&apos;t <em>stop</em> when the sessions end.
+            Growth doesn&apos;t stop when the sessions end.
           </h2>
         </FadeInWhenVisible>
 
@@ -609,7 +613,7 @@ export const NewLandingPage = () => {
       <section className="new-landing-section new-landing-coach-section">
         <FadeInWhenVisible>
           <h2 className="new-landing-section-heading">
-            Works with your coach. Works <em>without</em> one.
+            Works with your coach. Works without one.
           </h2>
         </FadeInWhenVisible>
 

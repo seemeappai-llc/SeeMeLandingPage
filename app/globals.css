@@ -1539,18 +1539,40 @@ body > div {
 
 .partner-page .hero {
   margin-top: -70px;
-  min-height: 100dvh;
-  padding: 200px 32px 120px;
+  min-height: calc(100dvh + 70px);
+  padding: 96px 32px 144px;
   text-align: center;
-  background:
-    linear-gradient(to bottom, rgba(28, 18, 16, 0.3) 0%, rgba(28, 18, 16, 0.15) 40%, rgba(28, 18, 16, 0.6) 85%, var(--seeme-bg) 100%),
-    url('/b2b-hero-bg.jpeg') center top / cover no-repeat;
+  background: transparent;
   border-bottom: none;
   position: relative;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0;
+}
+
+.partner-page .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/b2b-hero-bg.jpeg') center top / cover no-repeat;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.partner-page .hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(28, 18, 16, 0.42) 0%, rgba(28, 18, 16, 0.3) 38%, rgba(28, 18, 16, 0.72) 84%, var(--seeme-bg) 100%);
+  z-index: 1;
+}
+
+.partner-page .hero > * {
+  position: relative;
+  z-index: 2;
 }
 
 .partner-page .eyebrow {
@@ -1793,6 +1815,130 @@ body > div {
 .partner-page .inner {
   max-width: 920px;
   margin: 0 auto;
+}
+
+.partner-page .partner-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.partner-page .modes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.partner-page .mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 320px;
+  padding: 32px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 180, 160, 0.08);
+  background: rgba(255, 200, 180, 0.02);
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.partner-page .mode-card:hover {
+  border-color: rgba(255, 180, 160, 0.14);
+  background: rgba(255, 200, 180, 0.03);
+}
+
+.partner-page .mode-card.mode-selectable.selected {
+  border-color: rgba(254, 63, 106, 0.24);
+  background: linear-gradient(145deg, rgba(254, 63, 106, 0.05) 0%, rgba(255, 200, 180, 0.02) 100%);
+}
+
+.partner-page .mode-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 180, 160, 0.1);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--seeme-text-muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.partner-page .mode-card.mode-selectable.selected .mode-chip {
+  border-color: rgba(254, 63, 106, 0.2);
+  color: var(--seeme-accent);
+  background: rgba(254, 63, 106, 0.08);
+}
+
+.partner-page .mode-card h3 {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+  color: var(--seeme-text);
+}
+
+.partner-page .mode-card > p {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--seeme-subtext);
+  text-wrap: pretty;
+}
+
+.partner-page .mode-scale {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 180, 160, 0.08);
+}
+
+.partner-page .mode-scale-n {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  color: var(--seeme-accent);
+}
+
+.partner-page .mode-scale-l {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--seeme-text-muted);
+}
+
+.partner-page .mode-selectable::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 180, 160, 0.22);
+  background: transparent;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.partner-page .mode-selectable.selected::after {
+  border-color: var(--seeme-accent);
+  background: var(--seeme-accent);
+  transform: scale(1.02);
 }
 
 .partner-page .sh {
@@ -2386,6 +2532,7 @@ body > div {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin-bottom: 12px;
 }
 
 .partner-page .f-field.full {
@@ -2398,6 +2545,7 @@ body > div {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--seeme-muted);
+  margin-bottom: 4px;
 }
 
 .partner-page .f-field input,
@@ -2944,6 +3092,7 @@ body > div {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--seeme-accent);
+  margin-bottom: 10px;
 }
 
 .partner-page .cx-row-hi .cx-label {
@@ -3627,7 +3776,9 @@ body > div {
   .partner-page .feat-grid,
   .partner-page .price-grid,
   .partner-page .priv-grid,
-  .partner-page .pillar-grid {
+  .partner-page .pillar-grid,
+  .partner-page .modes-grid,
+  .partner-page .partner-pillars-grid {
     grid-template-columns: 1fr;
   }
 
