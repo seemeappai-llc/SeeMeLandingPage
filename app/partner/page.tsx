@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -46,6 +47,46 @@ const HOW_IT_WORKS = [
 ];
 
 type Mode = 'hybrid' | 'fullai';
+
+const heroContentVariants = {
+  hidden: { opacity: 0, y: 28, filter: 'blur(10px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1] as const,
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const heroItemVariants = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+const sectionRevealVariants = {
+  hidden: { opacity: 0, y: 28, filter: 'blur(10px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
 
 export default function PartnerPage() {
   const [selectedMode, setSelectedMode] = useState<Mode>('hybrid');
@@ -116,21 +157,34 @@ export default function PartnerPage() {
       </div>
 
       <section className="hero">
-        <div className="eyebrow">Coaching 3.0</div>
-        <h1>
-          Multiply your impact.
-          <br />
-          <em>Without multiplying your hours.</em>
-        </h1>
-        <p>
-          SeeMe keeps your coaching methodology working between sessions through check-ins, reflections, homework, and progress tracking.
-        </p>
-        <div className="cta-row">
-          <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
-        </div>
+        <motion.div
+          className="partner-hero-content"
+          variants={heroContentVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div className="eyebrow" variants={heroItemVariants}>Coaching 3.0</motion.div>
+          <motion.h1 variants={heroItemVariants}>
+            Multiply your impact.
+            <br />
+            <em>Without multiplying your hours.</em>
+          </motion.h1>
+          <motion.p variants={heroItemVariants}>
+            SeeMe keeps your coaching methodology working between sessions through check-ins, reflections, homework, and progress tracking.
+          </motion.p>
+          <motion.div className="cta-row" variants={heroItemVariants}>
+            <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
+          </motion.div>
+        </motion.div>
       </section>
 
-      <div className="section">
+      <motion.div
+        className="section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionRevealVariants}
+      >
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">What Coaching 3.0 Means</div>
@@ -152,9 +206,15 @@ export default function PartnerPage() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="section alt">
+      <motion.div
+        className="section alt"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionRevealVariants}
+      >
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">How It Works</div>
@@ -177,9 +237,15 @@ export default function PartnerPage() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="section">
+      <motion.div
+        className="section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionRevealVariants}
+      >
         <div className="inner">
           <div className="sh">
             <div className="eyebrow">Two Ways To Use It</div>
@@ -225,9 +291,16 @@ export default function PartnerPage() {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="apply" id="apply">
+      <motion.div
+        className="apply"
+        id="apply"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionRevealVariants}
+      >
         <h2>
           Join a select group of
           <br />
@@ -276,7 +349,7 @@ export default function PartnerPage() {
           {!submitError && submitted ? <p className="f-note partner-form-success">Thanks, {name.trim().split(' ')[0]}! We&apos;ll be in touch within 48 hours.</p> : null}
           {!submitError && !submitted ? <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p> : null}
         </div>
-      </div>
+      </motion.div>
 
       <footer>
         <div className="f-logo">See<em>Me</em></div>
