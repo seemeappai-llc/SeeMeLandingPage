@@ -165,7 +165,7 @@ export const NewLandingPage = () => {
     <div className="new-landing-root">
       <div className="new-landing-topbar is-visible">
         <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
-          <Image src="/SeeMeB2CIcon.png" alt="SeeMe" width={36} height={36} style={{ display: 'block' }} />
+          <Image src="/SeeMeB2CIcon.png" alt="SeeMe" width={22} height={22} style={{ display: 'block' }} />
         </Link>
         <div className="new-landing-topbar-actions">
           <SeemeButton href="/partner" variant="unfilled" size="sm" className="new-landing-topbar-cta">
