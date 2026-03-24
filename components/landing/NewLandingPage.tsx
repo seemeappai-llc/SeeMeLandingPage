@@ -191,9 +191,9 @@ export const NewLandingPage = () => {
                 {isMobile ? (<>Private.<br />Personal.<br />Intelligent.</>) : 'Private. Personal. Intelligent.'}
               </h2>
               <p className="new-landing-mockups-tagline">
-                Built around how you think, work, and want to grow
+                AI built around how you think, reflect, and grow -
                 {isMobile ? '\n' : ' '}
-                with your personal expert coaches beside you.
+                with expert coaches in your corner.
               </p>
             </div>
 
@@ -273,9 +273,9 @@ export const NewLandingPage = () => {
                     transition={{ duration: 0.7, delay: 0.35 }}
                     style={{ textAlign: 'center' }}
                   >
-                    Built around how you think, work, and want to grow
+                    AI built around how you think, reflect, and grow -
                     {isMobile ? '\n' : ' '}
-                    with your personal expert coaches beside you.
+                    with expert coaches in your corner.
                   </motion.p>
                 </motion.div>
               )}
@@ -414,7 +414,7 @@ export const NewLandingPage = () => {
 
         <FadeInWhenVisible delay={0.15}>
           <p className="new-landing-section-subtext">
-            Every session, journal entry, and integration feeds into a picture of you that gets sharper over time — so the guidance you get is never generic.
+            SeeMe learns how you think, what drives you, and where you get stuck — through daily check-ins, reflections, and your coaching sessions. It also connects with the apps already tracking your life, so it always has the full picture — even on the days you don&apos;t say a word.
           </p>
         </FadeInWhenVisible>
 
