@@ -147,7 +147,7 @@ export default function PartnerPage() {
     <div className="partner-page">
       <div className="new-landing-topbar is-visible">
         <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
-          <Image src="/SeeMeB2BIcon.png" alt="SeeMe" width={22} height={22} style={{ display: 'block' }} />
+          <Image src="/SeeMeB2CIcon.png" alt="SeeMe" width={22} height={22} style={{ display: 'block' }} />
         </Link>
         <div className="new-landing-topbar-actions">
           <SeemeButton href="/" variant="unfilled" size="sm" className="new-landing-topbar-cta">
