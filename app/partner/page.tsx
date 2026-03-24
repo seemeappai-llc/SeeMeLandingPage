@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import SeemeButton from '@/components/ui/SeemeButton';
 import { getSupabase } from '@/lib/supabase';
@@ -146,7 +147,7 @@ export default function PartnerPage() {
     <div className="partner-page">
       <div className="new-landing-topbar is-visible">
         <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
-          SeeMe
+          <Image src="/SeeMeB2BIcon.png" alt="SeeMe" width={36} height={36} style={{ display: 'block' }} />
         </Link>
         <div className="new-landing-topbar-actions">
           <SeemeButton href="/" variant="unfilled" size="sm" className="new-landing-topbar-cta">
