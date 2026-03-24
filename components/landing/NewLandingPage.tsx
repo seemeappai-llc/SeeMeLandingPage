@@ -240,7 +240,7 @@ export const NewLandingPage = () => {
             </AnimatePresence>
           </div>
 
-          {/* Phone Mockups — always visible, animate in once on mount */}
+          {/* Phone Mockups — center mockup appears first, others fan out from behind it */}
           <div className="new-landing-phones">
             {isMobile ? (
               <motion.div
@@ -250,7 +250,7 @@ export const NewLandingPage = () => {
                 transition={{ duration: 0.9, delay: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
               >
                 <Image
-                  src="/mockUp1.png"
+                  src="/updatedmockup3.png"
                   alt="SeeMe App - Home Screen"
                   width={280}
                   height={580}
@@ -261,20 +261,22 @@ export const NewLandingPage = () => {
             ) : (
               <>
                 {[
-                  { src: '/mockUp1.png', alt: 'Home Screen', delay: 0.5 },
-                  { src: '/mockUp2.png', alt: 'Capacity View', delay: 0.65 },
-                  { src: '/mockUp3.png', alt: 'Coach Chat', delay: 0.8 },
-                  { src: '/mockUp4.png', alt: 'Journal Entry', delay: 0.95 },
+                  { src: '/updatedmockup1.png', alt: 'Check-in', x: 0, delay: 1.1, zIndex: 1 },
+                  { src: '/updatedmockup2.png', alt: 'Capacity View', x: 0, delay: 0.85, zIndex: 2 },
+                  { src: '/updatedmockup3.png', alt: 'Affirmation', x: 0, delay: 0.5, zIndex: 5 },
+                  { src: '/updatedmockup4.png', alt: 'Voice Call', x: 0, delay: 0.85, zIndex: 2 },
+                  { src: '/updatedmockup5.png', alt: 'Chat', x: 0, delay: 1.1, zIndex: 1 },
                 ].map((mock) => (
                   <motion.div
                     key={mock.src}
                     className="new-landing-phone"
-                    initial={{ opacity: 0, y: 50, scale: 0.85 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    style={{ zIndex: mock.zIndex }}
+                    initial={{ opacity: 0, y: 30, scale: 0.92, x: mock.x }}
+                    animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
                     transition={{
-                      duration: 0.8,
+                      duration: 0.9,
                       delay: mock.delay,
-                      ease: [0.25, 0.4, 0.25, 1],
+                      ease: [0.22, 1, 0.36, 1],
                     }}
                   >
                     <Image
