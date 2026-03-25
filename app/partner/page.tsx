@@ -1,5 +1,6 @@
 'use client';
 
+import { CalendarCheck2, Handshake, SlidersHorizontal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,44 +8,44 @@ import { useEffect, useState } from 'react';
 import SeemeButton from '@/components/ui/SeemeButton';
 import { getSupabase } from '@/lib/supabase';
 
-const COACHING_PILLARS = [
-  {
-    num: '01',
-    label: 'Your method',
-    title: 'Your methodology, not generic AI',
-    body: 'Train SeeMe on your voice, frameworks, prompts, and exercises so clients experience your approach between sessions.',
-  },
-  {
-    num: '02',
-    label: 'Between sessions',
-    title: 'Support that keeps momentum alive',
-    body: 'Check-ins, reflections, homework, and progress tracking keep clients engaged while you stay focused on the work only you can do live.',
-  },
-  {
-    num: '03',
-    label: 'Capacity',
-    title: 'Better outcomes with more room to grow',
-    body: 'You arrive to every session with context already in place and create space to support more clients without multiplying your hours.',
-  },
-];
-
-const HOW_IT_WORKS = [
+const COACHING_30_STEPS = [
   {
     step: '1',
-    title: 'You train SeeMe on how you coach',
-    body: 'We help you turn your methodology, language, and session structure into a living system your clients can use between calls.',
+    icon: SlidersHorizontal,
+    title: 'Set up SeeMe around how you coach',
+    body: 'We turn your methodology, language, prompts, and exercises into a secure system that feels entirely like your coaching.',
   },
   {
     step: '2',
-    title: 'Clients get support between sessions',
-    body: 'SeeMe delivers check-ins, reflections, and homework in your style so the work continues after the call ends.',
+    icon: CalendarCheck2,
+    title: 'See every client and assign prep work',
+    body: 'You can see all your clients in one place, track their status, and create and assign prep sessions, reflections, and check-ins to keep them accountable between calls.',
   },
   {
     step: '3',
-    title: 'You arrive with context and go deeper',
-    body: 'Instead of spending time catching up, you step into each session already knowing what shifted and where to focus.',
+    icon: Handshake,
+    title: 'Create a smooth handoff into the real session',
+    body: 'By the time you show up live, the context is already there. Prep sessions can handle much of the heavy lifting, so you need fewer in-person sessions and can use live time for the deeper work only you can do.',
   },
 ];
+
+const PARTNER_SOCIAL_PROOF = [
+  {
+    name: 'Coach, private practice',
+    role: 'Life coach',
+    quote: 'This is the future of coaching. I deliver deeper sessions, while taking on more clients. Win-win.',
+  },
+  {
+    name: 'Coach, executive practice',
+    role: 'Leadership coach',
+    quote: 'Incredible what AI can do to our industry when used ethically, with us in control and privacy at its core.',
+  },
+  {
+    name: 'Coach, founder-led practice',
+    role: 'Programme coach',
+    quote: 'It’s sink or swim in the coaching field. This feels like adapting and moving these practices into the best direction.',
+  },
+] as const;
 
 type Mode = 'hybrid' | 'fullai';
 
@@ -147,7 +148,7 @@ export default function PartnerPage() {
     <div className="partner-page">
       <div className="new-landing-topbar is-visible">
         <Link href="/" className="new-landing-topbar-logo" aria-label="SeeMe home">
-          <Image src="/SeeMeB2BIcon.png" alt="SeeMe" width={36} height={36} style={{ display: 'block' }} />
+          <Image src="/SeeMeB2CIcon.png" alt="SeeMe" width={22} height={22} style={{ display: 'block' }} />
         </Link>
         <div className="new-landing-topbar-actions">
           <SeemeButton href="/" variant="unfilled" size="sm" className="new-landing-topbar-cta">
@@ -170,43 +171,13 @@ export default function PartnerPage() {
             <em>Without multiplying your hours.</em>
           </motion.h1>
           <motion.p variants={heroItemVariants}>
-            SeeMe keeps your coaching methodology working between sessions through check-ins, reflections, homework, and progress tracking.
+            Your coaching presence, working between every session — through check-ins, reflections, and prep sessions that keep clients moving and every live session worth more.
           </motion.p>
           <motion.div className="cta-row" variants={heroItemVariants}>
             <SeemeButton href="#apply" variant="filled" size="lg">Apply to pilot</SeemeButton>
           </motion.div>
         </motion.div>
       </section>
-
-      <motion.div
-        className="section"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionRevealVariants}
-      >
-        <div className="inner">
-          <div className="sh">
-            <div className="eyebrow">What Coaching 3.0 Means</div>
-            <h2>
-              The session no longer
-              <br />
-              ends the coaching.
-            </h2>
-            <p>SeeMe extends your coaching into the space between calls, so clients feel supported, the work keeps moving, and your live time becomes more valuable.</p>
-          </div>
-
-          <div className="cx-grid partner-pillars-grid">
-            {COACHING_PILLARS.map((pillar) => (
-              <div key={pillar.num} className="cx-card">
-                <div className="cx-label">{pillar.label}</div>
-                <h4>{pillar.title}</h4>
-                <p>{pillar.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
 
       <motion.div
         className="section alt"
@@ -217,25 +188,35 @@ export default function PartnerPage() {
       >
         <div className="inner">
           <div className="sh">
-            <div className="eyebrow">How It Works</div>
+            <div className="eyebrow">How it works</div>
             <h2>
-              A simple system for
+              The session no longer
               <br />
-              <em>modern coaching.</em>
+              <em>ends the coaching.</em>
             </h2>
+            <p>SeeMe extends your coaching into the space between calls, so clients feel supported, the work keeps moving, and your live time becomes more valuable.</p>
           </div>
 
           <div className="steps">
-            {HOW_IT_WORKS.map((item) => (
+            {COACHING_30_STEPS.map((item) => (
               <div key={item.step} className="step">
                 <div className="step-n">{item.step}</div>
-                <div>
+                <div className="step-body">
+                  <div className="step-icon" aria-hidden="true">
+                    <item.icon size={20} strokeWidth={2.2} />
+                  </div>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
                 </div>
               </div>
             ))}
           </div>
+
+          <p className="partner-client-bridge">
+            Your clients also get the SeeMe platform: their own private, personal, intelligent AI built around them, with the option to bring in other specialized coaches whose context can be shared securely too.
+            {' '}
+            <Link href="/">See the client experience.</Link>
+          </p>
         </div>
       </motion.div>
 
@@ -252,7 +233,7 @@ export default function PartnerPage() {
             <h2>
               You coach live,
               <br />
-              or <em>your AI does.</em>
+              or <em>your AI does</em>
             </h2>
             <p>Both modes keep your methodology at the center. The difference is how much of the delivery layer SeeMe takes on.</p>
           </div>
@@ -267,10 +248,17 @@ export default function PartnerPage() {
               <h3>You coach live.</h3>
               <p>SeeMe handles preparation sessions, check-ins, reflections, and homework so every handoff into the real session is smooth and your live time goes deeper faster.</p>
               <div className="mode-scale">
-                <div>
+                <div className="mode-scale-stat">
                   <div className="mode-scale-n">2-3×</div>
                   <div className="mode-scale-l">more clients<br />same live hours</div>
                 </div>
+                <div className="mode-scale-stat">
+                  <div className="mode-scale-n">+$2.3K/mo</div>
+                  <div className="mode-scale-l">added income<br />at current rates</div>
+                </div>
+              </div>
+              <div className="mode-fine-print">
+                Based on an average live session rate of $230 USD/hour and roughly 10 additional sessions per month.
               </div>
             </button>
 
@@ -283,12 +271,52 @@ export default function PartnerPage() {
               <h3>Your AI runs the program.</h3>
               <p>SeeMe delivers the full structured experience using your methodology while you oversee progress and step in when needed.</p>
               <div className="mode-scale">
-                <div>
+                <div className="mode-scale-stat">
                   <div className="mode-scale-n">100+</div>
                   <div className="mode-scale-l">clients from<br />one dashboard</div>
                 </div>
+                <div className="mode-scale-stat">
+                  <div className="mode-scale-n">+$5K/mo</div>
+                  <div className="mode-scale-l">added income<br />at scale</div>
+                </div>
+              </div>
+              <div className="mode-fine-print">
+                Based on 100 clients paying $50 USD per month for the full AI experience.
               </div>
             </button>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="section alt"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionRevealVariants}
+      >
+        <div className="inner">
+          <div className="sh">
+            <div className="eyebrow">From coaches</div>
+            <h2>
+              How coaches talk
+              <br />
+              <em>about the shift.</em>
+            </h2>
+          </div>
+
+          <div className="partner-social-grid">
+            {PARTNER_SOCIAL_PROOF.map((item) => (
+              <div key={item.name} className="partner-social-card">
+                <p>&ldquo;{item.quote}&rdquo;</p>
+                <div className="partner-social-person">
+                  <div className="partner-social-meta">
+                    <span className="partner-social-name">{item.name}</span>
+                    <span className="partner-social-role">{item.role}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </motion.div>
@@ -341,9 +369,17 @@ export default function PartnerPage() {
             </select>
           </div>
 
-          <button type="button" className="f-submit" onClick={handleApply} disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Apply to pilot →'}
-          </button>
+          <SeemeButton
+            type="button"
+            variant="filled"
+            size="lg"
+            fullWidth
+            className="partner-submit-button"
+            onClick={handleApply}
+            disabled={submitting}
+          >
+            {submitting ? 'Submitting...' : 'Submit'}
+          </SeemeButton>
 
           {submitError ? <p className="f-note partner-form-error">{submitError}</p> : null}
           {!submitError && submitted ? <p className="f-note partner-form-success">Thanks, {name.trim().split(' ')[0]}! We&apos;ll be in touch within 48 hours.</p> : null}
@@ -351,15 +387,14 @@ export default function PartnerPage() {
         </div>
       </motion.div>
 
-      <footer>
-        <div className="f-logo">See<em>Me</em></div>
-        <ul className="f-links">
-          <li><Link href="/privacy">Privacy</Link></li>
-          <li><a href="#">Terms</a></li>
-          <li><a href="#">Support</a></li>
-          <li><Link href="/">seemeai.app</Link></li>
-        </ul>
-        <div className="f-copy">© 2026 SeeMe</div>
+      <footer className="new-landing-footer">
+        <div className="new-landing-footer-links">
+          <Link href="/privacy" className="new-landing-footer-link">Privacy</Link>
+          <span className="new-landing-footer-dot">·</span>
+          <a href="mailto:info@seemeapp.ai" className="new-landing-footer-link">Contact</a>
+          <span className="new-landing-footer-dot">·</span>
+          <span className="new-landing-footer-copy">© 2026 SeeMe</span>
+        </div>
       </footer>
     </div>
   );
