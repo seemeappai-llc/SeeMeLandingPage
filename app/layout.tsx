@@ -1,33 +1,8 @@
 // app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import { Analytics } from '@vercel/analytics/next';
-import { Space_Grotesk, Syne, Manrope } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
 import "./globals.css";
-
-// Dramatic display font for headlines
-const syne = Syne({
-  subsets: ['latin'],
-  variable: '--font-syne',
-  display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
-});
-
-// Modern geometric sans for body
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-});
-
-// Clean, readable sans for UI elements
-const manrope = Manrope({
-  subsets: ['latin'],
-  variable: '--font-manrope',
-  display: 'swap',
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-});
 
 export const metadata: Metadata = {
   title: "SeeMe",
@@ -47,7 +22,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${spaceGrotesk.variable} ${manrope.variable}`}>
+    <html lang="en">
       <head>
         {/* iOS Web App Meta Tags */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -69,7 +44,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-manrope antialiased" suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         <SmoothScroll>
           {children}
         </SmoothScroll>
