@@ -69,7 +69,16 @@ export default function SeemeButton(props: SeemeButtonProps) {
     );
   }
 
-  const { type = 'button', ...buttonProps } = props;
+  const nativeProps = { ...props } as NativeButtonProps;
+  delete nativeProps.children;
+  delete nativeProps.variant;
+  delete nativeProps.size;
+  delete nativeProps.fullWidth;
+  delete nativeProps.className;
+  delete nativeProps.ariaLabel;
+  delete nativeProps.href;
+
+  const { type = 'button', ...buttonProps } = nativeProps;
   return (
     <button type={type} {...buttonProps} className={classes} aria-label={ariaLabel}>
       {children}

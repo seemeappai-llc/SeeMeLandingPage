@@ -1148,6 +1148,8 @@ body > div {
   .new-landing-phones {
     gap: 8px;
     margin-top: -10px;
+    min-height: 374px;
+    align-items: center;
   }
 
   .new-landing-phone-single {
@@ -2009,42 +2011,23 @@ body > div {
 .partner-page .partner-social-card {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  align-items: center;
+  justify-content: center;
   padding: 28px;
   border: 1px solid rgba(255, 180, 160, 0.08);
   border-radius: 20px;
   background: rgba(255, 200, 180, 0.02);
+  text-align: center;
 }
 
 .partner-page .partner-social-card p {
   margin: 0;
+  max-width: 28ch;
   color: var(--seeme-text);
   font-size: 15px;
   line-height: 1.7;
   letter-spacing: -0.01em;
-}
-
-.partner-page .partner-social-person {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.partner-page .partner-social-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.partner-page .partner-social-name {
-  color: var(--seeme-text);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.partner-page .partner-social-role {
-  color: var(--seeme-subtext);
-  font-size: 12px;
+  font-style: italic;
 }
 
 .partner-page .mode-selectable.selected::after {
@@ -2345,7 +2328,6 @@ body > div {
 }
 
 .partner-page .feat:hover,
-.partner-page .step:hover,
 .partner-page .carr-btn:hover {
   background: rgba(255, 255, 255, 0.07);
 }
@@ -2372,6 +2354,20 @@ body > div {
   gap: 8px;
   padding: 30px 32px 30px 32px;
   align-items: start;
+}
+
+.partner-page .step:not(:last-child) {
+  position: relative;
+}
+
+.partner-page .step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 0;
+  height: 1px;
+  background: rgba(255, 180, 160, 0.08);
 }
 
 .partner-page .step-body {
@@ -2715,7 +2711,7 @@ body > div {
   border: 1px solid rgba(255, 180, 160, 0.08);
   border-radius: 14px;
   padding: 14px 16px;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--seeme-text);
   font-family: inherit;
   outline: none;
@@ -2737,6 +2733,52 @@ body > div {
 .partner-page .partner-submit-button {
   width: 100%;
   margin-top: 16px;
+}
+
+.partner-page .partner-success-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(54, 211, 153, 0.2);
+  background: linear-gradient(180deg, rgba(54, 211, 153, 0.08) 0%, rgba(24, 18, 16, 0.92) 100%);
+  text-align: center;
+}
+
+.partner-page .partner-success-mark {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgba(54, 211, 153, 0.14);
+  border: 1px solid rgba(54, 211, 153, 0.28);
+  color: #53e0ab;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.partner-page .partner-success-card h3 {
+  margin: 0;
+  color: var(--seeme-text);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.partner-page .partner-success-card p {
+  margin: 0;
+  max-width: 34ch;
+  color: rgba(232, 255, 243, 0.74);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.partner-page .partner-form-success {
+  color: #53e0ab;
 }
 
 .partner-page .partner-apply-submit {
