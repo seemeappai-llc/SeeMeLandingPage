@@ -1,7 +1,7 @@
 'use client';
 
 import { CalendarCheck2, Handshake, SlidersHorizontal } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -31,18 +31,12 @@ const COACHING_30_STEPS = [
 
 const PARTNER_SOCIAL_PROOF = [
   {
-    name: 'Coach, private practice',
-    role: 'Life coach',
     quote: 'This is the future of coaching. I deliver deeper sessions, while taking on more clients. Win-win.',
   },
   {
-    name: 'Coach, executive practice',
-    role: 'Leadership coach',
     quote: 'Incredible what AI can do to our industry when used ethically, with us in control and privacy at its core.',
   },
   {
-    name: 'Coach, founder-led practice',
-    role: 'Programme coach',
     quote: 'It’s sink or swim in the coaching field. This feels like adapting and moving these practices into the best direction.',
   },
 ] as const;
@@ -137,6 +131,10 @@ export default function PartnerPage() {
       }
 
       setSubmitted(true);
+      setName('');
+      setEmail('');
+      setCoachType('');
+      setSelectedMode('hybrid');
       setSubmitting(false);
     } catch {
       setSubmitError('Something went wrong. Please try again.');
@@ -307,14 +305,8 @@ export default function PartnerPage() {
 
           <div className="partner-social-grid">
             {PARTNER_SOCIAL_PROOF.map((item) => (
-              <div key={item.name} className="partner-social-card">
+              <div key={item.quote} className="partner-social-card">
                 <p>&ldquo;{item.quote}&rdquo;</p>
-                <div className="partner-social-person">
-                  <div className="partner-social-meta">
-                    <span className="partner-social-name">{item.name}</span>
-                    <span className="partner-social-role">{item.role}</span>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
@@ -337,53 +329,77 @@ export default function PartnerPage() {
         <p>We&apos;re onboarding a small group of coaches to shape the platform with us. Every applicant gets a personal response within 48 hours.</p>
 
         <div className="form">
-          <div className="f-field">
-            <label htmlFor="partner-name">Full name</label>
-            <input id="partner-name" type="text" placeholder="Sarah Kim" value={name} onChange={(event) => setName(event.target.value)} />
-          </div>
+          <AnimatePresence mode="wait">
+            {submitted && !submitError ? (
+              <motion.div
+                key="success"
+                className="partner-success-card"
+                initial={{ opacity: 0, y: 24, scale: 0.98, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -18, scale: 0.98, filter: 'blur(8px)' }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="partner-success-mark" aria-hidden="true">✓</div>
+                <h3>Application received</h3>
+                <p>Thanks. We&apos;ll review your submission and get back to you within 48 hours.</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="form"
+                initial={{ opacity: 0, y: 18, filter: 'blur(8px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -20, scale: 0.98, filter: 'blur(10px)' }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="f-field">
+                  <label htmlFor="partner-name">Full name</label>
+                  <input id="partner-name" type="text" placeholder="Sarah Kim" value={name} onChange={(event) => setName(event.target.value)} />
+                </div>
 
-          <div className="f-field">
-            <label htmlFor="partner-email">Email</label>
-            <input id="partner-email" type="email" placeholder="sarah@yourpractice.com" value={email} onChange={(event) => setEmail(event.target.value)} />
-          </div>
+                <div className="f-field">
+                  <label htmlFor="partner-email">Email</label>
+                  <input id="partner-email" type="email" placeholder="sarah@yourpractice.com" value={email} onChange={(event) => setEmail(event.target.value)} />
+                </div>
 
-          <div className="f-field">
-            <label htmlFor="partner-coach-type">Coach type</label>
-            <select id="partner-coach-type" value={coachType} onChange={(event) => setCoachType(event.target.value)}>
-              <option value="" disabled>Select your primary practice</option>
-              <option value="life">Life Coach</option>
-              <option value="therapist">Therapist</option>
-              <option value="executive">Executive / Leadership Coach</option>
-              <option value="career">Career Coach</option>
-              <option value="health">Health &amp; Wellness Coach</option>
-              <option value="relationship">Relationship Coach</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+                <div className="f-field">
+                  <label htmlFor="partner-coach-type">Coach type</label>
+                  <select id="partner-coach-type" value={coachType} onChange={(event) => setCoachType(event.target.value)}>
+                    <option value="" disabled>Select your primary practice</option>
+                    <option value="life">Life Coach</option>
+                    <option value="therapist">Therapist</option>
+                    <option value="executive">Executive / Leadership Coach</option>
+                    <option value="career">Career Coach</option>
+                    <option value="health">Health &amp; Wellness Coach</option>
+                    <option value="relationship">Relationship Coach</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
 
-          <div className="f-field">
-            <label htmlFor="partner-mode">Mode interested in</label>
-            <select id="partner-mode" value={selectedMode} onChange={(event) => setSelectedMode(event.target.value as Mode)}>
-              <option value="hybrid">Hybrid</option>
-              <option value="fullai">Full AI</option>
-            </select>
-          </div>
+                <div className="f-field">
+                  <label htmlFor="partner-mode">Mode interested in</label>
+                  <select id="partner-mode" value={selectedMode} onChange={(event) => setSelectedMode(event.target.value as Mode)}>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="fullai">Full AI</option>
+                  </select>
+                </div>
 
-          <SeemeButton
-            type="button"
-            variant="filled"
-            size="lg"
-            fullWidth
-            className="partner-submit-button"
-            onClick={handleApply}
-            disabled={submitting}
-          >
-            {submitting ? 'Submitting...' : 'Submit'}
-          </SeemeButton>
+                <SeemeButton
+                  type="button"
+                  variant="filled"
+                  size="lg"
+                  fullWidth
+                  className="partner-submit-button"
+                  onClick={handleApply}
+                  disabled={submitting}
+                >
+                  {submitting ? 'Submitting...' : 'Submit'}
+                </SeemeButton>
 
-          {submitError ? <p className="f-note partner-form-error">{submitError}</p> : null}
-          {!submitError && submitted ? <p className="f-note partner-form-success">Thanks, {name.trim().split(' ')[0]}! We&apos;ll be in touch within 48 hours.</p> : null}
-          {!submitError && !submitted ? <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p> : null}
+                {submitError ? <p className="f-note partner-form-error">{submitError}</p> : null}
+                {!submitError ? <p className="f-note">No commitment. We&apos;ll follow up within 48 hours.</p> : null}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 
