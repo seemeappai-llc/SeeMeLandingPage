@@ -450,6 +450,13 @@ body > div {
   flex-wrap: nowrap;
 }
 
+.new-landing-phone-stage {
+  position: relative;
+  width: 280px;
+  aspect-ratio: 280 / 580;
+  flex-shrink: 0;
+}
+
 .new-landing-phone {
   flex-shrink: 0;
   width: 170px;
@@ -458,6 +465,16 @@ body > div {
 
 .new-landing-phone-single {
   width: 280px;
+}
+
+.new-landing-phone-layer {
+  position: absolute;
+  inset: 0;
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transform-origin: center bottom;
+  pointer-events: none;
 }
 
 /* App Store button */
@@ -1155,6 +1172,10 @@ body > div {
   .new-landing-phone-single {
     width: 180px;
     border-radius: 30px;
+  }
+
+  .new-landing-phone-stage {
+    width: 180px;
   }
 
   .new-landing-hero .new-landing-appstore-btn {
