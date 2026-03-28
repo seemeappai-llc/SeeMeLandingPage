@@ -5,10 +5,38 @@ import SmoothScroll from '@/components/SmoothScroll';
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://seemeai.app"),
   title: "SeeMe",
   description: "Your personal network of support",
   icons: {
-    icon: "/logo.ico",
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+      { url: "/logo.ico", rel: "shortcut icon" },
+    ],
+    apple: "/logo.png",
+    shortcut: "/logo.ico",
+  },
+  openGraph: {
+    title: "SeeMe",
+    description: "Your personal network of support",
+    url: "https://seemeai.app",
+    siteName: "SeeMe",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 1200,
+        alt: "SeeMe",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SeeMe",
+    description: "Your personal network of support",
+    images: ["/logo.png"],
   },
 };
 

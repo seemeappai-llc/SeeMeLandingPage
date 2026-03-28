@@ -127,18 +127,28 @@ const HERO_MOCKUPS = [
 ] as const;
 
 const MOBILE_HERO_SEQUENCE = [2, 1, 3, 0, 4] as const;
+const MOBILE_HERO_INTERVAL_MS = 4000;
+const MOBILE_HERO_FADE_MS = 950;
 
 // ========== MAIN COMPONENT ==========
 export const NewLandingPage = () => {
   const [phase, setPhase] = useState<Phase>('seeme');
   const [isMobile, setIsMobile] = useState(false);
   const [mobileHeroIndex, setMobileHeroIndex] = useState(0);
+  const [mobileHeroPreviousIndex, setMobileHeroPreviousIndex] = useState<number | null>(null);
   const [seemeSize, setSeemeSize] = useState<number | null>(null);
   const knowsYouRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
+  const mobileHeroResetTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
+    const check = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setMobileHeroPreviousIndex(null);
+      }
+    };
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -173,11 +183,35 @@ export const NewLandingPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile) {
+      if (mobileHeroResetTimeoutRef.current !== null) {
+        window.clearTimeout(mobileHeroResetTimeoutRef.current);
+        mobileHeroResetTimeoutRef.current = null;
+      }
+      return;
+    }
+
     const interval = window.setInterval(() => {
-      setMobileHeroIndex((current) => (current + 1) % HERO_MOCKUPS.length);
-    }, 4000);
-    return () => window.clearInterval(interval);
+      setMobileHeroIndex((current) => {
+        setMobileHeroPreviousIndex(current);
+        return (current + 1) % HERO_MOCKUPS.length;
+      });
+      if (mobileHeroResetTimeoutRef.current !== null) {
+        window.clearTimeout(mobileHeroResetTimeoutRef.current);
+      }
+      mobileHeroResetTimeoutRef.current = window.setTimeout(() => {
+        setMobileHeroPreviousIndex(null);
+        mobileHeroResetTimeoutRef.current = null;
+      }, MOBILE_HERO_FADE_MS);
+    }, MOBILE_HERO_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(interval);
+      if (mobileHeroResetTimeoutRef.current !== null) {
+        window.clearTimeout(mobileHeroResetTimeoutRef.current);
+        mobileHeroResetTimeoutRef.current = null;
+      }
+    };
   }, [isMobile]);
 
   return (
@@ -313,25 +347,43 @@ export const NewLandingPage = () => {
           {/* Phone Mockups — center mockup appears first, others fan out from behind it */}
           <div className="new-landing-phones">
             {isMobile ? (
-              <AnimatePresence mode="wait">
+              <div className="new-landing-phone-stage">
+                {mobileHeroPreviousIndex !== null ? (
+                  <motion.div
+                    key={`previous-${HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroPreviousIndex]].src}`}
+                    className="new-landing-phone new-landing-phone-single new-landing-phone-layer"
+                    initial={{ opacity: 1, x: 0, scale: 1 }}
+                    animate={{ opacity: 0, x: -240, scale: 0.2 }}
+                    transition={{ duration: MOBILE_HERO_FADE_MS / 1000, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden="true"
+                  >
+                    <Image
+                      src={HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroPreviousIndex]].src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 180px, 280px"
+                      quality={90}
+                      style={{ objectFit: 'contain', borderRadius: '22px' }}
+                    />
+                  </motion.div>
+                ) : null}
                 <motion.div
-                  key={HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].src}
-                  className="new-landing-phone new-landing-phone-single"
-                  initial={{ opacity: 0, y: 22, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -22, scale: 0.98 }}
-                  transition={{ duration: 0.65, ease: [0.25, 0.4, 0.25, 1] }}
+                  key={`current-${HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].src}`}
+                  className="new-landing-phone new-landing-phone-single new-landing-phone-layer"
+                  initial={mobileHeroPreviousIndex === null ? false : { opacity: 0, x: 240, scale: 0.2 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  transition={{ duration: MOBILE_HERO_FADE_MS / 1000, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <Image
                     src={HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].src}
                     alt={`SeeMe App - ${HERO_MOCKUPS[MOBILE_HERO_SEQUENCE[mobileHeroIndex]].alt}`}
-                    width={280}
-                    height={580}
+                    fill
+                    sizes="(max-width: 768px) 180px, 280px"
                     quality={90}
-                    style={{ width: '100%', height: 'auto', borderRadius: '22px' }}
+                    style={{ objectFit: 'contain', borderRadius: '22px' }}
                   />
                 </motion.div>
-              </AnimatePresence>
+              </div>
             ) : (
               <>
                 {HERO_MOCKUPS.map((mock) => (
