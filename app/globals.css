@@ -881,6 +881,9 @@ body > div {
 /* Carousel class for testimonial cards */
 .new-landing-testimonials-carousel {
   margin-top: 16px;
+  padding-top: 14px;
+  padding-bottom: 10px;
+  margin-top: 2px;
 }
 
 .new-landing-testimonials-carousel .new-landing-testimonial-card {
@@ -1088,7 +1091,8 @@ body > div {
 
 .new-landing-carousel-mask {
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   mask-image: linear-gradient(
     to right,
     transparent 0%,

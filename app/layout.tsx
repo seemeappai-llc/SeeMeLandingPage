@@ -23,10 +23,10 @@ export const metadata: Metadata = {
     siteName: "SeeMe",
     images: [
       {
-        url: "/logo.png",
-        width: 1200,
-        height: 1200,
-        alt: "SeeMe",
+        url: "/thumbnail.jpeg",
+        width: 2568,
+        height: 1448,
+        alt: "SeeMe thumbnail",
       },
     ],
     locale: "en_US",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SeeMe",
     description: "Your personal network of support",
-    images: ["/logo.png"],
+    images: ["/thumbnail.jpeg"],
   },
 };
 
